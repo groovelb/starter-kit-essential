@@ -1,6 +1,4 @@
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useTheme } from '@mui/material/styles';
+import { DocumentTitle, PageContainer } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Style/Typography',
@@ -33,116 +32,75 @@ export default {
 export const Default = {
   render: () => {
     const theme = useTheme();
+
+    const typographyData = [
+      { variant: 'h1', sample: 'h1. Heading', usage: '페이지 메인 타이틀' },
+      { variant: 'h2', sample: 'h2. Heading', usage: '섹션 타이틀' },
+      { variant: 'h3', sample: 'h3. Heading', usage: '서브섹션 타이틀' },
+      { variant: 'h4', sample: 'h4. Heading', usage: '카드 타이틀' },
+      { variant: 'h5', sample: 'h5. Heading', usage: '작은 타이틀' },
+      { variant: 'h6', sample: 'h6. Heading', usage: '레이블 타이틀' },
+      { variant: 'subtitle1', sample: 'subtitle1. Lorem ipsum dolor sit amet', usage: '부제목' },
+      { variant: 'subtitle2', sample: 'subtitle2. Lorem ipsum dolor sit amet', usage: '작은 부제목' },
+      { variant: 'body1', sample: 'body1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', usage: '본문 텍스트' },
+      { variant: 'body2', sample: 'body2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', usage: '보조 본문' },
+      { variant: 'button', sample: 'BUTTON TEXT', usage: '버튼 텍스트' },
+      { variant: 'caption', sample: 'caption text', usage: '캡션, 주석' },
+      { variant: 'overline', sample: 'OVERLINE TEXT', usage: '레이블, 카테고리' },
+    ];
+
     return (
-      <Box sx={ { maxWidth: 800 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          타이포그래피 시스템
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
-          텍스트 스타일과 폰트 설정을 확인합니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Typography"
+          status="Available"
+          note="폰트와 텍스트 스타일 시스템"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            타이포그래피 시스템
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
+            텍스트 스타일과 폰트 설정을 확인합니다.
+          </Typography>
 
-        <Divider sx={ { mb: 4 } } />
-
-        <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-          Heading Variants
-        </Typography>
-
-        <Box sx={ { mb: 4 } }>
-          <Typography variant="h1" gutterBottom>h1. Heading</Typography>
-          <Typography variant="h2" gutterBottom>h2. Heading</Typography>
-          <Typography variant="h3" gutterBottom>h3. Heading</Typography>
-          <Typography variant="h4" gutterBottom>h4. Heading</Typography>
-          <Typography variant="h5" gutterBottom>h5. Heading</Typography>
-          <Typography variant="h6" gutterBottom>h6. Heading</Typography>
-        </Box>
-
-        <Divider sx={ { mb: 4 } } />
-
-        <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-          Body Variants
-        </Typography>
-
-        <Box sx={ { mb: 4 } }>
-          <Typography variant="subtitle1" gutterBottom>subtitle1. Lorem ipsum dolor sit amet</Typography>
-          <Typography variant="subtitle2" gutterBottom>subtitle2. Lorem ipsum dolor sit amet</Typography>
-          <Typography variant="body1" gutterBottom>body1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Typography>
-          <Typography variant="body2" gutterBottom>body2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Typography>
-          <Typography variant="button" display="block" gutterBottom>button text</Typography>
-          <Typography variant="caption" display="block" gutterBottom>caption text</Typography>
-          <Typography variant="overline" display="block">overline text</Typography>
-        </Box>
-
-        <Divider sx={ { mb: 4 } } />
-
-        <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-          Font Size 참조표
-        </Typography>
-
-        <TableContainer>
-          <Table size="small">
+          <TableContainer>
+          <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Variant</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>Font Size</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>용도</TableCell>
+                <TableCell sx={ { fontWeight: 600, width: '12%' } }>Variant</TableCell>
+                <TableCell sx={ { fontWeight: 600, width: '10%' } }>Size</TableCell>
+                <TableCell sx={ { fontWeight: 600 } }>Sample</TableCell>
+                <TableCell sx={ { fontWeight: 600, width: '15%' } }>용도</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>h1</TableCell>
-                <TableCell>{ theme.typography.h1.fontSize }</TableCell>
-                <TableCell>페이지 메인 타이틀</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>h2</TableCell>
-                <TableCell>{ theme.typography.h2.fontSize }</TableCell>
-                <TableCell>섹션 타이틀</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>h3</TableCell>
-                <TableCell>{ theme.typography.h3.fontSize }</TableCell>
-                <TableCell>서브섹션 타이틀</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>h4</TableCell>
-                <TableCell>{ theme.typography.h4.fontSize }</TableCell>
-                <TableCell>카드 타이틀</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>h5</TableCell>
-                <TableCell>{ theme.typography.h5.fontSize }</TableCell>
-                <TableCell>작은 타이틀</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>h6</TableCell>
-                <TableCell>{ theme.typography.h6.fontSize }</TableCell>
-                <TableCell>레이블 타이틀</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>body1</TableCell>
-                <TableCell>{ theme.typography.body1.fontSize }</TableCell>
-                <TableCell>본문 텍스트</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>body2</TableCell>
-                <TableCell>{ theme.typography.body2.fontSize }</TableCell>
-                <TableCell>보조 본문</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>caption</TableCell>
-                <TableCell>{ theme.typography.caption.fontSize }</TableCell>
-                <TableCell>캡션, 주석</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>overline</TableCell>
-                <TableCell>{ theme.typography.overline.fontSize }</TableCell>
-                <TableCell>레이블, 카테고리</TableCell>
-              </TableRow>
+              { typographyData.map((row) => (
+                <TableRow key={ row.variant }>
+                  <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>
+                    { row.variant }
+                  </TableCell>
+                  <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>
+                    { theme.typography[row.variant]?.fontSize || '-' }
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant={ row.variant }>
+                      { row.sample }
+                    </Typography>
+                  </TableCell>
+                  <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>
+                    { row.usage }
+                  </TableCell>
+                </TableRow>
+              )) }
             </TableBody>
           </Table>
-        </TableContainer>
-      </Box>
+          </TableContainer>
+        </PageContainer>
+      </>
     );
   },
 };

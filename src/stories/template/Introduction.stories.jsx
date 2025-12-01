@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import { PageContainer } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Template/Introduction',
@@ -25,7 +26,7 @@ export default {
 
 export const Default = {
   render: () => (
-    <Box sx={ { maxWidth: 600 } }>
+    <PageContainer>
       <Paper sx={ { p: 3 } }>
         <Typography variant="h6" gutterBottom>
           템플릿 섹션
@@ -34,6 +35,6 @@ export const Default = {
           이 섹션에는 여러 컴포넌트가 조합된 템플릿이 추가될 예정입니다.
         </Typography>
       </Paper>
-    </Box>
+    </PageContainer>
   ),
 };

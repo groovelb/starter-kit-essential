@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import { PageContainer } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Overview/Introduction',
@@ -52,7 +53,7 @@ const FeatureCard = ({ title, description, icon }) => (
 
 export const Default = {
   render: () => (
-    <Box sx={ { maxWidth: 1000 } }>
+    <PageContainer>
       <Typography variant="h3" gutterBottom sx={ { fontWeight: 700 } }>
         Starter Kit Basic
       </Typography>
@@ -161,6 +162,6 @@ export const Default = {
           </Paper>
         </Grid>
       </Grid>
-    </Box>
+    </PageContainer>
   ),
 };

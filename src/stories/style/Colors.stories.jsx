@@ -17,6 +17,7 @@ import {
   green,
   lightBlue,
 } from '@mui/material/colors';
+import { DocumentTitle, PageContainer, SectionTitle } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Style/Colors',
@@ -39,34 +40,46 @@ export default {
   },
 };
 
-/** 팔레트 스케일 컴포넌트 */
+/** 팔레트 스케일 컴포넌트 - 큰 블록 형태 */
 const PaletteScale = ({ name, colorObj, description }) => (
-  <Box sx={ { mb: 4 } }>
-    <Typography variant="subtitle1" sx={ { fontWeight: 600, mb: 0.5 } }>{ name }</Typography>
+  <Box sx={ { mb: 6 } }>
+    <Typography variant="h6" sx={ { fontWeight: 600, mb: 0.5 } }>{ name }</Typography>
     <Typography variant="body2" color="text.secondary" sx={ { mb: 2 } }>{ description }</Typography>
-    <Box sx={ { display: 'flex', gap: 0.5 } }>
+    <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1 } }>
       { [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
-        <Box key={ shade } sx={ { flex: 1, minWidth: 0 } }>
-          <Box
+        <Box
+          key={ shade }
+          sx={ {
+            width: 80,
+            height: 80,
+            backgroundColor: colorObj[shade],
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 1,
+          } }
+        >
+          <Typography
+            variant="caption"
             sx={ {
-              height: 40,
-              backgroundColor: colorObj[shade],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              color: shade >= 400 ? 'white' : 'rgba(0,0,0,0.7)',
+              fontSize: 12,
+              fontWeight: 700,
             } }
           >
-            <Typography
-              variant="caption"
-              sx={ {
-                color: shade >= 500 ? 'white' : 'rgba(0,0,0,0.7)',
-                fontSize: '10px',
-                fontWeight: 600,
-              } }
-            >
-              { shade }
-            </Typography>
-          </Box>
+            { shade }
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={ {
+              color: shade >= 400 ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)',
+              fontSize: 10,
+              fontFamily: 'monospace',
+            } }
+          >
+            { colorObj[shade] }
+          </Typography>
         </Box>
       )) }
     </Box>
@@ -78,19 +91,24 @@ export const Default = {
   render: () => {
     const theme = useTheme();
     return (
-      <Box sx={ { maxWidth: 800 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          색상 시스템 개요
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Color System"
+          status="Available"
+          note="색상 팔레트와 역할별 컬러 토큰"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            색상 시스템 개요
+          </Typography>
         <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
           색상 시스템의 구조와 계층을 이해합니다.
         </Typography>
 
-        <Divider sx={ { mb: 4 } } />
-
-        <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-          색상 토큰 계층 구조
-        </Typography>
+        <SectionTitle title="색상 토큰 계층 구조" />
 
         <TableContainer sx={ { mb: 4 } }>
           <Table size="small">
@@ -121,11 +139,7 @@ export const Default = {
           </Table>
         </TableContainer>
 
-        <Divider sx={ { mb: 4 } } />
-
-        <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-          현재 프로젝트 주요 색상
-        </Typography>
+        <SectionTitle title="현재 프로젝트 주요 색상" />
 
         <TableContainer>
           <Table size="small">
@@ -149,7 +163,8 @@ export const Default = {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -158,10 +173,19 @@ export const Default = {
 export const Palette = {
   name: '1. Color Palette',
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
-      <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-        Color Palette (원시 색상)
-      </Typography>
+    <>
+      <DocumentTitle
+        title="Color Palette"
+        status="Available"
+        note="MUI 기본 색상 팔레트"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+          Color Palette (원시 색상)
+        </Typography>
       <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
         MUI에서 제공하는 기본 색상 팔레트입니다. 이 색상들을 조합하여 테마를 구성합니다.
       </Typography>
@@ -176,11 +200,7 @@ export const Palette = {
       <PaletteScale name="Green" colorObj={ green } description="Success 상태" />
       <PaletteScale name="Light Blue" colorObj={ lightBlue } description="Info 상태" />
 
-      <Divider sx={ { my: 4 } } />
-
-      <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-        명도 가이드
-      </Typography>
+      <SectionTitle title="명도 가이드" />
 
       <TableContainer>
         <Table size="small">
@@ -208,9 +228,102 @@ export const Palette = {
           </TableBody>
         </Table>
       </TableContainer>
-    </Box>
+      </PageContainer>
+    </>
   ),
 };
+
+/** 시멘틱 토큰 블록 컴포넌트 */
+const SemanticColorBlock = ({ name, colorObj, description }) => {
+  const shades = ['light', 'main', 'dark'];
+  return (
+    <Box sx={ { mb: 6 } }>
+      <Typography variant="h6" sx={ { fontWeight: 600, mb: 0.5 } }>{ name }</Typography>
+      <Typography variant="body2" color="text.secondary" sx={ { mb: 2 } }>{ description }</Typography>
+      <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1 } }>
+        { shades.map((shade) => {
+          const color = colorObj[shade];
+          const isLight = shade === 'light';
+          return (
+            <Box
+              key={ shade }
+              sx={ {
+                width: 120,
+                height: 80,
+                backgroundColor: color,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 1,
+                border: isLight ? '1px solid rgba(0,0,0,0.1)' : 'none',
+              } }
+            >
+              <Typography
+                variant="caption"
+                sx={ {
+                  color: isLight ? 'rgba(0,0,0,0.7)' : 'white',
+                  fontSize: 12,
+                  fontWeight: 700,
+                } }
+              >
+                { shade }
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={ {
+                  color: isLight ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.7)',
+                  fontSize: 10,
+                  fontFamily: 'monospace',
+                } }
+              >
+                { color }
+              </Typography>
+            </Box>
+          );
+        }) }
+      </Box>
+    </Box>
+  );
+};
+
+/** 단일 색상 블록 컴포넌트 */
+const SingleColorBlock = ({ name, color, description, hasBorder = false }) => (
+  <Box
+    sx={ {
+      width: 120,
+      height: 80,
+      backgroundColor: color,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 1,
+      border: hasBorder ? '1px solid rgba(0,0,0,0.1)' : 'none',
+    } }
+  >
+    <Typography
+      variant="caption"
+      sx={ {
+        color: hasBorder ? 'rgba(0,0,0,0.7)' : 'white',
+        fontSize: 12,
+        fontWeight: 700,
+      } }
+    >
+      { name }
+    </Typography>
+    <Typography
+      variant="caption"
+      sx={ {
+        color: hasBorder ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.7)',
+        fontSize: 10,
+        fontFamily: 'monospace',
+      } }
+    >
+      { color }
+    </Typography>
+  </Box>
+);
 
 /** 2. Semantic Tokens - 역할별 색상 */
 export const SemanticTokens = {
@@ -218,202 +331,84 @@ export const SemanticTokens = {
   render: () => {
     const theme = useTheme();
     return (
-      <Box sx={ { maxWidth: 800 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          Semantic Tokens (역할별 색상)
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Semantic Tokens"
+          status="Available"
+          note="역할별 의미 부여 색상"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Semantic Tokens (역할별 색상)
+          </Typography>
         <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
           색상에 의미와 역할을 부여한 토큰입니다. 컴포넌트에서 이 토큰을 참조합니다.
         </Typography>
 
-        <Divider sx={ { mb: 4 } } />
+        <SectionTitle title="브랜드 색상" />
 
-        <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-          브랜드 색상
-        </Typography>
+        <SemanticColorBlock
+          name="Primary"
+          colorObj={ theme.palette.primary }
+          description="CTA 버튼, 링크, 선택된 상태"
+        />
+        <SemanticColorBlock
+          name="Secondary"
+          colorObj={ theme.palette.secondary }
+          description="보조 버튼, 태그"
+        />
 
-        <TableContainer sx={ { mb: 4 } }>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Token</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>Light</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>Main</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>Dark</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>용도</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Primary</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.primary.light } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.primary.light }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.primary.main } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>#0000FF</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.primary.dark } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.primary.dark }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>CTA 버튼, 링크, 선택된 상태</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Secondary</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.secondary.light } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.secondary.light }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.secondary.main } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.secondary.main }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.secondary.dark } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.secondary.dark }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>보조 버튼, 태그</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <SectionTitle
+          title="상태 색상 (Feedback Colors)"
+          description="사용자에게 시스템 상태를 전달하는 색상입니다."
+        />
 
-        <Divider sx={ { mb: 4 } } />
+        <SemanticColorBlock
+          name="Error"
+          colorObj={ theme.palette.error }
+          description="오류, 삭제, 위험"
+        />
+        <SemanticColorBlock
+          name="Warning"
+          colorObj={ theme.palette.warning }
+          description="주의, 경고"
+        />
+        <SemanticColorBlock
+          name="Success"
+          colorObj={ theme.palette.success }
+          description="성공, 완료, 활성"
+        />
+        <SemanticColorBlock
+          name="Info"
+          colorObj={ theme.palette.info }
+          description="정보, 안내"
+        />
 
-        <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-          상태 색상 (Feedback Colors)
-        </Typography>
+        <SectionTitle title="텍스트 및 배경 색상" />
 
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 3 } }>
-          사용자에게 시스템 상태를 전달하는 색상입니다.
-        </Typography>
+        <Box sx={ { mb: 6 } }>
+          <Typography variant="h6" sx={ { fontWeight: 600, mb: 0.5 } }>Text</Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 2 } }>텍스트 색상</Typography>
+          <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1 } }>
+            <SingleColorBlock name="primary" color={ theme.palette.text.primary } description="주요 텍스트" />
+            <SingleColorBlock name="secondary" color={ theme.palette.text.secondary } description="보조 텍스트" />
+            <SingleColorBlock name="disabled" color={ theme.palette.text.disabled } description="비활성 텍스트" />
+          </Box>
+        </Box>
 
-        <TableContainer sx={ { mb: 4 } }>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Token</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>값</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>의미</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>예시</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Error</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.error.main } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.error.main }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>오류, 삭제, 위험</TableCell>
-                <TableCell>유효성 오류, 삭제 버튼</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Warning</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.warning.main } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.warning.main }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>주의, 경고</TableCell>
-                <TableCell>저장 안 됨, 만료 예정</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Success</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.success.main } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.success.main }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>성공, 완료, 활성</TableCell>
-                <TableCell>저장 완료, 온라인 상태</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>Info</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.info.main } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.info.main }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>정보, 안내</TableCell>
-                <TableCell>도움말, 새 기능 안내</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <Divider sx={ { mb: 4 } } />
-
-        <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-          텍스트 및 배경 색상
-        </Typography>
-
-        <TableContainer>
-          <Table size="small">
-            <TableBody>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600, width: '25%' } }>text.primary</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.text.primary } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.text.primary }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>주요 텍스트, 제목</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>text.secondary</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.text.secondary } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.text.secondary }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>보조 텍스트, 설명</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>background.default</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.background.default, border: '1px solid #e0e0e0' } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.background.default }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>페이지 배경</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600 } }>background.paper</TableCell>
-                <TableCell>
-                  <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                    <Box sx={ { width: 16, height: 16, backgroundColor: theme.palette.background.paper, border: '1px solid #e0e0e0' } } />
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ theme.palette.background.paper }</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>카드, 모달 배경</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+        <Box sx={ { mb: 6 } }>
+          <Typography variant="h6" sx={ { fontWeight: 600, mb: 0.5 } }>Background</Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 2 } }>배경 색상</Typography>
+          <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1 } }>
+            <SingleColorBlock name="default" color={ theme.palette.background.default } description="페이지 배경" hasBorder />
+            <SingleColorBlock name="paper" color={ theme.palette.background.paper } description="카드, 모달 배경" hasBorder />
+          </Box>
+        </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -422,23 +417,27 @@ export const SemanticTokens = {
 export const Usage = {
   name: '3. Usage',
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
-      <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-        컴포넌트 적용 예시
-      </Typography>
+    <>
+      <DocumentTitle
+        title="Color Usage"
+        status="Available"
+        note="컴포넌트에서의 색상 활용법"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+          컴포넌트 적용 예시
+        </Typography>
       <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
         Semantic Token이 실제 컴포넌트에 어떻게 적용되는지 확인합니다.
       </Typography>
 
-      <Divider sx={ { mb: 4 } } />
-
-      <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-        Button 컴포넌트
-      </Typography>
-
-      <Typography variant="body2" color="text.secondary" sx={ { mb: 3 } }>
-        Button의 color prop에 Semantic Token 이름을 전달하면 해당 색상이 적용됩니다.
-      </Typography>
+      <SectionTitle
+        title="Button 컴포넌트"
+        description="Button의 color prop에 Semantic Token 이름을 전달하면 해당 색상이 적용됩니다."
+      />
 
       <Box
         component="pre"
@@ -456,15 +455,10 @@ export const Usage = {
 <Button variant="contained" color="success">Success</Button>` }
       </Box>
 
-      <Divider sx={ { mb: 4 } } />
-
-      <Typography variant="h5" sx={ { fontWeight: 600, mb: 3 } }>
-        sx prop으로 직접 사용
-      </Typography>
-
-      <Typography variant="body2" color="text.secondary" sx={ { mb: 3 } }>
-        sx prop에서 theme 값을 직접 참조할 수 있습니다.
-      </Typography>
+      <SectionTitle
+        title="sx prop으로 직접 사용"
+        description="sx prop에서 theme 값을 직접 참조할 수 있습니다."
+      />
 
       <Box
         component="pre"
@@ -484,6 +478,7 @@ export const Usage = {
 // 함수로 참조 (복잡한 계산 필요시)
 <Box sx={{ backgroundColor: (theme) => theme.palette.primary.light }} />` }
       </Box>
-    </Box>
+      </PageContainer>
+    </>
   ),
 };

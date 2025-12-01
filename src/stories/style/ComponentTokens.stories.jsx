@@ -26,6 +26,7 @@ import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { useTheme } from '@mui/material/styles';
+import { DocumentTitle, PageContainer } from '../../components/storybookDocumentation';
 
 import { componentTokenMap, tokenCategories, componentList } from '../../data/componentTokenMap';
 
@@ -387,13 +388,22 @@ export const Default = {
     const collapseAll = () => setExpandedComponents([]);
 
     return (
-      <Box sx={ { maxWidth: 1200 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          Component Token Usage
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={ { mb: 3 } }>
-          각 MUI 컴포넌트가 테마의 어떤 토큰을 사용하는지 확인합니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Component Tokens"
+          status="Available"
+          note="컴포넌트별 테마 토큰 사용"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Component Token Usage
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={ { mb: 3 } }>
+            각 MUI 컴포넌트가 테마의 어떤 토큰을 사용하는지 확인합니다.
+          </Typography>
 
         <Box sx={ { display: 'flex', gap: 1, mb: 3 } }>
           <Button variant="outlined" size="small" onClick={ expandAll }>
@@ -424,7 +434,8 @@ export const Default = {
             • <strong>spacing</strong> 변경 시: 모든 컴포넌트의 여백에 영향
           </Typography>
         </Paper>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -444,13 +455,22 @@ export const Summary = {
     });
 
     return (
-      <Box sx={ { maxWidth: 1000 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          Token Usage Matrix
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={ { mb: 3 } }>
-          컴포넌트 × 토큰 카테고리 매트릭스. 숫자는 사용하는 토큰 개수입니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Token Matrix"
+          status="Available"
+          note="컴포넌트 × 토큰 카테고리 매트릭스"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Token Usage Matrix
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={ { mb: 3 } }>
+            컴포넌트 × 토큰 카테고리 매트릭스. 숫자는 사용하는 토큰 개수입니다.
+          </Typography>
 
         <Paper sx={ { overflow: 'auto' } }>
           <Table size="small">
@@ -514,7 +534,8 @@ export const Summary = {
           <Chip label="1-2" size="small" sx={ { backgroundColor: 'grey.100' } } />
           <Typography variant="caption">적게 사용</Typography>
         </Box>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -535,13 +556,22 @@ export const ByToken = {
     const affectedComponents = getComponentsUsingCategory(selectedCategory);
 
     return (
-      <Box sx={ { maxWidth: 1000 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          Token → Components
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={ { mb: 3 } }>
-          특정 토큰 카테고리를 변경하면 어떤 컴포넌트에 영향을 주는지 확인합니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Token to Components"
+          status="Available"
+          note="토큰이 영향주는 컴포넌트"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Token → Components
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={ { mb: 3 } }>
+            특정 토큰 카테고리를 변경하면 어떤 컴포넌트에 영향을 주는지 확인합니다.
+          </Typography>
 
         <Box sx={ { display: 'flex', gap: 1, mb: 4, flexWrap: 'wrap' } }>
           { Object.keys(tokenCategories).map((cat) => (
@@ -607,7 +637,8 @@ export const ByToken = {
             }) }
           </Grid>
         </Paper>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };

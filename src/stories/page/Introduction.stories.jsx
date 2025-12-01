@@ -6,6 +6,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
+import { PageContainer } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Page/Introduction',
@@ -30,7 +31,7 @@ export default {
 
 export const Default = {
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
+    <PageContainer>
       <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
         페이지 섹션
       </Typography>
@@ -66,6 +67,6 @@ export const Default = {
       <Typography variant="body2" color="text.secondary">
         각 페이지는 Template 섹션의 컴포넌트 조합을 활용하여 구성됩니다.
       </Typography>
-    </Box>
+    </PageContainer>
   ),
 };

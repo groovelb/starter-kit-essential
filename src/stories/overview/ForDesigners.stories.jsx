@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useTheme } from '@mui/material/styles';
+import { PageContainer, SectionTitle } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Overview/For Designers',
@@ -30,26 +31,11 @@ export default {
   },
 };
 
-/** 섹션 컴포넌트 */
-const Section = ({ title, description, children }) => (
-  <Box sx={ { mb: 6 } }>
-    <Typography variant="h5" sx={ { fontWeight: 600, mb: 1 } }>
-      { title }
-    </Typography>
-    { description && (
-      <Typography variant="body2" color="text.secondary" sx={ { mb: 3 } }>
-        { description }
-      </Typography>
-    ) }
-    { children }
-  </Box>
-);
-
 /** 0. Overview - React와 Storybook의 관계 */
 export const Overview = {
   name: '0. Overview',
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
+    <PageContainer>
       <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
         React.js와 Storybook의 관계
       </Typography>
@@ -59,7 +45,7 @@ export const Overview = {
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="핵심 비유">
+      <SectionTitle title="핵심 비유">
         <TableContainer sx={ { mb: 4 } }>
           <Table>
             <TableBody>
@@ -82,9 +68,9 @@ export const Overview = {
             </TableBody>
           </Table>
         </TableContainer>
-      </Section>
+      </SectionTitle>
 
-      <Section
+      <SectionTitle
         title="React.js란?"
         description="사용자가 실제로 보고 사용하는 화면을 만드는 도구입니다."
       >
@@ -96,9 +82,9 @@ export const Overview = {
           핵심 개념은 컴포넌트입니다. 피그마의 컴포넌트처럼 재사용 가능한 UI 블록을 만들고,
           이것들을 조합해서 전체 페이지를 구성합니다.
         </Typography>
-      </Section>
+      </SectionTitle>
 
-      <Section
+      <SectionTitle
         title="Storybook이란?"
         description="컴포넌트를 독립적으로 보고 테스트하는 도구입니다."
       >
@@ -111,11 +97,11 @@ export const Overview = {
           피그마와의 차이: 피그마는 그림이고, Storybook은 실제 작동하는 코드입니다.
           Storybook의 버튼은 실제로 클릭되고, hover 효과가 나타나고, disabled 상태가 적용됩니다.
         </Typography>
-      </Section>
+      </SectionTitle>
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="React와 Storybook의 관계">
+      <SectionTitle title="React와 Storybook의 관계">
         <TableContainer>
           <Table size="small">
             <TableHead>
@@ -148,11 +134,11 @@ export const Overview = {
           React로 만든 컴포넌트는 실제 서비스에서도, Storybook에서도 똑같이 사용됩니다.
           Storybook에서 보이는 버튼은 실제 서비스의 버튼과 100% 동일합니다.
         </Typography>
-      </Section>
+      </SectionTitle>
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="디자인 → 개발 워크플로우">
+      <SectionTitle title="디자인 → 개발 워크플로우">
         <TableContainer>
           <Table size="small">
             <TableBody>
@@ -179,8 +165,8 @@ export const Overview = {
             </TableBody>
           </Table>
         </TableContainer>
-      </Section>
-    </Box>
+      </SectionTitle>
+    </PageContainer>
   ),
 };
 
@@ -188,7 +174,7 @@ export const Overview = {
 export const ConceptMapping = {
   name: '1. 개념 매핑',
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
+    <PageContainer>
       <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
         피그마 ↔ 코드 개념 매핑
       </Typography>
@@ -257,7 +243,7 @@ export const ConceptMapping = {
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="핵심 개념 상세">
+      <SectionTitle title="핵심 개념 상세">
         <Box sx={ { mb: 4 } }>
           <Typography variant="subtitle1" sx={ { fontWeight: 600, mb: 1 } }>
             Component → React Component
@@ -294,8 +280,8 @@ export const ConceptMapping = {
             sx prop으로 개별 컴포넌트의 스타일을 변경할 수 있습니다.
           </Typography>
         </Box>
-      </Section>
-    </Box>
+      </SectionTitle>
+    </PageContainer>
   ),
 };
 
@@ -305,7 +291,7 @@ export const ThemeStructure = {
   render: () => {
     const theme = useTheme();
     return (
-      <Box sx={ { maxWidth: 800 } }>
+      <PageContainer>
         <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
           Theme = 피그마 Styles
         </Typography>
@@ -315,7 +301,7 @@ export const ThemeStructure = {
 
         <Divider sx={ { mb: 4 } } />
 
-        <Section title="개요">
+        <SectionTitle title="개요">
           <Typography variant="body2" sx={ { mb: 3 } }>
             피그마에서 Color Styles, Text Styles, Effect Styles를 한 곳에서 관리하듯이,
             코드에서는 Theme 파일에서 모든 디자인 토큰을 관리합니다.
@@ -345,11 +331,11 @@ export const ThemeStructure = {
               </TableBody>
             </Table>
           </TableContainer>
-        </Section>
+        </SectionTitle>
 
         <Divider sx={ { mb: 4 } } />
 
-        <Section title="현재 프로젝트 Theme 값">
+        <SectionTitle title="현재 프로젝트 Theme 값">
           <TableContainer>
             <Table size="small">
               <TableBody>
@@ -368,11 +354,11 @@ export const ThemeStructure = {
               </TableBody>
             </Table>
           </TableContainer>
-        </Section>
+        </SectionTitle>
 
         <Divider sx={ { mb: 4 } } />
 
-        <Section title="ThemeProvider">
+        <SectionTitle title="ThemeProvider">
           <Typography variant="body2" sx={ { mb: 2 } }>
             피그마에서 팀 라이브러리를 퍼블리시하면 모든 파일에서 사용할 수 있듯이,
             ThemeProvider로 감싼 영역 안의 모든 컴포넌트에 테마가 자동 적용됩니다.
@@ -393,8 +379,8 @@ export const ThemeStructure = {
   <Paper />       // 자동으로 elevation, border radius 적용
 </ThemeProvider>` }
           </Box>
-        </Section>
-      </Box>
+        </SectionTitle>
+      </PageContainer>
     );
   },
 };
@@ -403,7 +389,7 @@ export const ThemeStructure = {
 export const ProjectStructure = {
   name: '3. 프로젝트 구조',
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
+    <PageContainer>
       <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
         React.js & Storybook 구조
       </Typography>
@@ -413,7 +399,7 @@ export const ProjectStructure = {
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="두 개의 독립적인 앱">
+      <SectionTitle title="두 개의 독립적인 앱">
         <Typography variant="body2" sx={ { mb: 3 } }>
           React 프로젝트에서 실제 서비스(App)와 Storybook은 완전히 별개의 앱으로 실행됩니다.
           같은 컴포넌트를 공유하지만, 시작점과 설정 파일이 다릅니다.
@@ -452,11 +438,11 @@ export const ProjectStructure = {
             </TableBody>
           </Table>
         </TableContainer>
-      </Section>
+      </SectionTitle>
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="React.js 앱 구조">
+      <SectionTitle title="React.js 앱 구조">
         <Typography variant="body2" sx={ { mb: 3 } }>
           React 앱은 항상 하나의 시작점(Entry Point)에서 시작해서 트리 구조로 컴포넌트를 렌더링합니다.
           피그마에서 최상위 Frame 안에 모든 요소가 들어가는 것과 같습니다.
@@ -500,11 +486,11 @@ export const ProjectStructure = {
             </TableBody>
           </Table>
         </TableContainer>
-      </Section>
+      </SectionTitle>
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="Storybook 구조">
+      <SectionTitle title="Storybook 구조">
         <Typography variant="body2" sx={ { mb: 3 } }>
           Storybook은 .storybook 폴더의 설정 파일들로 구성됩니다.
         </Typography>
@@ -526,11 +512,11 @@ export const ProjectStructure = {
             모든 스토리에 공통으로 적용될 설정입니다. 테마, 레이아웃, 정렬 순서 등을 정의합니다.
           </Typography>
         </Box>
-      </Section>
+      </SectionTitle>
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="스토리 파일 구조 (*.stories.jsx)">
+      <SectionTitle title="스토리 파일 구조 (*.stories.jsx)">
         <Typography variant="body2" sx={ { mb: 3 } }>
           각 스토리 파일은 하나의 컴포넌트에 대한 문서입니다.
           피그마에서 컴포넌트 페이지를 만들고 Variants를 정의하는 것과 같습니다.
@@ -581,8 +567,8 @@ export const Outlined = { args: { variant: 'outlined' } };` }
             </TableBody>
           </Table>
         </TableContainer>
-      </Section>
-    </Box>
+      </SectionTitle>
+    </PageContainer>
   ),
 };
 
@@ -590,7 +576,7 @@ export const Outlined = { args: { variant: 'outlined' } };` }
 export const StorybookGuide = {
   name: '4. Storybook 사용법',
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
+    <PageContainer>
       <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
         Storybook = 컴포넌트 플레이그라운드
       </Typography>
@@ -600,7 +586,7 @@ export const StorybookGuide = {
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="개요">
+      <SectionTitle title="개요">
         <Typography variant="body2" sx={ { mb: 3 } }>
           Storybook은 피그마의 Component Docs와 Inspect 패널을 합쳐놓은 것과 같습니다.
           실제 코드로 만들어진 컴포넌트를 시각적으로 확인하고, Props를 바꿔가며 테스트할 수 있습니다.
@@ -630,11 +616,11 @@ export const StorybookGuide = {
             </TableBody>
           </Table>
         </TableContainer>
-      </Section>
+      </SectionTitle>
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="사용 방법">
+      <SectionTitle title="사용 방법">
         <TableContainer>
           <Table size="small">
             <TableBody>
@@ -656,24 +642,24 @@ export const StorybookGuide = {
             </TableBody>
           </Table>
         </TableContainer>
-      </Section>
+      </SectionTitle>
 
       <Divider sx={ { mb: 4 } } />
 
-      <Section title="연습">
+      <SectionTitle title="연습">
         <Typography variant="body2">
           사이드바에서 Component → Button → Default로 이동한 후,
           하단 Controls에서 variant를 "outlined"로, color를 "secondary"로 바꿔보세요.
         </Typography>
-      </Section>
-    </Box>
+      </SectionTitle>
+    </PageContainer>
   ),
 };
 
 /** 기본 스토리 */
 export const Default = {
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
+    <PageContainer>
       <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
         디자이너를 위한 가이드
       </Typography>
@@ -688,7 +674,7 @@ export const Default = {
         익숙한 피그마 개념과 1:1로 매핑하여 설명합니다.
       </Typography>
 
-      <Section title="목차">
+      <SectionTitle title="목차">
         <TableContainer>
           <Table size="small">
             <TableBody>
@@ -715,11 +701,11 @@ export const Default = {
             </TableBody>
           </Table>
         </TableContainer>
-      </Section>
+      </SectionTitle>
 
       <Typography variant="body2" color="text.secondary" sx={ { mt: 4 } }>
         왼쪽 사이드바에서 각 섹션을 클릭하여 상세 내용을 확인하세요.
       </Typography>
-    </Box>
+    </PageContainer>
   ),
 };

@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/material/styles';
+import { DocumentTitle, PageContainer } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Style/Overview',
@@ -237,15 +238,24 @@ export const Default = {
     };
 
     return (
-      <Box sx={ { maxWidth: 900 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          Theme Structure
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 3 } }>
-          클릭하여 펼치기/접기 | <code>src/styles/theme.js</code>
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Theme Overview"
+          status="Available"
+          note="테마 전체 구조 탐색"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Theme Structure
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 3 } }>
+            클릭하여 펼치기/접기 | <code>src/styles/theme.js</code>
+          </Typography>
 
-        <Box sx={ { p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 } }>
+          <Box sx={ { p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 } }>
           <Box sx={ { fontFamily: 'monospace' } }>
             { Object.entries(themeStructure).map(([key, value]) => (
               <TreeNode
@@ -261,12 +271,13 @@ export const Default = {
 
         <Divider sx={ { my: 3 } } />
 
-        <Typography variant="body2" color="text.secondary">
-          이 구조는 피그마의 Local Variables 패널과 유사합니다.
-          각 카테고리(palette, typography 등)가 Variable Collection이고,
-          그 안의 값들이 개별 Variable입니다.
-        </Typography>
-      </Box>
+          <Typography variant="body2" color="text.secondary">
+            이 구조는 피그마의 Local Variables 패널과 유사합니다.
+            각 카테고리(palette, typography 등)가 Variable Collection이고,
+            그 안의 값들이 개별 Variable입니다.
+          </Typography>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -351,15 +362,24 @@ export const TableView = {
     ];
 
     return (
-      <Box sx={ { maxWidth: 800 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          Token Tables
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          주요 토큰을 테이블 형태로 확인합니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Token Tables"
+          status="Available"
+          note="주요 토큰 요약 테이블"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Token Tables
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+            주요 토큰을 테이블 형태로 확인합니다.
+          </Typography>
 
-        { tables.map((table) => (
+          { tables.map((table) => (
           <Box key={ table.title } sx={ { mb: 4 } }>
             <Typography variant="h6" sx={ { fontWeight: 600, mb: 0.5 } }>
               { table.title }
@@ -425,8 +445,9 @@ export const TableView = {
               </Box>
             </Box>
           </Box>
-        )) }
-      </Box>
+          )) }
+        </PageContainer>
+      </>
     );
   },
 };

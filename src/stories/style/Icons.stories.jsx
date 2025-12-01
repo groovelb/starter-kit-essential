@@ -13,6 +13,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { DocumentTitle, PageContainer } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Style/Icons',
@@ -145,15 +146,24 @@ export const Default = {
     const [opticalSize, setOpticalSize] = useState(24);
 
     return (
-      <Box sx={ { maxWidth: 900 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          아이콘 플레이그라운드
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          스타일과 Variable Font Axes를 조절하여 아이콘을 변경해보세요.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Icon Playground"
+          status="Available"
+          note="Material Symbols 아이콘 테스트"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            아이콘 플레이그라운드
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+            스타일과 Variable Font Axes를 조절하여 아이콘을 변경해보세요.
+          </Typography>
 
-        <Grid container spacing={ 4 }>
+          <Grid container spacing={ 4 }>
           {/* 아이콘 미리보기 */}
           <Grid size={ { xs: 12, md: 5 } }>
             <Paper sx={ { p: 4, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' } }>
@@ -315,7 +325,8 @@ export const Default = {
 </span>` }
           </Box>
         </Paper>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -326,13 +337,22 @@ export const FillComparison = {
     const icons = ['favorite', 'star', 'bookmark', 'check_circle', 'thumb_up', 'visibility'];
 
     return (
-      <Box sx={ { maxWidth: 800 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          Fill 비교
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          Fill 값을 0에서 1로 변경하면 아이콘이 채워집니다. 토글 상태 표현에 유용합니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Icon Fill"
+          status="Available"
+          note="Fill 속성 비교"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Fill 비교
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+            Fill 값을 0에서 1로 변경하면 아이콘이 채워집니다. 토글 상태 표현에 유용합니다.
+          </Typography>
 
         <Grid container spacing={ 3 }>
           { icons.map((icon) => (
@@ -360,7 +380,8 @@ export const FillComparison = {
             • 별점: Fill로 선택/미선택 상태 표현
           </Typography>
         </Paper>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -372,13 +393,22 @@ export const WeightComparison = {
     const icon = 'settings';
 
     return (
-      <Box sx={ { maxWidth: 800 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          Weight 비교
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          Weight는 100(Thin)에서 700(Bold)까지 조절할 수 있습니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Icon Weight"
+          status="Available"
+          note="Weight 속성 비교"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Weight 비교
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+            Weight는 100(Thin)에서 700(Bold)까지 조절할 수 있습니다.
+          </Typography>
 
         <Paper sx={ { p: 4 } }>
           <Box sx={ { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 2 } }>
@@ -422,7 +452,8 @@ export const WeightComparison = {
             </Paper>
           </Grid>
         </Grid>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -433,13 +464,22 @@ export const PopularIcons = {
     const [selectedIcon, setSelectedIcon] = useState(null);
 
     return (
-      <Box sx={ { maxWidth: 1000 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          인기 아이콘
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          자주 사용되는 아이콘 모음입니다. 클릭하면 아이콘 이름을 복사합니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Popular Icons"
+          status="Available"
+          note="자주 사용되는 아이콘"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            인기 아이콘
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+            자주 사용되는 아이콘 모음입니다. 클릭하면 아이콘 이름을 복사합니다.
+          </Typography>
 
         <Paper sx={ { p: 3 } }>
           <Grid container spacing={ 1 }>
@@ -502,7 +542,8 @@ export const PopularIcons = {
             에서 확인하세요.
           </Typography>
         </Box>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -510,13 +551,22 @@ export const PopularIcons = {
 /** 카테고리별 아이콘 */
 export const IconsByCategory = {
   render: () => (
-    <Box sx={ { maxWidth: 1000 } }>
-      <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-        카테고리별 아이콘
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-        용도별로 분류된 아이콘입니다.
-      </Typography>
+    <>
+      <DocumentTitle
+        title="Icons by Category"
+        status="Available"
+        note="카테고리별 아이콘 분류"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+          카테고리별 아이콘
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+          용도별로 분류된 아이콘입니다.
+        </Typography>
 
       <Stack spacing={ 4 }>
         { Object.entries(iconCategories).map(([category, icons]) => (
@@ -540,7 +590,8 @@ export const IconsByCategory = {
           </Box>
         )) }
       </Stack>
-    </Box>
+      </PageContainer>
+    </>
   ),
 };
 
@@ -551,13 +602,22 @@ export const SizeComparison = {
     const icon = 'favorite';
 
     return (
-      <Box sx={ { maxWidth: 800 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          크기 비교
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          다양한 크기의 아이콘을 비교합니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Icon Sizes"
+          status="Available"
+          note="다양한 크기 비교"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            크기 비교
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+            다양한 크기의 아이콘을 비교합니다.
+          </Typography>
 
         <Paper sx={ { p: 4 } }>
           <Box sx={ { display: 'flex', alignItems: 'flex-end', gap: 3, flexWrap: 'wrap' } }>
@@ -612,7 +672,8 @@ export const SizeComparison = {
             </Paper>
           </Grid>
         </Grid>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -630,13 +691,22 @@ export const IconColors = {
     ];
 
     return (
-      <Box sx={ { maxWidth: 800 } }>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          색상 적용
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          테마 색상을 아이콘에 적용할 수 있습니다.
-        </Typography>
+      <>
+        <DocumentTitle
+          title="Icon Colors"
+          status="Available"
+          note="아이콘에 색상 적용"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            색상 적용
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+            테마 색상을 아이콘에 적용할 수 있습니다.
+          </Typography>
 
         <Grid container spacing={ 2 }>
           { colors.map((c) => (
@@ -681,7 +751,8 @@ export const IconColors = {
 </span>` }
           </Box>
         </Paper>
-      </Box>
+        </PageContainer>
+      </>
     );
   },
 };
@@ -689,13 +760,22 @@ export const IconColors = {
 /** 사용 예시 */
 export const UsageExamples = {
   render: () => (
-    <Box sx={ { maxWidth: 800 } }>
-      <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-        사용 예시
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-        실제 UI에서 아이콘을 활용하는 방법입니다.
-      </Typography>
+    <>
+      <DocumentTitle
+        title="Icon Usage"
+        status="Available"
+        note="아이콘 실제 활용 예시"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+          사용 예시
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+          실제 UI에서 아이콘을 활용하는 방법입니다.
+        </Typography>
 
       <Stack spacing={ 4 }>
         {/* 버튼과 함께 */}
@@ -848,6 +928,7 @@ export const UsageExamples = {
           </Paper>
         </Box>
       </Stack>
-    </Box>
+      </PageContainer>
+    </>
   ),
 };
