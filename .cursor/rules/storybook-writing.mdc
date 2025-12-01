@@ -7,208 +7,137 @@ alwaysApply: false
 
 ## 문서 스타일 원칙
 
-Carbon Design System을 참고한 정제된 공식 문서 스타일을 따른다.
+공식 기술 문서 스타일을 따른다. 장식보다 정보 전달에 집중한다.
 
 | 원칙 | 설명 |
 |------|------|
-| 미니멀 | 불필요한 장식, 이모지, 과한 강조 배제 |
-| 전문적 | 공식 문서처럼 신뢰감 있는 톤 |
-| 명확함 | 한 문장으로 핵심 전달 |
-| 일관성 | 모든 컴포넌트 문서가 동일한 구조 |
+| 보수적 | 최소한의 스타일링, 장식 요소 배제 |
+| 전문적 | 기술 문서처럼 신뢰감 있는 톤 |
+| 구조적 | 명확한 계층과 섹션 구분 |
+| 일관성 | 모든 문서가 동일한 레이아웃 구조 |
 
 ### 금지 사항
-- 🚫 이모지 과다 사용
-- 🚫 "멋진", "강력한" 등 마케팅 문구
-- 🚫 불필요한 색상 강조
-- 🚫 장황한 설명
+
+- Paper, Card 컴포넌트의 장식적 사용 금지
+- elevation, boxShadow 사용 금지
+- 불필요한 배경색, 그라데이션 금지
+- 이모지 과다 사용 금지
+- 마케팅 문구 금지
 
 ---
 
-## 컴포넌트 설명 (docs.description)
+## 필수 문서 컴포넌트
 
-디자이너가 이해할 수 있는 언어로 작성한다.
+`src/components/storybookDocumentation/` 내 컴포넌트를 적극 사용한다.
+
+### DocumentTitle
+
+모든 스토리 상단에 고정 헤더로 문서 메타 정보를 표시한다.
+
+```jsx
+import { DocumentTitle } from '../../components/storybookDocumentation';
+
+<DocumentTitle
+  title="문서 제목"
+  status="Available"
+  note="간단한 설명"
+  brandName="Design System"
+  systemName="Starter Kit"
+  version="1.0"
+/>
+```
+
+### PageContainer
+
+모든 스토리 콘텐츠를 감싸는 컨테이너. xl 브레이크포인트 기준 최대 너비 적용.
+
+```jsx
+import { PageContainer } from '../../components/storybookDocumentation';
+
+<PageContainer>
+  {/* 콘텐츠 */}
+</PageContainer>
+```
+
+### SectionTitle
+
+콘텐츠 섹션 구분용 타이틀. 하단 보더로 시각적 구분.
+
+```jsx
+import { SectionTitle } from '../../components/storybookDocumentation';
+
+<SectionTitle
+  title="섹션 제목"
+  description="섹션에 대한 부가 설명 (선택)"
+/>
+```
+
+---
+
+## 스토리 구조 템플릿
+
+### Style/Overview 섹션용 (문서형)
+
+Style 섹션은 인터랙티브 컴포넌트가 아닌 정적 문서이므로, 문서형 구조를 사용한다.
+
+```jsx
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import { DocumentTitle, PageContainer, SectionTitle } from '../../components/storybookDocumentation';
+
+export default {
+  title: 'Style/DocumentName',
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component: `
+## 문서 제목
+
+한 문장 정의.
 
 ### 구조
-
-```markdown
-## 컴포넌트명
-
-한 문장 정의. (이 컴포넌트가 무엇인지)
-
-### 용도
-- 언제 사용하는지 (When to use)
-- 어떤 맥락에서 적합한지
-
-### 주요 특징
-- 특징 1
-- 특징 2
-```
-
-### 예시 (Good)
-
-```jsx
-docs: {
-  description: {
-    component: `
-## Button
-
-사용자 인터랙션을 유도하는 기본 액션 요소입니다.
-
-### 용도
-- 폼 제출, 다이얼로그 확인 등 명확한 액션이 필요할 때
-- 페이지 내 주요 행동을 강조할 때
-
-### 주요 특징
-- 3가지 강조 수준: Contained(강조) → Outlined(보조) → Text(약함)
-- 6가지 색상 테마 지원
-    `,
-  },
-},
-```
-
-### 예시 (Bad)
-
-```jsx
-// ❌ 너무 간략함
-component: `버튼 컴포넌트입니다.`
-
-// ❌ 개발자 용어 과다
-component: `onClick 핸들러를 받아 이벤트를 트리거하는 컴포넌트`
-
-// ❌ 마케팅 문구
-component: `강력하고 유연한 버튼! 다양한 스타일을 지원합니다! ✨`
-```
-
----
-
-## argTypes 정의 규칙
-
-### 필수 요소
-
-```jsx
-argTypes: {
-  propName: {
-    control: 'select',           // 적절한 control 타입
-    options: ['a', 'b', 'c'],    // select/radio일 경우
-    description: '한국어 설명',   // 디자이너 친화적 설명
-    table: {
-      type: { summary: 'string' },
-      defaultValue: { summary: 'a' },
+- 항목 1
+- 항목 2
+        `,
+      },
     },
   },
-},
-```
+};
 
-### control 타입 가이드
-
-| props 타입 | control | 비고 |
-|-----------|---------|------|
-| 열거형 (3개 이하) | `radio` | 한눈에 보임 |
-| 열거형 (4개 이상) | `select` | 드롭다운 |
-| boolean | `boolean` | 토글 |
-| string | `text` | 텍스트 입력 |
-| number | `number` | 숫자 입력 |
-| 색상 | `color` | 컬러 피커 |
-| 객체/배열 | 정의하지 않음 | 문서 설명으로 대체 |
-
-### description 작성
-
-```jsx
-// ✅ Good - 디자이너 관점
-description: '버튼의 시각적 강조 수준을 결정합니다.'
-description: '컴포넌트의 전체 너비 확장 여부를 지정합니다.'
-
-// ❌ Bad - 개발자 용어
-description: 'variant prop의 값'
-description: 'boolean 타입의 fullWidth 속성'
-```
-
----
-
-## 스토리 구성 규칙
-
-### 필수 스토리
-
-| 스토리 | 목적 | 필수 |
-|--------|------|------|
-| Default | 가장 일반적인 사용 예시 | ✅ 필수 |
-
-### 선택 스토리 (필요 시에만)
-
-| 스토리 | 목적 | 포함 기준 |
-|--------|------|----------|
-| AllVariants | 주요 변형 한눈에 비교 | variant가 3개 이상일 때 |
-| Sizes | 크기 변형 비교 | size prop 있을 때 |
-| States | disabled, loading 등 | 상태 변형 있을 때 |
-
-### 스토리 개수 제한
-
-- **최소**: 1개 (Default)
-- **권장**: 3-5개
-- **최대**: 7개 (이상 시 분리 고려)
-
-### 금지 사항
-
-```jsx
-// ❌ 과한 색상 나열
-export const AllColors = {
+/** 메인 문서 */
+export const Default = {
   render: () => (
     <>
-      <Button color="primary">Primary</Button>
-      <Button color="secondary">Secondary</Button>
-      <Button color="success">Success</Button>
-      <Button color="error">Error</Button>
-      <Button color="info">Info</Button>
-      <Button color="warning">Warning</Button>
-      // ... 12가지 색상 전부 나열
+      <DocumentTitle
+        title="문서 제목"
+        status="Available"
+        note="설명"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+          페이지 제목
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
+          페이지 설명
+        </Typography>
+
+        <SectionTitle title="섹션 1" />
+        {/* Table 또는 콘텐츠 */}
+
+        <SectionTitle title="섹션 2" description="부가 설명" />
+        {/* Table 또는 콘텐츠 */}
+      </PageContainer>
     </>
   ),
 };
-
-// ✅ 대표 색상만
-export const Colors = {
-  render: () => (
-    <Stack direction="row" spacing={ 2 }>
-      <Button color="primary">Primary</Button>
-      <Button color="secondary">Secondary</Button>
-      <Button color="error">Error</Button>
-    </Stack>
-  ),
-};
 ```
 
----
-
-## 색상/스타일링 제한
-
-### 원칙
-
-- 흑백 기반 + 브랜드 컬러(Primary)만 강조
-- 무지개색 그라데이션 금지
-- 배경색 사용 최소화
-
-### 시연 스토리 스타일
-
-```jsx
-// ✅ 깔끔한 배치
-render: () => (
-  <Stack direction="row" spacing={ 2 }>
-    <Button variant="contained">Contained</Button>
-    <Button variant="outlined">Outlined</Button>
-  </Stack>
-),
-
-// ❌ 과한 스타일링
-render: () => (
-  <Box sx={{ background: 'linear-gradient(...)', padding: 4 }}>
-    <Button>Fancy Button</Button>
-  </Box>
-),
-```
-
----
-
-## 파일 구조 템플릿
+### Component 섹션용 (인터랙티브형)
 
 ```jsx
 import Component from 'path/to/Component';
@@ -230,10 +159,6 @@ export default {
 ### 용도
 - 용도 1
 - 용도 2
-
-### 주요 특징
-- 특징 1
-- 특징 2
         `,
       },
     },
@@ -243,34 +168,136 @@ export default {
   },
 };
 
-/** 기본 사용 예시 */
 export const Default = {
   args: {
     // 기본 args
   },
 };
-
-/** 변형 비교 (필요 시) */
-export const AllVariants = {
-  render: () => (
-    <Stack direction="row" spacing={ 2 }>
-      {/* 변형 나열 */}
-    </Stack>
-  ),
-};
 ```
 
 ---
 
-## 스토리 title 네이밍
+## 콘텐츠 스타일링 규칙
 
-| 섹션 | title 형식 | 예시 |
-|------|-----------|------|
-| Overview | `Overview/문서명` | `Overview/Introduction` |
-| Style | `Style/토큰명` | `Style/Colors` |
-| Component | `Component/컴포넌트명` | `Component/Button` |
-| Template | `Template/템플릿명` | `Template/CardGrid` |
-| Page | `Page/페이지명` | `Page/MainPage` |
+### 정보 표시용 컴포넌트
+
+| 용도 | 권장 | 금지 |
+|------|------|------|
+| 데이터 나열 | Table, TableContainer | Card 그리드 |
+| 섹션 구분 | SectionTitle, Divider | Paper elevation |
+| 색상 블록 | Box with backgroundColor | Card, Paper |
+| 코드 예시 | Box component="pre" | Paper elevation |
+
+### 허용되는 스타일링
+
+```jsx
+// ✅ 테이블로 정보 표시
+<TableContainer>
+  <Table size="small">
+    <TableBody>
+      <TableRow>
+        <TableCell sx={ { fontWeight: 600 } }>키</TableCell>
+        <TableCell>값</TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</TableContainer>
+
+// ✅ 색상 블록 (장식 없음)
+<Box
+  sx={ {
+    width: 80,
+    height: 80,
+    backgroundColor: color,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  } }
+>
+  <Typography variant="caption">{ label }</Typography>
+</Box>
+
+// ✅ 코드 블록
+<Box
+  component="pre"
+  sx={ {
+    backgroundColor: 'grey.100',
+    p: 2,
+    fontSize: 12,
+    fontFamily: 'monospace',
+    overflow: 'auto',
+  } }
+>
+  {code}
+</Box>
+```
+
+### 금지되는 스타일링
+
+```jsx
+// ❌ 장식적 Paper 사용
+<Paper sx={ { p: 3, elevation: 2 } }>
+  <Typography>내용</Typography>
+</Paper>
+
+// ❌ Card 그리드
+<Grid container spacing={ 2 }>
+  <Grid item>
+    <Card><CardContent>...</CardContent></Card>
+  </Grid>
+</Grid>
+
+// ❌ 그림자, 보더 장식
+<Box sx={ { boxShadow: 3, border: '2px solid primary.main' } }>
+```
+
+---
+
+## 스토리 구성 규칙
+
+### Style 섹션
+
+Style 섹션은 디자인 토큰 문서이므로 단일 문서형 스토리를 권장한다.
+
+| 접근 방식 | 설명 |
+|----------|------|
+| 단일 스토리 | 모든 정보를 하나의 Default 스토리에 SectionTitle로 구분 |
+| 다중 스토리 | 정보량이 많을 경우 주제별로 분리 (최대 3-4개) |
+
+### Component 섹션
+
+| 스토리 | 목적 | 필수 |
+|--------|------|------|
+| Default | 기본 사용 예시, args 연동 | 필수 |
+| Variants | 주요 변형 비교 | 선택 |
+
+### 스토리 개수 제한
+
+- Style 섹션: 1-3개 권장
+- Component 섹션: 1-5개 권장
+
+---
+
+## 타이포그래피 규칙
+
+### 페이지 제목
+
+```jsx
+<Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+  제목
+</Typography>
+<Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
+  부제목/설명
+</Typography>
+```
+
+### 테이블 스타일
+
+```jsx
+<TableCell sx={ { fontWeight: 600 } }>헤더</TableCell>
+<TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>코드값</TableCell>
+<TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>설명</TableCell>
+```
 
 ---
 
@@ -278,9 +305,9 @@ export const AllVariants = {
 
 스토리 작성 완료 전 확인:
 
-- [ ] 한 문장 정의가 명확한가?
-- [ ] 용도/특징이 디자이너 관점인가?
-- [ ] argTypes에 description이 모두 있는가?
-- [ ] 불필요한 스토리는 없는가? (3-5개 적정)
-- [ ] 과한 색상/스타일링은 없는가?
-- [ ] 이모지/마케팅 문구는 없는가?
+- [ ] DocumentTitle이 적용되어 있는가?
+- [ ] PageContainer로 감싸져 있는가?
+- [ ] SectionTitle로 섹션이 구분되어 있는가?
+- [ ] 불필요한 Paper, Card, elevation이 없는가?
+- [ ] Table로 정보가 정리되어 있는가?
+- [ ] 과한 색상/장식이 없는가?

@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useTheme } from '@mui/material/styles';
-import { DocumentTitle, PageContainer } from '../../components/storybookDocumentation';
+import { DocumentTitle, PageContainer, SectionTitle } from '../../components/storybookDocumentation';
 
 export default {
   title: 'Style/Typography',
@@ -19,19 +20,25 @@ export default {
 
 프로젝트에서 사용하는 폰트와 텍스트 스타일입니다.
 
-### 폰트 패밀리
-- 본문: Pretendard Variable
-- 헤드라인 (영문): Outfit
-- 헤드라인 (한글): Pretendard (Black)
+### 구조
+- Font Family: 폰트 패밀리 설정
+- Typography Scale: variant별 크기와 용도
         `,
       },
     },
   },
 };
 
+/** 타이포그래피 문서 */
 export const Default = {
   render: () => {
     const theme = useTheme();
+
+    const fontFamilyData = [
+      { role: '본문', font: 'Pretendard Variable', usage: '일반 텍스트, body, caption' },
+      { role: '헤드라인 (영문)', font: 'Outfit', usage: 'h1-h6 영문 타이틀' },
+      { role: '헤드라인 (한글)', font: 'Pretendard Black', usage: 'h1-h6 한글 타이틀' },
+    ];
 
     const typographyData = [
       { variant: 'h1', sample: 'h1. Heading', usage: '페이지 메인 타이틀' },
@@ -47,6 +54,13 @@ export const Default = {
       { variant: 'button', sample: 'BUTTON TEXT', usage: '버튼 텍스트' },
       { variant: 'caption', sample: 'caption text', usage: '캡션, 주석' },
       { variant: 'overline', sample: 'OVERLINE TEXT', usage: '레이블, 카테고리' },
+    ];
+
+    const fontWeightData = [
+      { weight: 300, name: 'Light', token: 'fontWeightLight' },
+      { weight: 400, name: 'Regular', token: 'fontWeightRegular' },
+      { weight: 500, name: 'Medium', token: 'fontWeightMedium' },
+      { weight: 700, name: 'Bold', token: 'fontWeightBold' },
     ];
 
     return (
@@ -67,37 +81,91 @@ export const Default = {
             텍스트 스타일과 폰트 설정을 확인합니다.
           </Typography>
 
-          <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={ { fontWeight: 600, width: '12%' } }>Variant</TableCell>
-                <TableCell sx={ { fontWeight: 600, width: '10%' } }>Size</TableCell>
-                <TableCell sx={ { fontWeight: 600 } }>Sample</TableCell>
-                <TableCell sx={ { fontWeight: 600, width: '15%' } }>용도</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              { typographyData.map((row) => (
-                <TableRow key={ row.variant }>
-                  <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>
-                    { row.variant }
-                  </TableCell>
-                  <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>
-                    { theme.typography[row.variant]?.fontSize || '-' }
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant={ row.variant }>
-                      { row.sample }
-                    </Typography>
-                  </TableCell>
-                  <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>
-                    { row.usage }
-                  </TableCell>
+          <SectionTitle title="Font Family" description="프로젝트에서 사용하는 폰트 패밀리" />
+
+          <TableContainer sx={ { mb: 6 } }>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600, width: '20%' } }>역할</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '30%' } }>Font</TableCell>
+                  <TableCell sx={ { fontWeight: 600 } }>적용 대상</TableCell>
                 </TableRow>
-              )) }
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                { fontFamilyData.map((row) => (
+                  <TableRow key={ row.role }>
+                    <TableCell sx={ { fontWeight: 600 } }>{ row.role }</TableCell>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>{ row.font }</TableCell>
+                    <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>{ row.usage }</TableCell>
+                  </TableRow>
+                )) }
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <SectionTitle title="Typography Scale" description="variant별 크기와 용도" />
+
+          <TableContainer sx={ { mb: 6 } }>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600, width: '12%' } }>Variant</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '10%' } }>Size</TableCell>
+                  <TableCell sx={ { fontWeight: 600 } }>Sample</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '15%' } }>용도</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                { typographyData.map((row) => (
+                  <TableRow key={ row.variant }>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>
+                      { row.variant }
+                    </TableCell>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>
+                      { theme.typography[row.variant]?.fontSize || '-' }
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant={ row.variant }>
+                        { row.sample }
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>
+                      { row.usage }
+                    </TableCell>
+                  </TableRow>
+                )) }
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <SectionTitle title="Font Weight" description="텍스트 굵기 토큰" />
+
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600, width: '15%' } }>Weight</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '20%' } }>Name</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '25%' } }>Token</TableCell>
+                  <TableCell sx={ { fontWeight: 600 } }>Sample</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                { fontWeightData.map((row) => (
+                  <TableRow key={ row.weight }>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>{ row.weight }</TableCell>
+                    <TableCell>{ row.name }</TableCell>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>{ row.token }</TableCell>
+                    <TableCell>
+                      <Box component="span" sx={ { fontWeight: row.weight } }>
+                        The quick brown fox jumps
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )) }
+              </TableBody>
+            </Table>
           </TableContainer>
         </PageContainer>
       </>

@@ -1,63 +1,14 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Slider from '@mui/material/Slider';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { DocumentTitle, PageContainer } from '../../components/storybookDocumentation';
-
-export default {
-  title: 'Style/Icons',
-  parameters: {
-    layout: 'padded',
-    docs: {
-      description: {
-        component: `
-## Material Symbols
-
-Google Material Symbols는 2,500개 이상의 아이콘을 제공하는 Variable Font 기반 아이콘 시스템입니다.
-
-### 스타일 종류
-
-| Style | 클래스명 | 특징 |
-|-------|---------|------|
-| **Outlined** | \`material-symbols-outlined\` | 기본 스타일, 선으로 표현 |
-| **Rounded** | \`material-symbols-rounded\` | 둥근 모서리 |
-| **Sharp** | \`material-symbols-sharp\` | 날카로운 모서리 |
-
-### Variable Font Axes
-
-| Axis | 범위 | 용도 |
-|------|------|------|
-| **Fill** | 0-1 | 채워진/빈 아이콘 전환 |
-| **Weight** | 100-700 | 획 굵기 (Thin ~ Bold) |
-| **Grade** | -50~200 | 미세한 두께 조정 |
-| **Optical Size** | 20-48 | 크기별 획 최적화 |
-
-### 사용법
-
-\`\`\`jsx
-<span
-  className="material-symbols-rounded"
-  style={{ fontVariationSettings: "'FILL' 1, 'wght' 400" }}
->
-  home
-</span>
-\`\`\`
-        `,
-      },
-    },
-  },
-};
+import { DocumentTitle, PageContainer, SectionTitle } from '../../components/storybookDocumentation';
 
 /** 스타일별 클래스명 매핑 */
 const STYLE_CLASS_MAP = {
@@ -68,19 +19,6 @@ const STYLE_CLASS_MAP = {
 
 /**
  * MaterialSymbol 컴포넌트
- *
- * Props:
- * @param {string} name - 아이콘 이름 [Required]
- * @param {string} variant - 스타일 종류 (outlined, rounded, sharp) [Optional, 기본값: 'outlined']
- * @param {number} size - 아이콘 크기 (px) [Optional, 기본값: 24]
- * @param {boolean} fill - 채움 여부 [Optional, 기본값: false]
- * @param {number} weight - 획 굵기 (100-700) [Optional, 기본값: 400]
- * @param {number} grade - 미세 두께 (-50~200) [Optional, 기본값: 0]
- * @param {number} opticalSize - 광학 크기 (20-48) [Optional, 기본값: 24]
- * @param {string} color - 아이콘 색상 [Optional, 기본값: 'inherit']
- *
- * Example usage:
- * <MaterialSymbol name="home" variant="rounded" fill size={24} />
  */
 const MaterialSymbol = ({
   name,
@@ -88,847 +26,483 @@ const MaterialSymbol = ({
   size = 24,
   fill = false,
   weight = 400,
-  grade = 0,
-  opticalSize = 24,
   color = 'inherit',
-  ...props
 }) => (
   <span
     className={ STYLE_CLASS_MAP[variant] || STYLE_CLASS_MAP.outlined }
     style={ {
       fontSize: size,
       color,
-      fontVariationSettings: `'FILL' ${fill ? 1 : 0}, 'wght' ${weight}, 'GRAD' ${grade}, 'opsz' ${opticalSize}`,
+      fontVariationSettings: `'FILL' ${fill ? 1 : 0}, 'wght' ${weight}`,
       lineHeight: 1,
       display: 'inline-block',
       verticalAlign: 'middle',
     } }
-    { ...props }
   >
     { name }
   </span>
 );
 
+export default {
+  title: 'Style/Icons',
+  component: MaterialSymbol,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component: `
+## Material Symbols
+
+Google Material Symbols는 2,500개 이상의 아이콘을 제공하는 Variable Font 기반 아이콘 시스템입니다.
+
+### 구조
+- Style: Outlined, Rounded, Sharp
+- Variable Font Axes: Fill, Weight, Grade, Optical Size
+
+### 사용법
+Controls 패널에서 아이콘 속성을 실시간으로 변경해보세요.
+        `,
+      },
+    },
+  },
+  argTypes: {
+    name: {
+      control: 'text',
+      description: '아이콘 이름 (Material Symbols 이름)',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'favorite' },
+      },
+    },
+    variant: {
+      control: 'select',
+      options: ['outlined', 'rounded', 'sharp'],
+      description: '아이콘 스타일',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'outlined' },
+      },
+    },
+    size: {
+      control: { type: 'range', min: 16, max: 96, step: 4 },
+      description: '아이콘 크기 (px)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: 24 },
+      },
+    },
+    fill: {
+      control: 'boolean',
+      description: '채움 여부 (Fill axis)',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: false },
+      },
+    },
+    weight: {
+      control: { type: 'range', min: 100, max: 700, step: 100 },
+      description: '굵기 (Weight axis)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: 400 },
+      },
+    },
+    color: {
+      control: 'color',
+      description: '아이콘 색상',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'inherit' },
+      },
+    },
+  },
+};
+
 /** 인기 아이콘 목록 */
 const popularIcons = [
   'home', 'search', 'settings', 'person', 'favorite', 'star',
   'check_circle', 'delete', 'add', 'close', 'menu', 'more_vert',
-  'arrow_back', 'arrow_forward', 'expand_more', 'expand_less',
-  'visibility', 'visibility_off', 'edit', 'content_copy',
-  'share', 'download', 'upload', 'refresh', 'sync', 'cloud',
-  'folder', 'file_copy', 'attachment', 'link', 'image', 'video_camera_back',
-  'mail', 'send', 'chat', 'notifications', 'alarm', 'schedule',
-  'lock', 'lock_open', 'key', 'security', 'verified', 'warning',
-  'info', 'help', 'error', 'check', 'priority_high', 'lightbulb',
+  'arrow_back', 'arrow_forward', 'expand_more', 'visibility',
+  'edit', 'content_copy', 'share', 'download', 'mail', 'notifications',
+  'lock', 'warning', 'info', 'help', 'error', 'check',
 ];
 
-/** 카테고리별 아이콘 */
-const iconCategories = {
-  'Action': ['home', 'search', 'settings', 'bookmark', 'favorite', 'shopping_cart', 'thumb_up', 'thumb_down'],
-  'Navigation': ['menu', 'close', 'arrow_back', 'arrow_forward', 'expand_more', 'chevron_right', 'first_page', 'last_page'],
-  'Content': ['add', 'remove', 'create', 'content_copy', 'content_paste', 'delete', 'archive', 'inventory'],
-  'Communication': ['mail', 'call', 'chat', 'message', 'forum', 'comment', 'send', 'contact_mail'],
-  'Alert': ['error', 'warning', 'info', 'help', 'notification_important', 'report', 'feedback', 'new_releases'],
-  'File': ['folder', 'file_copy', 'attachment', 'cloud_upload', 'cloud_download', 'save', 'print', 'description'],
-  'Social': ['person', 'group', 'share', 'public', 'thumb_up', 'mood', 'sentiment_satisfied', 'emoji_emotions'],
-  'Device': ['smartphone', 'computer', 'tablet', 'watch', 'headphones', 'keyboard', 'mouse', 'monitor'],
-};
-
-/** 기본 - 아이콘 플레이그라운드 */
+/** 기본 아이콘 - Controls에서 스타일 확인 */
 export const Default = {
-  render: () => {
-    const [iconName, setIconName] = useState('home');
-    const [variant, setVariant] = useState('outlined');
-    const [size, setSize] = useState(48);
-    const [fill, setFill] = useState(false);
-    const [weight, setWeight] = useState(400);
-    const [grade, setGrade] = useState(0);
-    const [opticalSize, setOpticalSize] = useState(24);
-
-    return (
-      <>
-        <DocumentTitle
-          title="Icon Playground"
-          status="Available"
-          note="Material Symbols 아이콘 테스트"
-          brandName="Design System"
-          systemName="Starter Kit"
-          version="1.0"
-        />
-        <PageContainer>
-          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-            아이콘 플레이그라운드
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-            스타일과 Variable Font Axes를 조절하여 아이콘을 변경해보세요.
-          </Typography>
-
-          <Grid container spacing={ 4 }>
-          {/* 아이콘 미리보기 */}
-          <Grid size={ { xs: 12, md: 5 } }>
-            <Paper sx={ { p: 4, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' } }>
-              <Box sx={ { mb: 3 } }>
-                <MaterialSymbol
-                  name={ iconName }
-                  variant={ variant }
-                  size={ size }
-                  fill={ fill }
-                  weight={ weight }
-                  grade={ grade }
-                  opticalSize={ opticalSize }
-                  color="#0000FF"
-                />
-              </Box>
-              <Typography variant="h6" sx={ { fontFamily: 'monospace' } }>
-                { iconName }
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                { variant } · { size }px { fill ? '· filled' : '' }
-              </Typography>
-            </Paper>
-          </Grid>
-
-          {/* 컨트롤 패널 */}
-          <Grid size={ { xs: 12, md: 7 } }>
-            <Paper sx={ { p: 3 } }>
-              <Typography variant="subtitle2" sx={ { mb: 2, fontWeight: 600 } }>
-                아이콘 이름
-              </Typography>
-              <TextField
-                fullWidth
-                size="small"
-                value={ iconName }
-                onChange={ (e) => setIconName(e.target.value) }
-                placeholder="아이콘 이름 입력"
-                sx={ { mb: 3 } }
-                slotProps={ {
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <MaterialSymbol name="search" size={ 20 } variant={ variant } />
-                      </InputAdornment>
-                    ),
-                  },
-                } }
-              />
-
-              <Typography variant="subtitle2" sx={ { mb: 2, fontWeight: 600 } }>
-                Style
-              </Typography>
-              <ToggleButtonGroup
-                value={ variant }
-                exclusive
-                onChange={ (e, v) => v && setVariant(v) }
-                size="small"
-                sx={ { mb: 3 } }
-              >
-                <ToggleButton value="outlined">
-                  <MaterialSymbol name="category" size={ 20 } variant="outlined" />
-                  <Typography variant="caption" sx={ { ml: 1 } }>Outlined</Typography>
-                </ToggleButton>
-                <ToggleButton value="rounded">
-                  <MaterialSymbol name="category" size={ 20 } variant="rounded" />
-                  <Typography variant="caption" sx={ { ml: 1 } }>Rounded</Typography>
-                </ToggleButton>
-                <ToggleButton value="sharp">
-                  <MaterialSymbol name="category" size={ 20 } variant="sharp" />
-                  <Typography variant="caption" sx={ { ml: 1 } }>Sharp</Typography>
-                </ToggleButton>
-              </ToggleButtonGroup>
-
-              <Box sx={ { mb: 3 } }>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={ fill }
-                      onChange={ (e) => setFill(e.target.checked) }
-                    />
-                  }
-                  label={
-                    <Typography variant="subtitle2" sx={ { fontWeight: 600 } }>
-                      Fill
-                    </Typography>
-                  }
-                />
-              </Box>
-
-              <Typography variant="subtitle2" sx={ { mb: 2, fontWeight: 600 } }>
-                Size: { size }px
-              </Typography>
-              <Slider
-                value={ size }
-                onChange={ (e, v) => setSize(v) }
-                min={ 16 }
-                max={ 96 }
-                sx={ { mb: 3 } }
-              />
-
-              <Typography variant="subtitle2" sx={ { mb: 2, fontWeight: 600 } }>
-                Weight: { weight }
-              </Typography>
-              <Slider
-                value={ weight }
-                onChange={ (e, v) => setWeight(v) }
-                min={ 100 }
-                max={ 700 }
-                step={ 100 }
-                marks
-                sx={ { mb: 3 } }
-              />
-
-              <Typography variant="subtitle2" sx={ { mb: 2, fontWeight: 600 } }>
-                Grade: { grade }
-              </Typography>
-              <Slider
-                value={ grade }
-                onChange={ (e, v) => setGrade(v) }
-                min={ -50 }
-                max={ 200 }
-                sx={ { mb: 3 } }
-              />
-
-              <Typography variant="subtitle2" sx={ { mb: 2, fontWeight: 600 } }>
-                Optical Size: { opticalSize }
-              </Typography>
-              <Slider
-                value={ opticalSize }
-                onChange={ (e, v) => setOpticalSize(v) }
-                min={ 20 }
-                max={ 48 }
-              />
-            </Paper>
-          </Grid>
-        </Grid>
-
-        {/* 코드 미리보기 */}
-        <Paper sx={ { p: 3, mt: 4, backgroundColor: '#263238' } }>
-          <Typography variant="subtitle2" sx={ { color: '#80cbc4', mb: 2 } }>
-            코드 예시
-          </Typography>
-          <Box
-            component="pre"
-            sx={ {
-              color: '#aed581',
-              fontSize: '12px',
-              overflow: 'auto',
-              m: 0,
-            } }
-          >
-{ `<span
-  className="material-symbols-${variant}"
-  style={{
-    fontSize: ${size},
-    fontVariationSettings: "'FILL' ${fill ? 1 : 0}, 'wght' ${weight}, 'GRAD' ${grade}, 'opsz' ${opticalSize}"
-  }}
->
-  ${iconName}
-</span>` }
-          </Box>
-        </Paper>
-        </PageContainer>
-      </>
-    );
+  args: {
+    name: 'favorite',
+    variant: 'outlined',
+    size: 48,
+    fill: false,
+    weight: 400,
+    color: '#0000FF',
   },
 };
 
-/** Fill 비교 */
-export const FillComparison = {
-  render: () => {
-    const icons = ['favorite', 'star', 'bookmark', 'check_circle', 'thumb_up', 'visibility'];
-
-    return (
-      <>
-        <DocumentTitle
-          title="Icon Fill"
-          status="Available"
-          note="Fill 속성 비교"
-          brandName="Design System"
-          systemName="Starter Kit"
-          version="1.0"
-        />
-        <PageContainer>
-          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-            Fill 비교
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-            Fill 값을 0에서 1로 변경하면 아이콘이 채워집니다. 토글 상태 표현에 유용합니다.
-          </Typography>
-
-        <Grid container spacing={ 3 }>
-          { icons.map((icon) => (
-            <Grid size={ { xs: 6, sm: 4, md: 2 } } key={ icon }>
-              <Paper sx={ { p: 2, textAlign: 'center' } }>
-                <Box sx={ { display: 'flex', justifyContent: 'center', gap: 2, mb: 1 } }>
-                  <MaterialSymbol name={ icon } size={ 32 } fill={ 0 } />
-                  <MaterialSymbol name={ icon } size={ 32 } fill={ 1 } />
-                </Box>
-                <Typography variant="caption" color="text.secondary">
-                  { icon }
-                </Typography>
-              </Paper>
-            </Grid>
-          )) }
-        </Grid>
-
-        <Paper sx={ { p: 3, mt: 4, backgroundColor: '#e3f2fd' } }>
-          <Typography variant="subtitle2" sx={ { fontWeight: 600, mb: 1 } }>
-            사용 예시
-          </Typography>
-          <Typography variant="body2">
-            • 좋아요 버튼: Fill 0 (기본) → Fill 1 (좋아요 누름)<br />
-            • 북마크: Fill 0 (저장 안 됨) → Fill 1 (저장됨)<br />
-            • 별점: Fill로 선택/미선택 상태 표현
-          </Typography>
-        </Paper>
-        </PageContainer>
-      </>
-    );
+/** 아이콘 문서 */
+export const Documentation = {
+  parameters: {
+    layout: 'padded',
   },
-};
-
-/** Weight 비교 */
-export const WeightComparison = {
   render: () => {
-    const weights = [100, 200, 300, 400, 500, 600, 700];
-    const icon = 'settings';
+    const styleData = [
+      { style: 'Outlined', className: 'material-symbols-outlined', description: '기본 스타일, 선으로 표현' },
+      { style: 'Rounded', className: 'material-symbols-rounded', description: '둥근 모서리' },
+      { style: 'Sharp', className: 'material-symbols-sharp', description: '날카로운 모서리' },
+    ];
 
-    return (
-      <>
-        <DocumentTitle
-          title="Icon Weight"
-          status="Available"
-          note="Weight 속성 비교"
-          brandName="Design System"
-          systemName="Starter Kit"
-          version="1.0"
-        />
-        <PageContainer>
-          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-            Weight 비교
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-            Weight는 100(Thin)에서 700(Bold)까지 조절할 수 있습니다.
-          </Typography>
+    const axisData = [
+      { axis: 'Fill', range: '0-1', description: '채워진/빈 아이콘 전환' },
+      { axis: 'Weight', range: '100-700', description: '획 굵기 (Thin ~ Bold)' },
+      { axis: 'Grade', range: '-50~200', description: '미세한 두께 조정' },
+      { axis: 'Optical Size', range: '20-48', description: '크기별 획 최적화' },
+    ];
 
-        <Paper sx={ { p: 4 } }>
-          <Box sx={ { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 2 } }>
-            { weights.map((weight) => (
-              <Box key={ weight } sx={ { textAlign: 'center' } }>
-                <MaterialSymbol name={ icon } size={ 48 } weight={ weight } />
-                <Typography variant="caption" display="block" sx={ { mt: 1 } }>
-                  { weight }
-                </Typography>
-              </Box>
-            )) }
-          </Box>
-        </Paper>
+    const sizeData = [
+      { size: '16-20px', usage: '인라인 텍스트, 작은 버튼, 태그' },
+      { size: '24px', usage: '기본값, 버튼, 리스트 아이템, 네비게이션' },
+      { size: '32-48px', usage: '카드 아이콘, 섹션 강조' },
+      { size: '48px+', usage: '빈 상태, 히어로 섹션' },
+    ];
 
-        <Grid container spacing={ 3 } sx={ { mt: 3 } }>
-          <Grid size={ { xs: 12, md: 4 } }>
-            <Paper sx={ { p: 3, textAlign: 'center' } }>
-              <MaterialSymbol name="home" size={ 48 } weight={ 100 } />
-              <Typography variant="subtitle2" sx={ { mt: 2 } }>Thin (100)</Typography>
-              <Typography variant="caption" color="text.secondary">
-                섬세한 UI, 밝은 배경
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid size={ { xs: 12, md: 4 } }>
-            <Paper sx={ { p: 3, textAlign: 'center' } }>
-              <MaterialSymbol name="home" size={ 48 } weight={ 400 } />
-              <Typography variant="subtitle2" sx={ { mt: 2 } }>Regular (400)</Typography>
-              <Typography variant="caption" color="text.secondary">
-                기본값, 대부분의 상황
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid size={ { xs: 12, md: 4 } }>
-            <Paper sx={ { p: 3, textAlign: 'center' } }>
-              <MaterialSymbol name="home" size={ 48 } weight={ 700 } />
-              <Typography variant="subtitle2" sx={ { mt: 2 } }>Bold (700)</Typography>
-              <Typography variant="caption" color="text.secondary">
-                강조, 어두운 배경
-              </Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-        </PageContainer>
-      </>
-    );
-  },
-};
-
-/** 인기 아이콘 */
-export const PopularIcons = {
-  render: () => {
-    const [selectedIcon, setSelectedIcon] = useState(null);
-
-    return (
-      <>
-        <DocumentTitle
-          title="Popular Icons"
-          status="Available"
-          note="자주 사용되는 아이콘"
-          brandName="Design System"
-          systemName="Starter Kit"
-          version="1.0"
-        />
-        <PageContainer>
-          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-            인기 아이콘
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-            자주 사용되는 아이콘 모음입니다. 클릭하면 아이콘 이름을 복사합니다.
-          </Typography>
-
-        <Paper sx={ { p: 3 } }>
-          <Grid container spacing={ 1 }>
-            { popularIcons.map((icon) => (
-              <Grid size={ { xs: 3, sm: 2, md: 1.5 } } key={ icon }>
-                <Box
-                  onClick={ () => {
-                    navigator.clipboard.writeText(icon);
-                    setSelectedIcon(icon);
-                    setTimeout(() => setSelectedIcon(null), 1500);
-                  } }
-                  sx={ {
-                    p: 2,
-                    textAlign: 'center',
-                    cursor: 'pointer',
-                    borderRadius: 1,
-                    transition: 'all 0.2s',
-                    backgroundColor: selectedIcon === icon ? 'primary.main' : 'transparent',
-                    color: selectedIcon === icon ? 'white' : 'inherit',
-                    '&:hover': {
-                      backgroundColor: selectedIcon === icon ? 'primary.main' : 'action.hover',
-                    },
-                  } }
-                >
-                  <MaterialSymbol
-                    name={ icon }
-                    size={ 24 }
-                    color={ selectedIcon === icon ? 'white' : 'inherit' }
-                  />
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    sx={ {
-                      mt: 0.5,
-                      fontSize: '10px',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    } }
-                  >
-                    { selectedIcon === icon ? 'Copied!' : icon }
-                  </Typography>
-                </Box>
-              </Grid>
-            )) }
-          </Grid>
-        </Paper>
-
-        <Box sx={ { mt: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 } }>
-          <Typography variant="body2">
-            전체 아이콘 목록은{' '}
-            <a
-              href="https://fonts.google.com/icons"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={ { color: '#1976d2' } }
-            >
-              Google Fonts Icons
-            </a>
-            에서 확인하세요.
-          </Typography>
-        </Box>
-        </PageContainer>
-      </>
-    );
-  },
-};
-
-/** 카테고리별 아이콘 */
-export const IconsByCategory = {
-  render: () => (
-    <>
-      <DocumentTitle
-        title="Icons by Category"
-        status="Available"
-        note="카테고리별 아이콘 분류"
-        brandName="Design System"
-        systemName="Starter Kit"
-        version="1.0"
-      />
-      <PageContainer>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          카테고리별 아이콘
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          용도별로 분류된 아이콘입니다.
-        </Typography>
-
-      <Stack spacing={ 4 }>
-        { Object.entries(iconCategories).map(([category, icons]) => (
-          <Box key={ category }>
-            <Typography variant="h6" sx={ { mb: 2, fontWeight: 600 } }>
-              { category }
-            </Typography>
-            <Paper sx={ { p: 2 } }>
-              <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1 } }>
-                { icons.map((icon) => (
-                  <Chip
-                    key={ icon }
-                    icon={ <MaterialSymbol name={ icon } size={ 18 } /> }
-                    label={ icon }
-                    variant="outlined"
-                    sx={ { fontFamily: 'monospace', fontSize: '12px' } }
-                  />
-                )) }
-              </Box>
-            </Paper>
-          </Box>
-        )) }
-      </Stack>
-      </PageContainer>
-    </>
-  ),
-};
-
-/** 크기 비교 */
-export const SizeComparison = {
-  render: () => {
-    const sizes = [16, 20, 24, 32, 40, 48, 64];
-    const icon = 'favorite';
-
-    return (
-      <>
-        <DocumentTitle
-          title="Icon Sizes"
-          status="Available"
-          note="다양한 크기 비교"
-          brandName="Design System"
-          systemName="Starter Kit"
-          version="1.0"
-        />
-        <PageContainer>
-          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-            크기 비교
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-            다양한 크기의 아이콘을 비교합니다.
-          </Typography>
-
-        <Paper sx={ { p: 4 } }>
-          <Box sx={ { display: 'flex', alignItems: 'flex-end', gap: 3, flexWrap: 'wrap' } }>
-            { sizes.map((size) => (
-              <Box key={ size } sx={ { textAlign: 'center' } }>
-                <MaterialSymbol name={ icon } size={ size } fill={ 1 } color="#e91e63" />
-                <Typography variant="caption" display="block" sx={ { mt: 1 } }>
-                  { size }px
-                </Typography>
-              </Box>
-            )) }
-          </Box>
-        </Paper>
-
-        <Divider sx={ { my: 4 } } />
-
-        <Typography variant="h6" sx={ { mb: 2 } }>
-          사용 가이드
-        </Typography>
-        <Grid container spacing={ 2 }>
-          <Grid size={ { xs: 12, md: 4 } }>
-            <Paper sx={ { p: 2 } }>
-              <Box sx={ { display: 'flex', alignItems: 'center', gap: 2, mb: 1 } }>
-                <MaterialSymbol name="info" size={ 16 } />
-                <Typography variant="subtitle2">16-20px</Typography>
-              </Box>
-              <Typography variant="caption" color="text.secondary">
-                인라인 텍스트, 작은 버튼, 태그
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid size={ { xs: 12, md: 4 } }>
-            <Paper sx={ { p: 2 } }>
-              <Box sx={ { display: 'flex', alignItems: 'center', gap: 2, mb: 1 } }>
-                <MaterialSymbol name="info" size={ 24 } />
-                <Typography variant="subtitle2">24px (기본)</Typography>
-              </Box>
-              <Typography variant="caption" color="text.secondary">
-                버튼, 리스트 아이템, 네비게이션
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid size={ { xs: 12, md: 4 } }>
-            <Paper sx={ { p: 2 } }>
-              <Box sx={ { display: 'flex', alignItems: 'center', gap: 2, mb: 1 } }>
-                <MaterialSymbol name="info" size={ 48 } />
-                <Typography variant="subtitle2">48px+</Typography>
-              </Box>
-              <Typography variant="caption" color="text.secondary">
-                빈 상태, 히어로 섹션, 강조
-              </Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-        </PageContainer>
-      </>
-    );
-  },
-};
-
-/** 색상 적용 */
-export const IconColors = {
-  render: () => {
-    const colors = [
-      { name: 'Primary', color: 'primary.main', value: '#0000FF' },
-      { name: 'Secondary', color: 'secondary.main', value: '#263238' },
-      { name: 'Error', color: 'error.main', value: '#d32f2f' },
-      { name: 'Warning', color: 'warning.main', value: '#ed6c02' },
-      { name: 'Success', color: 'success.main', value: '#2e7d32' },
-      { name: 'Info', color: 'info.main', value: '#0288d1' },
+    const colorData = [
+      { name: 'Primary', token: 'primary.main', value: '#0000FF' },
+      { name: 'Error', token: 'error.main', value: '#d32f2f' },
+      { name: 'Warning', token: 'warning.main', value: '#ed6c02' },
+      { name: 'Success', token: 'success.main', value: '#2e7d32' },
+      { name: 'Info', token: 'info.main', value: '#0288d1' },
     ];
 
     return (
       <>
         <DocumentTitle
-          title="Icon Colors"
+          title="Icons"
           status="Available"
-          note="아이콘에 색상 적용"
+          note="Material Symbols 아이콘 시스템"
           brandName="Design System"
           systemName="Starter Kit"
           version="1.0"
         />
         <PageContainer>
           <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-            색상 적용
+            Material Symbols
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-            테마 색상을 아이콘에 적용할 수 있습니다.
+          <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
+            Google Material Symbols Variable Font 기반 아이콘 시스템입니다.
           </Typography>
 
-        <Grid container spacing={ 2 }>
-          { colors.map((c) => (
-            <Grid size={ { xs: 6, sm: 4, md: 2 } } key={ c.name }>
-              <Paper sx={ { p: 3, textAlign: 'center' } }>
-                <MaterialSymbol name="favorite" size={ 40 } fill={ 1 } color={ c.value } />
-                <Typography variant="subtitle2" sx={ { mt: 2 } }>
-                  { c.name }
-                </Typography>
-                <Typography variant="caption" color="text.secondary" sx={ { fontFamily: 'monospace' } }>
-                  { c.color }
-                </Typography>
-              </Paper>
-            </Grid>
-          )) }
-        </Grid>
+          <SectionTitle title="Style" description="3가지 스타일 변형" />
 
-        <Paper sx={ { p: 3, mt: 4, backgroundColor: '#263238' } }>
-          <Typography variant="subtitle2" sx={ { color: '#80cbc4', mb: 2 } }>
-            사용 예시
-          </Typography>
+          <TableContainer sx={ { mb: 4 } }>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600, width: '15%' } }>Style</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '30%' } }>Class Name</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '25%' } }>설명</TableCell>
+                  <TableCell sx={ { fontWeight: 600 } }>Sample</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                { styleData.map((row) => (
+                  <TableRow key={ row.style }>
+                    <TableCell sx={ { fontWeight: 600 } }>{ row.style }</TableCell>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>{ row.className }</TableCell>
+                    <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>{ row.description }</TableCell>
+                    <TableCell>
+                      <Box sx={ { display: 'flex', gap: 2 } }>
+                        <MaterialSymbol name="home" variant={ row.style.toLowerCase() } size={ 24 } />
+                        <MaterialSymbol name="favorite" variant={ row.style.toLowerCase() } size={ 24 } />
+                        <MaterialSymbol name="settings" variant={ row.style.toLowerCase() } size={ 24 } />
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )) }
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <SectionTitle title="Variable Font Axes" description="Variable Font 속성" />
+
+          <TableContainer sx={ { mb: 4 } }>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600, width: '15%' } }>Axis</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '15%' } }>Range</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '30%' } }>설명</TableCell>
+                  <TableCell sx={ { fontWeight: 600 } }>Sample</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600 } }>Fill</TableCell>
+                  <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>0-1</TableCell>
+                  <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>채워진/빈 아이콘 전환</TableCell>
+                  <TableCell>
+                    <Box sx={ { display: 'flex', gap: 2, alignItems: 'center' } }>
+                      <MaterialSymbol name="favorite" size={ 24 } fill={ false } />
+                      <Typography variant="caption" color="text.secondary">→</Typography>
+                      <MaterialSymbol name="favorite" size={ 24 } fill={ true } />
+                    </Box>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600 } }>Weight</TableCell>
+                  <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>100-700</TableCell>
+                  <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>획 굵기 (Thin ~ Bold)</TableCell>
+                  <TableCell>
+                    <Box sx={ { display: 'flex', gap: 2, alignItems: 'center' } }>
+                      <MaterialSymbol name="settings" size={ 24 } weight={ 100 } />
+                      <MaterialSymbol name="settings" size={ 24 } weight={ 400 } />
+                      <MaterialSymbol name="settings" size={ 24 } weight={ 700 } />
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <SectionTitle title="Size Guide" description="크기별 권장 용도" />
+
+          <TableContainer sx={ { mb: 4 } }>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600, width: '15%' } }>Size</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '40%' } }>권장 용도</TableCell>
+                  <TableCell sx={ { fontWeight: 600 } }>Sample</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                { sizeData.map((row) => (
+                  <TableRow key={ row.size }>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>{ row.size }</TableCell>
+                    <TableCell sx={ { color: 'text.secondary', fontSize: 13 } }>{ row.usage }</TableCell>
+                    <TableCell>
+                      <MaterialSymbol
+                        name="favorite"
+                        size={ parseInt(row.size) || 24 }
+                        fill={ true }
+                        color="#e91e63"
+                      />
+                    </TableCell>
+                  </TableRow>
+                )) }
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <SectionTitle title="Color" description="테마 색상 적용" />
+
+          <TableContainer sx={ { mb: 4 } }>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600, width: '15%' } }>Name</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '20%' } }>Token</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '15%' } }>Value</TableCell>
+                  <TableCell sx={ { fontWeight: 600 } }>Sample</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                { colorData.map((row) => (
+                  <TableRow key={ row.name }>
+                    <TableCell sx={ { fontWeight: 600 } }>{ row.name }</TableCell>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>{ row.token }</TableCell>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 12 } }>{ row.value }</TableCell>
+                    <TableCell>
+                      <Box sx={ { display: 'flex', gap: 2 } }>
+                        <MaterialSymbol name="favorite" size={ 24 } fill={ true } color={ row.value } />
+                        <MaterialSymbol name="check_circle" size={ 24 } fill={ true } color={ row.value } />
+                        <MaterialSymbol name="info" size={ 24 } fill={ true } color={ row.value } />
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )) }
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <SectionTitle title="Usage" description="코드 사용법" />
+
           <Box
             component="pre"
             sx={ {
-              color: '#aed581',
-              fontSize: '12px',
+              backgroundColor: 'grey.100',
+              p: 3,
+              fontSize: 12,
+              fontFamily: 'monospace',
               overflow: 'auto',
-              m: 0,
+              mb: 4,
             } }
           >
-{ `// sx prop 사용
-<Box sx={{ color: 'primary.main' }}>
-  <span className="material-symbols-outlined">favorite</span>
-</Box>
+{ `// 기본 사용
+<span className="material-symbols-outlined">home</span>
 
-// inline style 사용
+// Variable Font 속성 적용
 <span
-  className="material-symbols-outlined"
-  style={{ color: '#0000FF' }}
+  className="material-symbols-rounded"
+  style={{
+    fontSize: 24,
+    fontVariationSettings: "'FILL' 1, 'wght' 400"
+  }}
 >
   favorite
-</span>` }
+</span>
+
+// sx prop으로 색상 적용
+<Box sx={{ color: 'primary.main' }}>
+  <span className="material-symbols-outlined">star</span>
+</Box>` }
           </Box>
-        </Paper>
+
+          <SectionTitle title="Popular Icons" description="자주 사용되는 아이콘" />
+
+          <Box sx={ { display: 'flex', flexWrap: 'wrap', gap: 1 } }>
+            { popularIcons.map((icon) => (
+              <Box
+                key={ icon }
+                sx={ {
+                  width: 80,
+                  py: 2,
+                  textAlign: 'center',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                } }
+              >
+                <MaterialSymbol name={ icon } size={ 24 } />
+                <Typography
+                  variant="caption"
+                  display="block"
+                  sx={ {
+                    mt: 0.5,
+                    fontSize: 10,
+                    fontFamily: 'monospace',
+                    color: 'text.secondary',
+                  } }
+                >
+                  { icon }
+                </Typography>
+              </Box>
+            )) }
+          </Box>
+
+          <Divider sx={ { my: 4 } } />
+
+          <Typography variant="body2" color="text.secondary">
+            전체 아이콘 목록은{' '}
+            <a
+              href="https://fonts.google.com/icons"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={ { color: '#0000FF' } }
+            >
+              Google Fonts Icons
+            </a>
+            에서 확인하세요.
+          </Typography>
         </PageContainer>
       </>
     );
   },
 };
 
-/** 사용 예시 */
-export const UsageExamples = {
-  render: () => (
-    <>
-      <DocumentTitle
-        title="Icon Usage"
-        status="Available"
-        note="아이콘 실제 활용 예시"
-        brandName="Design System"
-        systemName="Starter Kit"
-        version="1.0"
-      />
-      <PageContainer>
-        <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
-          사용 예시
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
-          실제 UI에서 아이콘을 활용하는 방법입니다.
-        </Typography>
+/** Fill 활용 예시 */
+export const FillUsage = {
+  render: () => {
+    const fillExamples = [
+      { icon: 'favorite', label: '좋아요', activeColor: '#e91e63' },
+      { icon: 'bookmark', label: '북마크', activeColor: '#1976d2' },
+      { icon: 'star', label: '즐겨찾기', activeColor: '#ffc107' },
+      { icon: 'thumb_up', label: '추천', activeColor: '#0000FF' },
+      { icon: 'check_circle', label: '완료', activeColor: '#2e7d32' },
+      { icon: 'visibility', label: '공개', activeColor: '#263238' },
+    ];
 
-      <Stack spacing={ 4 }>
-        {/* 버튼과 함께 */}
-        <Box>
-          <Typography variant="h6" sx={ { mb: 2 } }>버튼과 함께</Typography>
-          <Paper sx={ { p: 3 } }>
-            <Stack direction="row" spacing={ 2 } flexWrap="wrap" useFlexGap>
-              <Box
-                component="button"
-                sx={ {
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  px: 2,
-                  py: 1,
-                  border: 'none',
-                  borderRadius: 0,
-                  backgroundColor: 'primary.main',
-                  color: 'white',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                } }
-              >
-                <MaterialSymbol name="add" size={ 20 } color="white" />
-                새로 만들기
-              </Box>
-              <Box
-                component="button"
-                sx={ {
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  px: 2,
-                  py: 1,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  borderRadius: 0,
-                  backgroundColor: 'transparent',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                } }
-              >
-                <MaterialSymbol name="edit" size={ 20 } />
-                수정
-              </Box>
-              <Box
-                component="button"
-                sx={ {
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  px: 2,
-                  py: 1,
-                  border: '1px solid',
-                  borderColor: 'error.main',
-                  borderRadius: 0,
-                  backgroundColor: 'transparent',
-                  color: 'error.main',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                } }
-              >
-                <MaterialSymbol name="delete" size={ 20 } color="#d32f2f" />
-                삭제
-              </Box>
-            </Stack>
-          </Paper>
-        </Box>
+    return (
+      <>
+        <DocumentTitle
+          title="Icon Fill Usage"
+          status="Available"
+          note="Fill 속성 활용 패턴"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            Fill 활용
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
+            Fill 속성으로 토글 상태를 표현합니다.
+          </Typography>
 
-        {/* 리스트 아이템 */}
-        <Box>
-          <Typography variant="h6" sx={ { mb: 2 } }>리스트 아이템</Typography>
-          <Paper>
-            { ['home', 'person', 'settings', 'help'].map((icon, index) => (
-              <Box
-                key={ icon }
-                sx={ {
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2,
-                  p: 2,
-                  borderBottom: index < 3 ? '1px solid' : 'none',
-                  borderColor: 'divider',
-                  cursor: 'pointer',
-                  '&:hover': { backgroundColor: 'action.hover' },
-                } }
-              >
-                <MaterialSymbol name={ icon } size={ 24 } />
-                <Typography sx={ { textTransform: 'capitalize' } }>
-                  { icon === 'person' ? '프로필' : icon === 'home' ? '홈' : icon === 'settings' ? '설정' : '도움말' }
-                </Typography>
-              </Box>
-            )) }
-          </Paper>
-        </Box>
+          <SectionTitle title="Toggle Pattern" description="선택/미선택 상태 표현" />
 
-        {/* 상태 표시 */}
-        <Box>
-          <Typography variant="h6" sx={ { mb: 2 } }>상태 표시</Typography>
-          <Paper sx={ { p: 3 } }>
-            <Stack direction="row" spacing={ 3 } flexWrap="wrap" useFlexGap>
-              <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                <MaterialSymbol name="check_circle" size={ 20 } fill={ 1 } color="#2e7d32" />
-                <Typography variant="body2">완료</Typography>
-              </Box>
-              <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                <MaterialSymbol name="schedule" size={ 20 } color="#ed6c02" />
-                <Typography variant="body2">대기중</Typography>
-              </Box>
-              <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                <MaterialSymbol name="error" size={ 20 } fill={ 1 } color="#d32f2f" />
-                <Typography variant="body2">오류</Typography>
-              </Box>
-              <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-                <MaterialSymbol name="info" size={ 20 } fill={ 1 } color="#0288d1" />
-                <Typography variant="body2">정보</Typography>
-              </Box>
-            </Stack>
-          </Paper>
-        </Box>
+          <TableContainer sx={ { mb: 4 } }>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={ { fontWeight: 600, width: '20%' } }>Icon</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '20%' } }>용도</TableCell>
+                  <TableCell sx={ { fontWeight: 600, width: '30%' } }>Off (Fill: 0)</TableCell>
+                  <TableCell sx={ { fontWeight: 600 } }>On (Fill: 1)</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                { fillExamples.map((item) => (
+                  <TableRow key={ item.icon }>
+                    <TableCell sx={ { fontFamily: 'monospace', fontSize: 13 } }>{ item.icon }</TableCell>
+                    <TableCell>{ item.label }</TableCell>
+                    <TableCell>
+                      <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
+                        <MaterialSymbol name={ item.icon } size={ 28 } fill={ false } />
+                        <Typography variant="caption" color="text.secondary">미선택</Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
+                        <MaterialSymbol name={ item.icon } size={ 28 } fill={ true } color={ item.activeColor } />
+                        <Typography variant="caption" color="text.secondary">선택됨</Typography>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )) }
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-        {/* 토글 상태 */}
-        <Box>
-          <Typography variant="h6" sx={ { mb: 2 } }>토글 상태 (Fill 활용)</Typography>
-          <Paper sx={ { p: 3 } }>
-            <Stack direction="row" spacing={ 4 }>
-              <Box sx={ { textAlign: 'center' } }>
-                <Box sx={ { display: 'flex', gap: 1 } }>
-                  <MaterialSymbol name="favorite" size={ 32 } fill={ 0 } />
-                  <MaterialSymbol name="favorite" size={ 32 } fill={ 1 } color="#e91e63" />
-                </Box>
-                <Typography variant="caption">좋아요</Typography>
-              </Box>
-              <Box sx={ { textAlign: 'center' } }>
-                <Box sx={ { display: 'flex', gap: 1 } }>
-                  <MaterialSymbol name="bookmark" size={ 32 } fill={ 0 } />
-                  <MaterialSymbol name="bookmark" size={ 32 } fill={ 1 } color="#1976d2" />
-                </Box>
-                <Typography variant="caption">북마크</Typography>
-              </Box>
-              <Box sx={ { textAlign: 'center' } }>
-                <Box sx={ { display: 'flex', gap: 1 } }>
-                  <MaterialSymbol name="star" size={ 32 } fill={ 0 } />
-                  <MaterialSymbol name="star" size={ 32 } fill={ 1 } color="#ffc107" />
-                </Box>
-                <Typography variant="caption">즐겨찾기</Typography>
-              </Box>
-            </Stack>
-          </Paper>
-        </Box>
-      </Stack>
-      </PageContainer>
-    </>
-  ),
+          <SectionTitle title="Code Example" />
+
+          <Box
+            component="pre"
+            sx={ {
+              backgroundColor: 'grey.100',
+              p: 3,
+              fontSize: 12,
+              fontFamily: 'monospace',
+              overflow: 'auto',
+            } }
+          >
+{ `// React 상태로 토글
+const [isLiked, setIsLiked] = useState(false);
+
+<span
+  className="material-symbols-outlined"
+  style={{
+    fontVariationSettings: \`'FILL' \${isLiked ? 1 : 0}\`,
+    color: isLiked ? '#e91e63' : 'inherit',
+    cursor: 'pointer'
+  }}
+  onClick={() => setIsLiked(!isLiked)}
+>
+  favorite
+</span>` }
+          </Box>
+        </PageContainer>
+      </>
+    );
+  },
 };
