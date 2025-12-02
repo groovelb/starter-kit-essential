@@ -2,10 +2,15 @@ import { useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import { DocumentTitle, PageContainer, SectionTitle } from '../../../components/storybookDocumentation';
 import VideoScrubbing from '../../../components/media/VideoScrubbing';
 
-// 확실히 작동하는 테스트 비디오 URL
 const TEST_VIDEO_URL = 'https://www.w3schools.com/html/mov_bbb.mp4';
 
 export default {
@@ -22,216 +27,333 @@ export default {
 스크롤 위치에 따라 비디오를 프레임 단위로 재생(스크러빙)하는 컴포넌트입니다.
 
 ### 핵심 기능
-- **스크롤 기반 재생**: 페이지 스크롤에 따라 비디오 프레임 이동
-- **성능 최적화**: IntersectionObserver + requestAnimationFrame (~60fps)
-- **진행도 콜백**: onProgressChange로 외부에서 진행도(0-1) 활용 가능
-
-### 사용 시 주의
-- 비디오는 \`preload="auto"\`로 전체 로드 필요
-- 긴 비디오는 로딩 시간 고려
+- 스크롤 기반 재생: 페이지 스크롤에 따라 비디오 프레임 이동
+- 성능 최적화: IntersectionObserver + requestAnimationFrame (~60fps)
+- 진행도 콜백: onProgressChange로 외부에서 진행도(0-1) 활용 가능
         `,
       },
     },
   },
   argTypes: {
-    aspectRatio: {
-      control: 'select',
-      options: ['16/9', '4/3', '21/9', '1/1'],
-      description: 'CSS aspect-ratio 값',
+    src: {
+      control: 'text',
+      description: '비디오 소스 경로',
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: '16/9' },
       },
     },
-    objectFit: {
-      control: 'select',
-      options: ['cover', 'contain', 'fill'],
-      description: 'CSS object-fit 값',
+    containerRef: {
+      control: false,
+      description: '스크롤 추적용 컨테이너 요소',
       table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'cover' },
+        type: { summary: 'React.RefObject' },
+      },
+    },
+    scrollRange: {
+      control: 'object',
+      description: '스크롤 범위 매핑',
+      table: {
+        type: { summary: '{ start: number, end: number }' },
+        defaultValue: { summary: '{ start: 0, end: 1 }' },
+      },
+    },
+    onProgressChange: {
+      control: false,
+      description: '진행도 변경 콜백 (0-1)',
+      table: {
+        type: { summary: 'function' },
       },
     },
   },
 };
 
-/** 스크롤 테스트를 위한 래퍼 컴포넌트 */
-const ScrollTestWrapper = ({ children, height = '300vh' }) => {
-  return (
-    <Box sx={{ minHeight: height }}>
-      <Box
-        sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          backgroundColor: 'grey.900',
-          color: 'white',
-          py: 1,
-          px: 2,
-        }}
-      >
-        <Typography variant="caption" sx={{ opacity: 0.7 }}>
-          ↓ 스크롤하여 비디오 스크러빙 테스트
-        </Typography>
-      </Box>
-      <Box sx={{ pt: 4 }}>
-        {children}
-      </Box>
-    </Box>
-  );
-};
+/** 스크롤 영역 래퍼 */
+const ScrollArea = ({ children, height = '150vh' }) => (
+  <Box sx={{ minHeight: height, pb: 8 }}>
+    {children}
+  </Box>
+);
 
-/** 진행도 콜백 데모 컴포넌트 */
+/** 진행도 콜백 데모 */
 const ProgressDemo = () => {
   const [progress, setProgress] = useState(0);
 
   return (
-    <ScrollTestWrapper height="400vh">
-      <Box sx={{ px: { xs: 2, md: 4 } }}>
-        <Alert severity="info" sx={{ mb: 2 }}>
-          onProgressChange 콜백으로 진행도를 외부에서 활용할 수 있습니다.
-        </Alert>
-
-        <Box
-          sx={{
-            position: 'sticky',
-            top: 40,
-            zIndex: 5,
-            backgroundColor: 'white',
-            py: 1,
-            mb: 2,
-          }}
-        >
-          <Typography variant="body2">
-            Progress: <strong>{(progress * 100).toFixed(1)}%</strong>
-          </Typography>
+    <ScrollArea height="180vh">
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 5,
+          backgroundColor: 'grey.100',
+          py: 1.5,
+          px: 2,
+          mb: 3,
+        }}
+      >
+        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+          progress: {(progress * 100).toFixed(1)}%
+        </Typography>
+        <Box sx={{ height: 4, backgroundColor: 'grey.300', mt: 1 }}>
           <Box
             sx={{
-              height: 4,
-              backgroundColor: 'grey.200',
-              mt: 1,
+              height: '100%',
+              width: `${progress * 100}%`,
+              backgroundColor: 'primary.main',
+              transition: 'width 0.05s linear',
             }}
-          >
-            <Box
-              sx={{
-                height: '100%',
-                width: `${progress * 100}%`,
-                backgroundColor: 'primary.main',
-                transition: 'width 0.1s linear',
-              }}
-            />
-          </Box>
+          />
         </Box>
-
-        <VideoScrubbing
-          src={TEST_VIDEO_URL}
-          aspectRatio="16/9"
-          onProgressChange={setProgress}
-        />
       </Box>
-    </ScrollTestWrapper>
+      <VideoScrubbing
+        src={TEST_VIDEO_URL}
+        onProgressChange={setProgress}
+      />
+    </ScrollArea>
   );
 };
 
-/** 컨테이너 Ref 데모 컴포넌트 */
+/** 컨테이너 Ref 데모 */
 const ContainerRefDemo = () => {
   const containerRef = useRef(null);
 
   return (
-    <ScrollTestWrapper height="400vh">
-      <Box sx={{ px: { xs: 2, md: 4 } }}>
-        <Alert severity="info" sx={{ mb: 2 }}>
-          containerRef를 전달하면 해당 컨테이너 기준으로 스크롤 진행도를 계산합니다.
-        </Alert>
-
-        <Box
-          ref={containerRef}
-          sx={{
-            height: '200vh',
-            backgroundColor: 'grey.50',
-            p: 2,
-          }}
-        >
-          <Typography variant="subtitle2" sx={{ mb: 2 }}>
-            이 컨테이너 높이 기준으로 비디오 진행
-          </Typography>
-          <Box sx={{ position: 'sticky', top: 80 }}>
-            <VideoScrubbing
-              src={TEST_VIDEO_URL}
-              containerRef={containerRef}
-              aspectRatio="16/9"
-            />
-          </Box>
+    <ScrollArea height="180vh">
+      <Box
+        ref={containerRef}
+        sx={{
+          height: '150vh',
+          backgroundColor: 'grey.50',
+          p: 2,
+        }}
+      >
+        <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
+          이 컨테이너 높이 기준으로 비디오 진행
+        </Typography>
+        <Box sx={{ position: 'sticky', top: 16 }}>
+          <VideoScrubbing
+            src={TEST_VIDEO_URL}
+            containerRef={containerRef}
+          />
         </Box>
       </Box>
-    </ScrollTestWrapper>
+    </ScrollArea>
   );
 };
 
 /** 기본 사용 */
 export const Default = {
-  args: {
-    src: TEST_VIDEO_URL,
-    aspectRatio: '16/9',
-    objectFit: 'cover',
-  },
-  render: (args) => (
-    <ScrollTestWrapper>
-      <Box sx={{ px: { xs: 2, md: 4 } }}>
-        <Alert severity="info" sx={{ mb: 2 }}>
-          스크롤하면 비디오가 프레임 단위로 재생됩니다.
-        </Alert>
-        <VideoScrubbing {...args} />
-      </Box>
-    </ScrollTestWrapper>
+  render: () => (
+    <>
+      <DocumentTitle
+        title="VideoScrubbing"
+        status="Available"
+        note="스크롤 기반 비디오 스크러빙"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          VideoScrubbing
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+          스크롤 위치에 따라 비디오를 프레임 단위로 재생하는 컴포넌트입니다.
+        </Typography>
+
+        <SectionTitle title="Demo" description="스크롤하여 비디오 재생 테스트" />
+        <ScrollArea>
+          <VideoScrubbing src={TEST_VIDEO_URL} />
+        </ScrollArea>
+
+        <SectionTitle title="Props" description="컴포넌트 속성" />
+        <TableContainer sx={{ mb: 4 }}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 600 }}>Prop</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Default</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell sx={{ fontFamily: 'monospace', fontSize: 12 }}>src</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>string</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>-</TableCell>
+                <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>비디오 소스 경로 [Required]</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ fontFamily: 'monospace', fontSize: 12 }}>containerRef</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>React.RefObject</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>null</TableCell>
+                <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>스크롤 추적용 컨테이너 요소</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ fontFamily: 'monospace', fontSize: 12 }}>scrollRange</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>{'{ start, end }'}</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>{'{ 0, 1 }'}</TableCell>
+                <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>스크롤 범위 매핑 (0-1)</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ fontFamily: 'monospace', fontSize: 12 }}>onProgressChange</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>function</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>-</TableCell>
+                <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>진행도 변경 콜백 (progress: 0-1)</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ fontFamily: 'monospace', fontSize: 12 }}>sx</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>object</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>{'{}'}</TableCell>
+                <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>MUI sx 스타일 객체</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <SectionTitle title="Usage" description="코드 예시" />
+        <Box
+          component="pre"
+          sx={{
+            backgroundColor: 'grey.100',
+            p: 2,
+            fontSize: 12,
+            fontFamily: 'monospace',
+            overflow: 'auto',
+            mb: 4,
+          }}
+        >
+{`import VideoScrubbing from '@/components/media/VideoScrubbing';
+
+// 기본 사용
+<VideoScrubbing src="/video.mp4" />
+
+// 진행도 콜백 활용
+const [progress, setProgress] = useState(0);
+<VideoScrubbing
+  src="/video.mp4"
+  onProgressChange={setProgress}
+/>
+
+// 컨테이너 기준 스크롤
+const containerRef = useRef(null);
+<Box ref={containerRef} sx={{ height: '200vh' }}>
+  <VideoScrubbing
+    src="/video.mp4"
+    containerRef={containerRef}
+  />
+</Box>`}
+        </Box>
+      </PageContainer>
+    </>
   ),
 };
 
-/** 진행도 콜백 활용 */
+/** 진행도 콜백 */
 export const WithProgressCallback = {
-  render: () => <ProgressDemo />,
+  render: () => (
+    <>
+      <DocumentTitle
+        title="VideoScrubbing"
+        status="Available"
+        note="onProgressChange 콜백 활용"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          Progress Callback
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+          onProgressChange 콜백으로 현재 진행도(0-1)를 외부에서 활용할 수 있습니다.
+        </Typography>
+        <ProgressDemo />
+      </PageContainer>
+    </>
+  ),
 };
 
-/** 컨테이너 Ref 사용 */
+/** 컨테이너 Ref */
 export const WithContainerRef = {
-  render: () => <ContainerRefDemo />,
+  render: () => (
+    <>
+      <DocumentTitle
+        title="VideoScrubbing"
+        status="Available"
+        note="containerRef 활용"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          Container Reference
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+          containerRef를 전달하면 해당 컨테이너 기준으로 스크롤 진행도를 계산합니다.
+        </Typography>
+        <ContainerRefDemo />
+      </PageContainer>
+    </>
+  ),
 };
 
 /** 다양한 비율 */
 export const AspectRatios = {
   render: () => (
-    <ScrollTestWrapper height="500vh">
-      <Stack spacing={4} sx={{ px: { xs: 2, md: 4 } }}>
-        <Box>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
-            21:9 (Cinematic)
-          </Typography>
-          <VideoScrubbing
-            src={TEST_VIDEO_URL}
-            aspectRatio="21/9"
-          />
-        </Box>
+    <>
+      <DocumentTitle
+        title="VideoScrubbing"
+        status="Available"
+        note="Aspect Ratio 변형"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          Aspect Ratios
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+          sx prop으로 다양한 비율을 적용할 수 있습니다.
+        </Typography>
 
-        <Box>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
-            16:9 (Standard)
-          </Typography>
-          <VideoScrubbing
-            src={TEST_VIDEO_URL}
-            aspectRatio="16/9"
-          />
-        </Box>
+        <ScrollArea height="300vh">
+          <Stack spacing={6}>
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontFamily: 'monospace' }}>
+                aspectRatio: 21/9 (Cinematic)
+              </Typography>
+              <VideoScrubbing
+                src={TEST_VIDEO_URL}
+                sx={{ aspectRatio: '21/9', objectFit: 'cover' }}
+              />
+            </Box>
 
-        <Box>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
-            4:3 (Classic)
-          </Typography>
-          <VideoScrubbing
-            src={TEST_VIDEO_URL}
-            aspectRatio="4/3"
-          />
-        </Box>
-      </Stack>
-    </ScrollTestWrapper>
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontFamily: 'monospace' }}>
+                aspectRatio: 16/9 (Standard)
+              </Typography>
+              <VideoScrubbing
+                src={TEST_VIDEO_URL}
+                sx={{ aspectRatio: '16/9', objectFit: 'cover' }}
+              />
+            </Box>
+
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontFamily: 'monospace' }}>
+                aspectRatio: 4/3 (Classic)
+              </Typography>
+              <VideoScrubbing
+                src={TEST_VIDEO_URL}
+                sx={{ aspectRatio: '4/3', objectFit: 'cover' }}
+              />
+            </Box>
+          </Stack>
+        </ScrollArea>
+      </PageContainer>
+    </>
   ),
 };
