@@ -13,7 +13,7 @@ import {
   LeadParagraph,
   PullQuote,
   Callout,
-} from '../../../components/typography/styled-paragraph';
+} from '../../../components/typography/StyledParagraph';
 
 export default {
   title: 'Custom Component/Typography/StyledParagraph',

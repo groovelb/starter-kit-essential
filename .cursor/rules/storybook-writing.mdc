@@ -5,6 +5,68 @@ alwaysApply: false
 ---
 # Storybook 작성 규칙
 
+## 필수 규칙 (MUST)
+
+All stories MUST follow these rules:
+
+| Rule | Description |
+|------|-------------|
+| English Only | ALL story content (titles, descriptions, labels) MUST be written in English |
+| SectionTitle Usage | When a story has 2+ sections, MUST use `SectionTitle` to separate them |
+
+### Story Types
+
+| Type | autodocs | Doc Story | DocumentTitle | Use Case |
+|------|----------|-----------|---------------|----------|
+| Component (interactive) | `tags: ['autodocs']` | NOT needed | NOT supported in Docs tab | Components with props (Button, Card, Icons) |
+| Documentation (static) | None | Required | Required | Overview, Style sections (Introduction, Typography) |
+
+**Note:** `docs.page` with JSX causes dynamic import errors in Vite + Storybook. Do NOT use DocumentTitle in autodocs Docs tab.
+
+### Component Story (autodocs)
+
+Use `tags: ['autodocs']` for automatic documentation. No separate Doc story needed. DocumentTitle cannot be added to autodocs Docs tab.
+
+```jsx
+export default {
+  title: 'Component/Button',
+  component: Button,
+  tags: ['autodocs'],
+  argTypes: { /* props */ },
+};
+
+export const Default = {
+  args: { /* default args */ },
+};
+```
+
+### Documentation Story (Doc)
+
+For static documentation pages (Overview, Style), use Doc story with DocumentTitle.
+
+```jsx
+export const Doc = {
+  render: () => (
+    <>
+      <DocumentTitle
+        title="ComponentName"
+        status="Available"
+        note="Brief description"
+        brandName="Design System"
+        systemName="Starter Kit"
+        version="1.0"
+      />
+      <PageContainer>
+        <SectionTitle title="Section 1" />
+        {/* Content */}
+      </PageContainer>
+    </>
+  ),
+};
+```
+
+---
+
 ## 문서 스타일 원칙
 
 공식 기술 문서 스타일을 따른다. 장식보다 정보 전달에 집중한다.
@@ -305,9 +367,13 @@ Style 섹션은 디자인 토큰 문서이므로 단일 문서형 스토리를 �
 
 스토리 작성 완료 전 확인:
 
-- [ ] DocumentTitle이 적용되어 있는가?
-- [ ] PageContainer로 감싸져 있는가?
-- [ ] SectionTitle로 섹션이 구분되어 있는가?
-- [ ] 불필요한 Paper, Card, elevation이 없는가?
-- [ ] Table로 정보가 정리되어 있는가?
-- [ ] 과한 색상/장식이 없는가?
+### MUST (Required)
+- [ ] All content written in English?
+- [ ] SectionTitle used for 2+ sections?
+- [ ] Correct story type used? (autodocs for components, Doc for documentation)
+
+### SHOULD (Recommended)
+- [ ] PageContainer wrapping content (for Doc stories)?
+- [ ] No Paper, Card, elevation decorations?
+- [ ] Props documented in Table format?
+- [ ] No excessive colors/decorations?

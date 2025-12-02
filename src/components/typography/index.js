@@ -6,16 +6,16 @@
  */
 
 // FitText - 컨테이너 너비에 맞춰 자동으로 크기 조절
-export { FitText } from './fit-text';
+export { FitText } from './FitText';
 
 // Title - 섹션/아이템의 계층적 타이틀 시스템
-export { Title } from './title';
+export { Title } from './Title';
 
 // HighlightedTypography - 텍스트 강조 효과 (밑줄, 배경, 마커, 원)
-export { HighlightedTypography, Highlight } from './highlighted-typography';
+export { HighlightedTypography, Highlight } from './HighlightedTypography';
 
 // StretchedHeadline - 단어 간격을 늘려 전체 너비를 채우는 히어로 타이포
-export { StretchedHeadline, StretchedHeadlineMultiline } from './stretched-headline';
+export { StretchedHeadline, StretchedHeadlineMultiline } from './StretchedHeadline';
 
 // InlineTypography - 텍스트 속에 이미지/아이콘 삽입
 export {
@@ -23,7 +23,7 @@ export {
   InlineObject,
   InlineIcon,
   InlineImage,
-} from './inline-typography';
+} from './InlineTypography';
 
 // StyledParagraph - 스타일링된 문단 (Lead, Editorial, Quote, Callout)
 export {
@@ -31,10 +31,7 @@ export {
   LeadParagraph,
   PullQuote,
   Callout,
-} from './styled-paragraph';
+} from './StyledParagraph';
 
 // QuotedContainer - 장식적 인용 부호가 있는 인용문
-export { QuotedContainer } from './quoted-container';
-
-// DynamicVariant - Variable font axis 애니메이션 (Kinetic Typography)
-export { DynamicVariant, DynamicVariantWord } from './dynamic-variant';
+export { QuotedContainer } from './QuotedContainer';

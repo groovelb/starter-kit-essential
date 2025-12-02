@@ -17,7 +17,7 @@ import {
   InlineObject,
   InlineIcon,
   InlineImage,
-} from '../../../components/typography/inline-typography';
+} from '../../../components/typography/InlineTypography';
 
 export default {
   title: 'Custom Component/Typography/InlineTypography',
