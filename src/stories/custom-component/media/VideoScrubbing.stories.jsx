@@ -11,7 +11,9 @@ import TableRow from '@mui/material/TableRow';
 import { DocumentTitle, PageContainer, SectionTitle } from '../../../components/storybookDocumentation';
 import VideoScrubbing from '../../../components/media/VideoScrubbing';
 
-const TEST_VIDEO_URL = 'https://www.w3schools.com/html/mov_bbb.mp4';
+import testVideo from '../../../assets/video/9-motion.mp4';
+
+const TEST_VIDEO_URL = testVideo;
 
 export default {
   title: 'Custom Component/Media/VideoScrubbing',
@@ -105,10 +107,12 @@ const ProgressDemo = () => {
           />
         </Box>
       </Box>
-      <VideoScrubbing
-        src={TEST_VIDEO_URL}
-        onProgressChange={setProgress}
-      />
+      <Box sx={{ maxWidth: 800 }}>
+        <VideoScrubbing
+          src={TEST_VIDEO_URL}
+          onProgressChange={setProgress}
+        />
+      </Box>
     </ScrollArea>
   );
 };
@@ -130,7 +134,7 @@ const ContainerRefDemo = () => {
         <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
           이 컨테이너 높이 기준으로 비디오 진행
         </Typography>
-        <Box sx={{ position: 'sticky', top: 16 }}>
+        <Box sx={{ position: 'sticky', top: 16, maxWidth: 800 }}>
           <VideoScrubbing
             src={TEST_VIDEO_URL}
             containerRef={containerRef}
@@ -163,7 +167,9 @@ export const Default = {
 
         <SectionTitle title="Demo" description="스크롤하여 비디오 재생 테스트" />
         <ScrollArea>
-          <VideoScrubbing src={TEST_VIDEO_URL} />
+          <Box sx={{ maxWidth: 800 }}>
+            <VideoScrubbing src={TEST_VIDEO_URL} />
+          </Box>
         </ScrollArea>
 
         <SectionTitle title="Props" description="컴포넌트 속성" />
@@ -245,6 +251,65 @@ const containerRef = useRef(null);
   />
 </Box>`}
         </Box>
+
+        <SectionTitle title="Video Encoding" description="스크러빙 최적화를 위한 비디오 인코딩" />
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          부드러운 스크러빙을 위해서는 비디오의 키프레임(I-frame) 설정이 중요합니다.
+          일반 비디오는 키프레임 간격이 2~10초로, seeking 시 가장 가까운 키프레임부터 디코딩해야 하므로 끊김이 발생합니다.
+        </Typography>
+
+        <TableContainer sx={{ mb: 3 }}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 600 }}>비디오 타입</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>키프레임 간격</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Seeking 속도</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>파일 크기</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell sx={{ fontSize: 13 }}>일반 MP4</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>2~10초</TableCell>
+                <TableCell sx={{ color: 'error.main', fontSize: 13 }}>50~100ms (끊김)</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>기본</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ fontSize: 13 }}>스크러빙 최적화</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>매 프레임</TableCell>
+                <TableCell sx={{ color: 'success.main', fontSize: 13 }}>1~5ms (즉시)</TableCell>
+                <TableCell sx={{ fontSize: 13 }}>2~3배</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+          FFmpeg 인코딩 명령어
+        </Typography>
+        <Box
+          component="pre"
+          sx={{
+            backgroundColor: 'grey.100',
+            p: 2,
+            fontSize: 12,
+            fontFamily: 'monospace',
+            overflow: 'auto',
+            mb: 2,
+          }}
+        >
+{`# 모든 프레임을 키프레임으로 인코딩
+ffmpeg -i input.mp4 -g 1 -keyint_min 1 -c:v libx264 -crf 23 output.mp4
+
+# 옵션 설명
+# -g 1          : GOP(Group of Pictures) 크기를 1로 설정
+# -keyint_min 1 : 최소 키프레임 간격 1
+# -crf 23       : 품질 설정 (낮을수록 고품질, 18~28 권장)`}
+        </Box>
+        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 4 }}>
+          참고: 키프레임 최적화 비디오는 파일 크기가 증가하므로, 짧은 클립(30초 이내)에 적합합니다.
+        </Typography>
       </PageContainer>
     </>
   ),
@@ -321,7 +386,7 @@ export const AspectRatios = {
         </Typography>
 
         <ScrollArea height="300vh">
-          <Stack spacing={6}>
+          <Stack spacing={6} sx={{ maxWidth: 800 }}>
             <Box>
               <Typography variant="subtitle2" sx={{ mb: 1, fontFamily: 'monospace' }}>
                 aspectRatio: 21/9 (Cinematic)
