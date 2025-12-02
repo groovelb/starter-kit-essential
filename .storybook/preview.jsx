@@ -53,6 +53,7 @@ const preview = {
           'Custom Component',
           'Template',
           'Page',
+          'Test Data',
         ],
         method: 'alphabetical',
       },
