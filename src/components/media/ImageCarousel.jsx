@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { CarouselIndicator } from './CarouselIndicator';
+import { Indicator } from '../../common/ui/Indicator';
 
 /**
  * ImageCarousel 컴포넌트
@@ -340,12 +340,12 @@ export function ImageCarousel({
       {/* 인디케이터 */}
       { hasIndicator && totalImages > 1 && (
         <Box sx={ getIndicatorPositionStyles() }>
-          <CarouselIndicator
+          <Indicator
             total={ totalImages }
             current={ currentIndex }
-            type={ indicatorType }
+            variant={ indicatorType }
             direction={ indicatorPosition === 'left' || indicatorPosition === 'right' ? 'vertical' : 'horizontal' }
-            activeColor="white"
+            activeColor="common.white"
             inactiveColor="rgba(255,255,255,0.5)"
             onClick={ goToIndex }
           />

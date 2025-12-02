@@ -16,4 +16,9 @@ export { ImageTransition } from './ImageTransition';
 
 // ImageCarousel - 이미지 캐러셀 + 인디케이터
 export { ImageCarousel } from './ImageCarousel';
+
+// Indicator - 범용 인디케이터 (common/ui에서 재노출)
+export { Indicator } from '../../common/ui/Indicator';
+
+// CarouselIndicator - 레거시 호환용 (Indicator 사용 권장)
 export { CarouselIndicator } from './CarouselIndicator';
