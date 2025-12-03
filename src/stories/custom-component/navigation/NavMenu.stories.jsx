@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import CampaignIcon from '@mui/icons-material/Campaign';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
@@ -14,12 +13,11 @@ import { NavMenu } from '../../../components/navigation/NavMenu';
 import { DocumentTitle, PageContainer } from '../../../components/storybookDocumentation';
 import { SectionContainer } from '../../../components/container/SectionContainer';
 
-// Orbit Navigation Items
-const orbitNavItems = [
-  { id: 'dashboard', label: 'Team Pulse', icon: <DashboardIcon /> },
-  { id: 'assets', label: 'Asset Library', icon: <PhotoLibraryIcon /> },
-  { id: 'projects', label: 'Campaign Manager', icon: <CampaignIcon /> },
-  { id: 'settings', label: 'Studio Config', icon: <SettingsIcon /> },
+// MUSE Navigation Items
+const museNavItems = [
+  { id: 'archive', label: 'Archive', icon: <DashboardIcon /> },
+  { id: 'moodboards', label: 'Moodboards', icon: <PhotoLibraryIcon /> },
+  { id: 'settings', label: 'Settings', icon: <SettingsIcon /> },
 ];
 
 // Basic Navigation Items
@@ -34,7 +32,7 @@ const basicNavItems = [
  * Story Component: Interactive Demo
  */
 function InteractiveDemo() {
-  const [activeId, setActiveId] = useState('dashboard');
+  const [activeId, setActiveId] = useState('archive');
 
   return (
     <PageContainer>
@@ -48,7 +46,7 @@ function InteractiveDemo() {
       />
       <SectionContainer>
         <NavMenu
-          items={orbitNavItems}
+          items={museNavItems}
           activeId={activeId}
           variant="underline"
           onItemClick={(item) => setActiveId(item.id)}
@@ -65,7 +63,7 @@ function InteractiveDemo() {
  * Story Component: Variants Demo
  */
 function VariantsDemo() {
-  const [activeId, setActiveId] = useState('dashboard');
+  const [activeId, setActiveId] = useState('archive');
 
   return (
     <PageContainer>
@@ -88,7 +86,7 @@ function VariantsDemo() {
                 {variant}
               </Typography>
               <NavMenu
-                items={orbitNavItems}
+                items={museNavItems}
                 activeId={activeId}
                 variant={variant}
                 onItemClick={(item) => setActiveId(item.id)}
@@ -105,10 +103,10 @@ function VariantsDemo() {
  * Story Component: Vertical Demo
  */
 function VerticalDemo() {
-  const [activeId, setActiveId] = useState('dashboard');
+  const [activeId, setActiveId] = useState('archive');
 
   const items = [
-    ...orbitNavItems,
+    ...museNavItems,
     { id: 'disabled', label: 'Disabled Item', icon: <SettingsIcon />, disabled: true },
   ];
 
@@ -147,7 +145,7 @@ export default {
 };
 
 /**
- * Default horizontal menu with Orbit style
+ * Default horizontal menu with MUSE style
  */
 export const Default = {
   render: () => (
@@ -162,8 +160,8 @@ export const Default = {
       />
       <SectionContainer>
         <NavMenu
-          items={orbitNavItems}
-          activeId="dashboard"
+          items={museNavItems}
+          activeId="archive"
           variant="underline"
         />
       </SectionContainer>
@@ -208,8 +206,8 @@ export const IconOnly = {
       />
       <SectionContainer>
         <NavMenu
-          items={orbitNavItems}
-          activeId="dashboard"
+          items={museNavItems}
+          activeId="archive"
           isIconOnly
           variant="pills"
         />
@@ -243,8 +241,8 @@ export const Sizes = {
                 {size.toUpperCase()}
               </Typography>
               <NavMenu
-                items={orbitNavItems}
-                activeId="dashboard"
+                items={museNavItems}
+                activeId="archive"
                 size={size}
                 variant="pills"
               />

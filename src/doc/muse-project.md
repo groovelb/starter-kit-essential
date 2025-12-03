@@ -62,3 +62,168 @@
 | **Collection Dropdown** | 아이템을 추가할 무드보드 목록을 보여주는 팝오버/드롭다운. | 5 |
 | **Toast/SnackBar** | 업로드 및 컬렉션 저장 성공 등 비동기 피드백을 전달. | 2, 5 |
 | **Skeleton Loader** | 이미지 로딩 중 사용자에게 부드러운 대기 상태를 표시. | 3, 4 |
+
+## 4. 화면 정의 (Screen Spec)
+
+### 4.1 A. 메인 대시보드 (아카이브)
+
+**목적:** 레퍼런스 탐색, 필터링, 아카이브 관리 및 업로드 진입.
+
+| 구성 요소 | 사용 컴포넌트 |
+| :--- | :--- |
+| 레이아웃 | `AppShell`, `NavMenu` |
+| 필터링 | `FilterBar`, `SearchBar`, `CategoryTab` |
+| 콘텐츠 | `Grid Container`, `ImageCard` |
+
+**인터랙션 흐름:**
+1. 카테고리/키워드를 클릭하여 Grid를 실시간 필터링
+2. `ImageCard`를 Hover하여 액션 버튼 활성화 (좋아요, 무드보드 추가)
+3. 우상단 또는 사이드바의 버튼을 클릭하여 Upload Modal 진입
+
+**컴포넌트 조합:**
+```
+AppShell
+├── NavMenu (sidebar)
+│   ├── CategoryTab (카테고리 목록)
+│   └── Moodboard List
+└── Main Content
+    ├── FilterBar
+    │   ├── SearchBar
+    │   └── Keyword Chips
+    └── Grid Container
+        └── ImageCard[]
+```
+
+---
+
+### 4.2 B. 업로드 모달/폼
+
+**목적:** 외부 이미지 레퍼런스를 시스템에 등록하고 메타데이터를 정의.
+
+| 구성 요소 | 사용 컴포넌트 |
+| :--- | :--- |
+| 컨테이너 | `UploadModal` |
+| 파일 선택 | `FileDropzone` |
+| 정보 입력 | `TextField`, `TagInput`, `Select` |
+| 액션 | `Button`, `Stepper` |
+
+**인터랙션 흐름:**
+1. 파일을 Dropzone에 드래그하거나 선택
+2. 제목, 카테고리, 태그를 입력/선택
+3. Primary Button 클릭 후 업로드 진행률 확인
+4. Toast 알림 확인 후 모달 자동 닫힘
+
+**컴포넌트 조합:**
+```
+UploadModal
+├── Stepper (3단계: Select → Details → Upload)
+├── Step 1: FileDropzone
+├── Step 2: Form
+│   ├── TextField (제목)
+│   ├── Select (카테고리)
+│   └── TagInput (태그)
+└── Step 3: Progress + Confirmation
+    └── Snackbar (Toast)
+```
+
+---
+
+### 4.3 C. 상세 뷰 (Modal)
+
+**목적:** 레퍼런스 심층 분석, 메모 및 큐레이션 액션 실행.
+
+| 구성 요소 | 사용 컴포넌트 |
+| :--- | :--- |
+| 컨테이너 | `ImageDetailModal` |
+| 이미지 뷰어 | 대형 이미지 + 네비게이션 버튼 |
+| 정보 패널 | 메타데이터, 태그 Chips, 메모 필드 |
+| 액션 | `IconButton`, `CollectionDropdown`, `Button` |
+
+**인터랙션 흐름:**
+1. 이미지 및 메타데이터 확인 (해상도, 파일 크기, 라이센스 등)
+2. '무드보드 추가' 버튼 클릭 후 `CollectionDropdown`에서 컬렉션 선택
+3. (더미 기능) 메모 필드에 텍스트 입력
+4. 닫기 버튼 또는 배경 클릭으로 Grid View 복귀
+5. 좌/우 화살표 키 또는 버튼으로 이전/다음 이미지 탐색
+
+**컴포넌트 조합:**
+```
+ImageDetailModal
+├── Image Viewer (좌측)
+│   ├── 메인 이미지
+│   └── Navigation Buttons (< / >)
+└── Info Panel (우측)
+    ├── Title & Type
+    ├── Action Buttons (Like, Download, Share, Edit)
+    ├── MetaItem[] (Details)
+    ├── Tag Chips
+    └── CollectionDropdown (Add to Moodboard)
+```
+
+---
+
+### 4.4 D. 무드보드 뷰
+
+**목적:** 선별된 아이템 목록 검토 및 프로젝트별 정리.
+
+| 구성 요소 | 사용 컴포넌트 |
+| :--- | :--- |
+| 레이아웃 | `AppShell`, `NavMenu` |
+| 콘텐츠 헤더 | 무드보드 제목, 아이템 수, 액션 버튼 |
+| 콘텐츠 | `Grid Container`, `ImageCard` |
+| 액션 | `IconButton` (삭제, 순서 변경) |
+
+**인터랙션 흐름:**
+1. `NavMenu`에서 특정 무드보드 선택
+2. 무드보드 내 아이템 리스트 확인
+3. (더미 기능) 아이템 순서 재정렬 시뮬레이션
+4. 아이템의 '제거' 버튼 클릭하여 리스트에서 삭제 (CRUD의 Delete)
+
+**컴포넌트 조합:**
+```
+AppShell
+├── NavMenu (sidebar)
+│   └── Moodboard List (active item highlighted)
+└── Moodboard Content
+    ├── Header
+    │   ├── Title
+    │   ├── Item Count
+    │   └── Share Button
+    └── Grid Container
+        └── ImageCard[] (with delete action)
+```
+
+---
+
+## 5. 구현된 컴포넌트 목록
+
+### 5.1 Input 컴포넌트 (`src/components/input/`)
+
+| 컴포넌트 | 파일 | 설명 |
+| :--- | :--- | :--- |
+| **SearchBar** | `SearchBar.jsx` | 키워드 검색 입력 필드. 변형(outlined/filled/minimal), 필터 토글 지원 |
+| **FileDropzone** | `FileDropzone.jsx` | 드래그 앤 드롭 파일 업로드. 미리보기, 진행률, 완료 상태 표시 |
+| **TagInput** | `TagInput.jsx` | 태그 입력 및 Chip 변환. 자동완성 제안, 최대 개수 제한 |
+| **CollectionDropdown** | `CollectionDropdown.jsx` | 무드보드 선택 드롭다운. 새 컬렉션 생성 기능 포함 |
+
+### 5.2 Data 컴포넌트 (`src/components/data/`)
+
+| 컴포넌트 | 파일 | 설명 |
+| :--- | :--- | :--- |
+| **ImageDetailModal** | `ImageDetailModal.jsx` | 이미지 상세 보기 모달. 메타데이터, 태그, 액션 버튼, 네비게이션 |
+
+### 5.3 Templates (`src/components/templates/`)
+
+| 템플릿 | 파일 | 설명 |
+| :--- | :--- | :--- |
+| **UploadModal** | `UploadModal.jsx` | 3단계 업로드 플로우 모달 (파일 선택 → 정보 입력 → 업로드) |
+| **FilterBar** | `FilterBar.jsx` | 검색 + 태그 필터링 + 정렬 + 뷰 모드 전환 통합 바 |
+
+### 5.4 기존 활용 컴포넌트
+
+| 컴포넌트 | 위치 | 역할 |
+| :--- | :--- | :--- |
+| **ImageCard** | `src/components/card/ImageCard.jsx` | 메인 그리드 아이템, Hover 액션 오버레이 |
+| **CategoryTab** | `src/components/navigation/CategoryTab.jsx` | 카테고리 필터링 탭 메뉴 |
+| **AppShell** | `src/components/navigation/AppShell.jsx` | 메인 레이아웃 (Header + Sidebar + Content) |
+| **NavMenu** | `src/components/navigation/NavMenu.jsx` | 네비게이션 메뉴 (수직/수평, 다양한 스타일) |

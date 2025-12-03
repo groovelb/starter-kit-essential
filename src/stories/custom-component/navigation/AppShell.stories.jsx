@@ -10,12 +10,11 @@ import { NavMenu } from '../../../components/navigation/NavMenu';
 import { DocumentTitle, PageContainer } from '../../../components/storybookDocumentation';
 import { SectionContainer } from '../../../components/container/SectionContainer';
 
-// Navigation Items (Orbit 스타일)
-const orbitNavItems = [
-  { id: 'dashboard', label: 'Team Pulse' },
-  { id: 'assets', label: 'Asset Library' },
-  { id: 'projects', label: 'Campaign Manager' },
-  { id: 'settings', label: 'Studio Config' },
+// Navigation Items (MUSE Style)
+const museNavItems = [
+  { id: 'archive', label: 'Archive' },
+  { id: 'moodboards', label: 'Moodboards' },
+  { id: 'settings', label: 'Settings' },
 ];
 
 // Navigation Items (기본)
@@ -57,7 +56,7 @@ export const Default = {
           <AppShell
             logo={
               <Typography variant="h6" fontWeight={700} sx={{ letterSpacing: '-0.5px' }}>
-                Orbit.
+                MUSE.
               </Typography>
             }
             headerPersistent={
@@ -67,8 +66,8 @@ export const Default = {
             }
             headerCollapsible={
               <NavMenu
-                items={orbitNavItems}
-                activeId="dashboard"
+                items={museNavItems}
+                activeId="archive"
                 variant="underline"
               />
             }

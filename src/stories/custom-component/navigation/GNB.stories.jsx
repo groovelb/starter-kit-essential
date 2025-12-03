@@ -2,7 +2,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import CampaignIcon from '@mui/icons-material/Campaign';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { GNB } from '../../../components/navigation/GNB';
 import { NavMenu } from '../../../components/navigation/NavMenu';
@@ -19,15 +18,14 @@ export default {
 };
 
 const navItems = [
-  { id: 'dashboard', label: 'Team Pulse', icon: <DashboardIcon /> },
-  { id: 'library', label: 'Asset Library', icon: <PhotoLibraryIcon /> },
-  { id: 'manager', label: 'Campaign Manager', icon: <CampaignIcon /> },
-  { id: 'settings', label: 'Studio Config', icon: <SettingsIcon /> },
+  { id: 'archive', label: 'Archive', icon: <DashboardIcon /> },
+  { id: 'moodboards', label: 'Moodboards', icon: <PhotoLibraryIcon /> },
+  { id: 'settings', label: 'Settings', icon: <SettingsIcon /> },
 ];
 
 const Logo = () => (
   <Typography variant="h6" fontWeight={700} sx={{ letterSpacing: '-0.5px' }}>
-    Orbit.
+    MUSE.
   </Typography>
 );
 
@@ -54,7 +52,7 @@ export const Default = {
           navContent={
             <NavMenu
               items={navItems}
-              activeId="dashboard"
+              activeId="archive"
               variant="underline"
             />
           }
@@ -92,7 +90,7 @@ export const Transparent = {
             navContent={
               <NavMenu
                 items={navItems}
-                activeId="dashboard"
+                activeId="archive"
                 variant="underline"
               />
             }
@@ -140,7 +138,7 @@ export const WithPersistent = {
           navContent={
             <NavMenu
               items={navItems}
-              activeId="dashboard"
+              activeId="archive"
               variant="underline"
             />
           }
@@ -195,7 +193,7 @@ export const CustomBreakpoint = {
           navContent={
             <NavMenu
               items={navItems}
-              activeId="dashboard"
+              activeId="archive"
               variant="underline"
             />
           }

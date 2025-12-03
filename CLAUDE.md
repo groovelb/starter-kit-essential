@@ -18,11 +18,11 @@ YOU MUST NOT 명시적 허용 없이 규칙을 위반하는 코드를 작성하�
 
 ### CRITICAL (절대 위반 불가)
 @.cursor/rules/project-summary.mdc
+@.cursor/rules/mui-grid-usage.mdc
 
 ### MUST (반드시 준수)
 @.cursor/rules/code-convenstion.mdc
 @.cursor/rules/design-system.mdc
-@.cursor/rules/mui-grid-usage.mdc
 @.cursor/rules/project-directory-rules.mdc
 
 ### SHOULD (관련 작업 시 준수)

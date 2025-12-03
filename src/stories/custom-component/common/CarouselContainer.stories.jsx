@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { CarouselContainer } from '../../../common/ui/CarouselContainer';
+import { CarouselContainer } from '../../../components/container/CarouselContainer';
 
 /**
  * 데모용 샘플 아이템 생성
