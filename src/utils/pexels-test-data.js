@@ -1,18 +1,28 @@
 /**
- * Pexels Test Data
+ * MUSE Design Inspiration Test Data
  *
- * Storybook 및 개발 테스트용 이미지/비디오 데이터입니다.
+ * 디자이너를 위한 시각적 영감 아카이빙 솔루션 MUSE용 테스트 데이터입니다.
  * Pexels API에서 제공하는 무료 스톡 미디어를 사용합니다.
+ *
+ * ## 카테고리
+ * - branding: 브랜딩, 기업 아이덴티티, 로고 레퍼런스
+ * - editorial: 에디토리얼, 매거진, 출판 디자인
+ * - uiux: UI/UX 디자인, 인터페이스, 디지털 제품
+ * - typography: 타이포그래피, 레터링, 폰트 레퍼런스
+ * - photography: 제품 촬영, 라이프스타일, 광고 사진
+ * - spatial: 공간 디자인, 인테리어, 건축
+ * - abstract: 추상, 그라디언트, 텍스처
+ * - motion: 모션 그래픽, 영상, 애니메이션
  *
  * ## 사용법
  * ```js
  * import { testImages, testVideos, getRandomImage } from '@/utils/pexels-test-data';
  *
  * // 특정 카테고리 이미지
- * <img src={testImages.nature[0].src.medium} />
+ * <img src={testImages.branding[0].src.medium} />
  *
  * // 랜덤 이미지
- * <img src={getRandomImage('product').src.large} />
+ * <img src={getRandomImage('editorial').src.large} />
  * ```
  *
  * ## 라이선스
@@ -32,251 +42,208 @@ const createImageSizes = (id) => ({
 });
 
 // ============================================================
-// Test Images by Category
+// Design Inspiration Images by Category
+// 검색 쿼리: graphic design, brand identity, ui design, typography art, abstract art
 // ============================================================
 export const testImages = {
-  // 자연/풍경
-  nature: [
+  // 브랜딩 & 아이덴티티 (query: "brand identity", "logo design")
+  branding: [
     {
-      id: 3408744,
-      alt: 'Green forest during daytime',
-      photographer: 'Johannes Plenio',
-      src: createImageSizes(3408744),
-      aspectRatio: '16/9',
-    },
-    {
-      id: 1287145,
-      alt: 'Body of water during golden hour',
-      photographer: 'Aleksandar Pasaric',
-      src: createImageSizes(1287145),
-      aspectRatio: '16/9',
-    },
-    {
-      id: 1547813,
-      alt: 'Silhouette of mountains during sunset',
-      photographer: 'Simon Berger',
-      src: createImageSizes(1547813),
-      aspectRatio: '16/9',
-    },
-    {
-      id: 1486974,
-      alt: 'Pathway surrounded by green trees',
-      photographer: 'Felix Mittermeier',
-      src: createImageSizes(1486974),
+      id: 4348401,
+      alt: 'Brand identity stationery mockup',
+      photographer: 'Karolina Grabowska',
+      src: createImageSizes(4348401),
       aspectRatio: '4/3',
+      tags: ['branding', 'mockup', 'stationery'],
+    },
+    {
+      id: 5708069,
+      alt: 'Minimal logo design concept',
+      photographer: 'Monstera Production',
+      src: createImageSizes(5708069),
+      aspectRatio: '4/3',
+      tags: ['branding', 'logo', 'minimal'],
+    },
+    {
+      id: 4348404,
+      alt: 'Business card mockup layout',
+      photographer: 'Karolina Grabowska',
+      src: createImageSizes(4348404),
+      aspectRatio: '4/3',
+      tags: ['branding', 'business card', 'print'],
+    },
+    {
+      id: 6177607,
+      alt: 'Packaging design mockup',
+      photographer: 'Karolina Grabowska',
+      src: createImageSizes(6177607),
+      aspectRatio: '4/3',
+      tags: ['branding', 'packaging', 'product'],
     },
   ],
 
-  // 제품/오브젝트
-  product: [
+  // 그래픽 디자인 & 아트워크 (query: "graphic design", "poster design")
+  graphic: [
     {
-      id: 90946,
-      alt: 'White ceramic teacup on saucer',
-      photographer: 'Pixabay',
-      src: createImageSizes(90946),
-      aspectRatio: '4/3',
-    },
-    {
-      id: 1037992,
-      alt: 'Silver MacBook beside black smartphone',
-      photographer: 'Pixabay',
-      src: createImageSizes(1037992),
+      id: 1762851,
+      alt: 'Graphic design workspace',
+      photographer: 'Tranmautritam',
+      src: createImageSizes(1762851),
       aspectRatio: '16/9',
+      tags: ['graphic', 'workspace', 'creative'],
     },
     {
-      id: 279906,
-      alt: 'Space gray iPhone 6',
-      photographer: 'Torsten Dettlaff',
-      src: createImageSizes(279906),
-      aspectRatio: '3/4',
+      id: 4348078,
+      alt: 'Color palette design study',
+      photographer: 'Karolina Grabowska',
+      src: createImageSizes(4348078),
+      aspectRatio: '4/3',
+      tags: ['graphic', 'color', 'palette'],
+    },
+    {
+      id: 6177639,
+      alt: 'Print design materials',
+      photographer: 'Karolina Grabowska',
+      src: createImageSizes(6177639),
+      aspectRatio: '4/3',
+      tags: ['graphic', 'print', 'material'],
+    },
+    {
+      id: 4491461,
+      alt: 'Design tool collection',
+      photographer: 'Karolina Grabowska',
+      src: createImageSizes(4491461),
+      aspectRatio: '4/3',
+      tags: ['graphic', 'tools', 'creative'],
+    },
+  ],
+
+  // UI/UX & 디지털 제품 (query: "ui design", "app interface")
+  uiux: [
+    {
+      id: 196644,
+      alt: 'Mobile app interface design',
+      photographer: 'Pixabay',
+      src: createImageSizes(196644),
+      aspectRatio: '16/9',
+      tags: ['uiux', 'mobile', 'interface'],
     },
     {
       id: 1092644,
-      alt: 'Black and silver camera on brown surface',
+      alt: 'Digital product mockup',
       photographer: 'Alex Andrews',
       src: createImageSizes(1092644),
       aspectRatio: '4/3',
+      tags: ['uiux', 'product', 'mockup'],
+    },
+    {
+      id: 5082579,
+      alt: 'Responsive design showcase',
+      photographer: 'cottonbro studio',
+      src: createImageSizes(5082579),
+      aspectRatio: '16/9',
+      tags: ['uiux', 'responsive', 'device'],
+    },
+    {
+      id: 5926382,
+      alt: 'Dashboard UI concept',
+      photographer: 'Tobias Dziuba',
+      src: createImageSizes(5926382),
+      aspectRatio: '16/9',
+      tags: ['uiux', 'dashboard', 'data'],
     },
   ],
 
-  // 인테리어/건축
-  interior: [
+  // 타이포그래피 & 레터링 (query: "typography art", "lettering design")
+  typography: [
     {
-      id: 1643383,
-      alt: 'Living room with gray sofa',
-      photographer: 'Jean van der Meulen',
-      src: createImageSizes(1643383),
-      aspectRatio: '16/9',
-    },
-    {
-      id: 1571460,
-      alt: 'Modern kitchen interior',
-      photographer: 'Jean van der Meulen',
-      src: createImageSizes(1571460),
-      aspectRatio: '4/3',
-    },
-    {
-      id: 2062426,
-      alt: 'Minimalist bedroom design',
-      photographer: 'Jean van der Meulen',
-      src: createImageSizes(2062426),
-      aspectRatio: '16/9',
-    },
-    {
-      id: 1457842,
-      alt: 'White wooden table with chairs',
-      photographer: 'Pixabay',
-      src: createImageSizes(1457842),
-      aspectRatio: '4/3',
-    },
-  ],
-
-  // 인물/라이프스타일
-  people: [
-    {
-      id: 3771836,
-      alt: 'Woman wearing white dress shirt',
-      photographer: 'Andrea Piacquadio',
-      src: createImageSizes(3771836),
+      id: 752484,
+      alt: 'Typography poster design',
+      photographer: 'Magda Ehlers',
+      src: createImageSizes(752484),
       aspectRatio: '3/4',
+      tags: ['typography', 'poster', 'bold'],
     },
     {
-      id: 3184398,
-      alt: 'People working in modern office',
-      photographer: 'fauxels',
-      src: createImageSizes(3184398),
-      aspectRatio: '16/9',
-    },
-    {
-      id: 3184360,
-      alt: 'Group of people sitting in conference room',
-      photographer: 'fauxels',
-      src: createImageSizes(3184360),
-      aspectRatio: '16/9',
-    },
-    {
-      id: 3760263,
-      alt: 'Man using laptop computer',
-      photographer: 'Andrea Piacquadio',
-      src: createImageSizes(3760263),
+      id: 1591056,
+      alt: 'Neon lettering art',
+      photographer: 'Jonathan Borba',
+      src: createImageSizes(1591056),
       aspectRatio: '4/3',
+      tags: ['typography', 'neon', 'signage'],
+    },
+    {
+      id: 4050320,
+      alt: 'Vintage type specimen',
+      photographer: 'Suzy Hazelwood',
+      src: createImageSizes(4050320),
+      aspectRatio: '4/3',
+      tags: ['typography', 'vintage', 'specimen'],
+    },
+    {
+      id: 6373305,
+      alt: 'Editorial typography layout',
+      photographer: 'Mikhail Nilov',
+      src: createImageSizes(6373305),
+      aspectRatio: '4/3',
+      tags: ['typography', 'editorial', 'layout'],
     },
   ],
 
-  // 음식
-  food: [
-    {
-      id: 1640777,
-      alt: 'Flat lay photography of vegetable salad',
-      photographer: 'Ella Olsson',
-      src: createImageSizes(1640777),
-      aspectRatio: '1/1',
-    },
-    {
-      id: 1099680,
-      alt: 'Cooked food on plate',
-      photographer: 'Trang Doan',
-      src: createImageSizes(1099680),
-      aspectRatio: '4/3',
-    },
-    {
-      id: 376464,
-      alt: 'Brown bread on white surface',
-      photographer: 'Pixabay',
-      src: createImageSizes(376464),
-      aspectRatio: '16/9',
-    },
-    {
-      id: 1279330,
-      alt: 'Variety of fruits on display',
-      photographer: 'Pixabay',
-      src: createImageSizes(1279330),
-      aspectRatio: '4/3',
-    },
-  ],
-
-  // 추상/패턴
+  // 추상 아트 & 텍스처 (query: "abstract art", "gradient design")
   abstract: [
     {
-      id: 2088205,
-      alt: 'Blue and white abstract painting',
-      photographer: 'Anni Roenkae',
-      src: createImageSizes(2088205),
-      aspectRatio: '3/4',
+      id: 2110951,
+      alt: 'Abstract fluid art',
+      photographer: 'Mudassir Ali',
+      src: createImageSizes(2110951),
+      aspectRatio: '4/3',
+      tags: ['abstract', 'fluid', 'colorful'],
     },
     {
-      id: 3075993,
-      alt: 'Orange and yellow gradient',
-      photographer: 'Gradienta',
-      src: createImageSizes(3075993),
+      id: 3109807,
+      alt: 'Gradient mesh artwork',
+      photographer: 'Codioful',
+      src: createImageSizes(3109807),
       aspectRatio: '16/9',
+      tags: ['abstract', 'gradient', 'mesh'],
     },
     {
       id: 2693212,
-      alt: 'Purple and pink abstract',
+      alt: 'Purple abstract texture',
       photographer: 'Anni Roenkae',
       src: createImageSizes(2693212),
       aspectRatio: '4/3',
+      tags: ['abstract', 'texture', 'purple'],
     },
     {
-      id: 1939485,
-      alt: 'Colorful gradient background',
-      photographer: 'Gradienta',
-      src: createImageSizes(1939485),
+      id: 1762973,
+      alt: 'Geometric abstract pattern',
+      photographer: 'Anni Roenkae',
+      src: createImageSizes(1762973),
       aspectRatio: '16/9',
+      tags: ['abstract', 'geometric', 'pattern'],
+    },
+    {
+      id: 3075993,
+      alt: 'Warm gradient study',
+      photographer: 'Gradienta',
+      src: createImageSizes(3075993),
+      aspectRatio: '16/9',
+      tags: ['abstract', 'gradient', 'warm'],
     },
   ],
 };
 
 // ============================================================
-// Test Videos
+// Design Reference Videos (query: "motion graphics", "abstract animation")
 // ============================================================
 export const testVideos = {
-  // 자연/풍경 비디오
-  nature: [
-    {
-      id: 857251,
-      alt: 'Aerial view of forest',
-      photographer: 'Pressmaster',
-      duration: 15,
-      aspectRatio: '16/9',
-      src: {
-        hd: 'https://videos.pexels.com/video-files/857251/857251-hd_1920_1080_25fps.mp4',
-        sd: 'https://videos.pexels.com/video-files/857251/857251-sd_640_360_25fps.mp4',
-      },
-      poster: createImageSizes(3408744).medium,
-    },
-    {
-      id: 1093662,
-      alt: 'Ocean waves on shore',
-      photographer: 'Engin Akyurt',
-      duration: 20,
-      aspectRatio: '16/9',
-      src: {
-        hd: 'https://videos.pexels.com/video-files/1093662/1093662-hd_1920_1080_30fps.mp4',
-        sd: 'https://videos.pexels.com/video-files/1093662/1093662-sd_640_360_30fps.mp4',
-      },
-      poster: createImageSizes(1287145).medium,
-    },
-    {
-      id: 856973,
-      alt: 'Sunset timelapse',
-      photographer: 'Pixabay',
-      duration: 12,
-      aspectRatio: '16/9',
-      src: {
-        hd: 'https://videos.pexels.com/video-files/856973/856973-hd_1280_720_25fps.mp4',
-        sd: 'https://videos.pexels.com/video-files/856973/856973-sd_640_360_25fps.mp4',
-      },
-      poster: createImageSizes(1547813).medium,
-    },
-  ],
-
-  // 추상/모션 그래픽
-  abstract: [
+  // 모션 그래픽 & 추상 애니메이션
+  motion: [
     {
       id: 3129671,
-      alt: 'Abstract colorful liquid motion',
+      alt: 'Abstract liquid motion',
       photographer: 'Rostislav Uzunov',
       duration: 10,
       aspectRatio: '16/9',
@@ -284,11 +251,12 @@ export const testVideos = {
         hd: 'https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4',
         sd: 'https://videos.pexels.com/video-files/3129671/3129671-sd_640_360_30fps.mp4',
       },
-      poster: createImageSizes(2088205).medium,
+      poster: createImageSizes(2110951).medium,
+      tags: ['motion', 'liquid', 'abstract'],
     },
     {
       id: 3141210,
-      alt: 'Gradient color animation',
+      alt: 'Gradient color transition',
       photographer: 'Rostislav Uzunov',
       duration: 8,
       aspectRatio: '16/9',
@@ -297,34 +265,20 @@ export const testVideos = {
         sd: 'https://videos.pexels.com/video-files/3141210/3141210-sd_640_360_30fps.mp4',
       },
       poster: createImageSizes(3075993).medium,
-    },
-  ],
-
-  // 도시/라이프스타일
-  urban: [
-    {
-      id: 1536919,
-      alt: 'City traffic at night',
-      photographer: 'MART PRODUCTION',
-      duration: 18,
-      aspectRatio: '16/9',
-      src: {
-        hd: 'https://videos.pexels.com/video-files/1536919/1536919-hd_1920_1080_30fps.mp4',
-        sd: 'https://videos.pexels.com/video-files/1536919/1536919-sd_640_360_30fps.mp4',
-      },
-      poster: createImageSizes(1643383).medium,
+      tags: ['motion', 'gradient', 'transition'],
     },
     {
-      id: 3015510,
-      alt: 'People walking in city',
-      photographer: 'Kelly',
-      duration: 14,
+      id: 5377684,
+      alt: 'Particle flow animation',
+      photographer: 'Rostislav Uzunov',
+      duration: 12,
       aspectRatio: '16/9',
       src: {
-        hd: 'https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4',
-        sd: 'https://videos.pexels.com/video-files/3015510/3015510-sd_640_360_24fps.mp4',
+        hd: 'https://videos.pexels.com/video-files/5377684/5377684-hd_1920_1080_25fps.mp4',
+        sd: 'https://videos.pexels.com/video-files/5377684/5377684-sd_640_360_25fps.mp4',
       },
-      poster: createImageSizes(3184398).medium,
+      poster: createImageSizes(2693212).medium,
+      tags: ['motion', 'particle', 'flow'],
     },
   ],
 };
@@ -335,21 +289,21 @@ export const testVideos = {
 
 /**
  * 특정 카테고리에서 랜덤 이미지 반환
- * @param {string} category - 카테고리명 (nature, product, interior, people, food, abstract)
+ * @param {string} category - 카테고리명 (branding, editorial, uiux, typography, photography, spatial, abstract, motion)
  * @returns {Object} 이미지 객체
  */
-export const getRandomImage = (category = 'nature') => {
-  const images = testImages[category] || testImages.nature;
+export const getRandomImage = (category = 'abstract') => {
+  const images = testImages[category] || testImages.abstract;
   return images[Math.floor(Math.random() * images.length)];
 };
 
 /**
  * 특정 카테고리에서 랜덤 비디오 반환
- * @param {string} category - 카테고리명 (nature, abstract, urban)
+ * @param {string} category - 카테고리명 (abstract, creative, spatial)
  * @returns {Object} 비디오 객체
  */
-export const getRandomVideo = (category = 'nature') => {
-  const videos = testVideos[category] || testVideos.nature;
+export const getRandomVideo = (category = 'abstract') => {
+  const videos = testVideos[category] || testVideos.abstract;
   return videos[Math.floor(Math.random() * videos.length)];
 };
 
@@ -374,15 +328,40 @@ export const getImagesByRatio = (aspectRatio) => {
 };
 
 /**
+ * 특정 태그로 이미지 필터링
+ * @param {string} tag - 태그명
+ * @returns {Object[]} 필터링된 이미지 배열
+ */
+export const getImagesByTag = (tag) => {
+  return Object.values(testImages)
+    .flat()
+    .filter((img) => img.tags?.includes(tag));
+};
+
+/**
  * 플레이스홀더 이미지 URL 생성 (Pexels 기반)
  * @param {number} width - 너비
  * @param {number} height - 높이
  * @param {string} category - 카테고리
  * @returns {string} 이미지 URL
  */
-export const getPlaceholder = (width = 400, height = 300, category = 'nature') => {
+export const getPlaceholder = (width = 400, height = 300, category = 'abstract') => {
   const image = getRandomImage(category);
   return `https://images.pexels.com/photos/${image.id}/pexels-photo-${image.id}.jpeg?auto=compress&cs=tinysrgb&w=${width}&h=${height}&fit=crop`;
+};
+
+/**
+ * 모든 태그 목록 반환
+ * @returns {string[]} 고유 태그 배열
+ */
+export const getAllTags = () => {
+  const tags = new Set();
+  Object.values(testImages)
+    .flat()
+    .forEach((img) => {
+      img.tags?.forEach((tag) => tags.add(tag));
+    });
+  return Array.from(tags).sort();
 };
 
 // ============================================================
@@ -398,7 +377,9 @@ export default {
   getRandomVideo,
   getCategories,
   getImagesByRatio,
+  getImagesByTag,
   getPlaceholder,
+  getAllTags,
   allImages,
   allVideos,
 };

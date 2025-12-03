@@ -1,8 +1,7 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Fab from '@mui/material/Fab';
 import Fade from '@mui/material/Fade';
 import Grid from '@mui/material/Grid';
@@ -15,7 +14,8 @@ import { UploadModal } from '../components/templates/UploadModal';
 import { ImageCard } from '../components/card/ImageCard';
 import { ImageDetailModal } from '../components/data/ImageDetailModal';
 import { CollectionDropdown } from '../components/input/CollectionDropdown';
-import { museAssets } from '../data/museMockData';
+import { PageContainer } from '../components/container/PageContainer';
+import museDataStore from '../data/museDataStore';
 
 /**
  * ArchivePage 컴포넌트
@@ -24,16 +24,21 @@ import { museAssets } from '../data/museMockData';
  * 검색, 필터링, 이미지 그리드, 상세 보기, 업로드 기능을 통합.
  *
  * 동작 방식:
- * 1. FilterBar로 검색어/태그 기반 실시간 필터링
- * 2. ImageCard 그리드에서 레퍼런스 탐색
- * 3. 카드 클릭 시 ImageDetailModal로 상세 보기
- * 4. FAB 또는 헤더 버튼으로 UploadModal 진입
- * 5. 무드보드 추가 시 CollectionDropdown 표시
+ * 1. 마운트 시 museDataStore에서 데이터 로드 및 구독
+ * 2. FilterBar로 검색어/태그 기반 실시간 필터링
+ * 3. ImageCard 그리드에서 레퍼런스 탐색
+ * 4. 카드 클릭 시 ImageDetailModal로 상세 보기
+ * 5. 업로드 시 스토어에 추가 → UI 자동 업데이트
+ * 6. 무드보드 추가 시 스토어에 반영
  *
  * Example usage:
  * <ArchivePage />
  */
 export function ArchivePage() {
+  // 데이터 상태 (스토어에서 초기화)
+  const [assets, setAssets] = useState(() => museDataStore.getAssets());
+  const [moodboards, setMoodboards] = useState(() => museDataStore.getMoodboards());
+
   // 필터 상태
   const [searchValue, setSearchValue] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
@@ -48,28 +53,35 @@ export function ArchivePage() {
   // 인터랙션 상태
   const [likedIds, setLikedIds] = useState([]);
   const [showBoardDropdown, setShowBoardDropdown] = useState(null);
+  const [currentAssetForBoard, setCurrentAssetForBoard] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  // 샘플 무드보드 데이터
-  const moodboards = [
-    { id: 'board-1', name: 'Tech Product Shots', count: 24 },
-    { id: 'board-2', name: 'Summer Campaign', count: 18 },
-    { id: 'board-3', name: 'Brand Identity', count: 42 },
-    { id: 'board-4', name: 'UI References', count: 31 },
-  ];
+  /**
+   * 스토어 변경 구독
+   * 업로드, 무드보드 추가 등의 변경 시 UI 자동 업데이트
+   */
+  useEffect(() => {
+    const unsubAssets = museDataStore.subscribe('assets', setAssets);
+    const unsubMoodboards = museDataStore.subscribe('moodboards', setMoodboards);
+
+    return () => {
+      unsubAssets();
+      unsubMoodboards();
+    };
+  }, []);
 
   // 사용 가능한 모든 태그 추출
   const allTags = useMemo(() => {
     const tags = new Set();
-    museAssets.forEach((asset) => {
+    assets.forEach((asset) => {
       asset.tags?.forEach((tag) => tags.add(tag));
     });
     return Array.from(tags);
-  }, []);
+  }, [assets]);
 
   // 필터링된 에셋
   const filteredAssets = useMemo(() => {
-    let result = [...museAssets];
+    let result = [...assets];
 
     // 검색어 필터
     if (searchValue) {
@@ -104,7 +116,16 @@ export function ArchivePage() {
     }
 
     return result;
-  }, [searchValue, selectedTags, sortBy]);
+  }, [assets, searchValue, selectedTags, sortBy]);
+
+  // 무드보드 목록 (CollectionDropdown용)
+  const moodboardOptions = useMemo(() => {
+    return moodboards.map((board) => ({
+      id: board.id,
+      name: board.name,
+      count: board.items.length,
+    }));
+  }, [moodboards]);
 
   /**
    * 태그 토글
@@ -170,44 +191,83 @@ export function ArchivePage() {
   }, [selectedAssetIndex, filteredAssets]);
 
   /**
+   * 무드보드 추가 드롭다운 열기
+   */
+  const handleOpenBoardDropdown = useCallback((asset) => {
+    setCurrentAssetForBoard(asset);
+    setShowBoardDropdown(true);
+  }, []);
+
+  /**
    * 무드보드에 추가
    */
   const handleAddToBoard = useCallback((boardId) => {
+    if (!currentAssetForBoard) return;
+
     const board = moodboards.find((b) => b.id === boardId);
+    museDataStore.addItemToMoodboard(boardId, currentAssetForBoard);
+
     setSnackbar({
       open: true,
       message: `Added to "${board?.name}"`,
       severity: 'success',
     });
-    setShowBoardDropdown(null);
-  }, []);
+    setShowBoardDropdown(false);
+    setCurrentAssetForBoard(null);
+  }, [currentAssetForBoard, moodboards]);
 
   /**
-   * 새 무드보드 생성
+   * 새 무드보드 생성 및 추가
    */
   const handleCreateBoard = useCallback((name) => {
-    setSnackbar({
-      open: true,
-      message: `Created new board "${name}"`,
-      severity: 'success',
-    });
-  }, []);
+    const newBoard = museDataStore.createMoodboard(name);
+
+    if (currentAssetForBoard) {
+      museDataStore.addItemToMoodboard(newBoard.id, currentAssetForBoard);
+      setSnackbar({
+        open: true,
+        message: `Created "${name}" and added item`,
+        severity: 'success',
+      });
+    } else {
+      setSnackbar({
+        open: true,
+        message: `Created new board "${name}"`,
+        severity: 'success',
+      });
+    }
+
+    setShowBoardDropdown(false);
+    setCurrentAssetForBoard(null);
+  }, [currentAssetForBoard]);
 
   /**
-   * 업로드 완료
+   * 업로드 완료 - 스토어에 새 에셋 추가
    */
   const handleUpload = useCallback(async (data) => {
-    console.log('Uploading:', data);
+    // 업로드 시뮬레이션 (실제 API 연동 시 여기서 서버 호출)
     await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // 스토어에 새 에셋 추가 → 구독을 통해 UI 자동 업데이트
+    const newAsset = museDataStore.addAsset({
+      title: data.title || 'Untitled Upload',
+      tags: data.tags || [],
+      thumbnail: data.previewUrl || 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600',
+      type: data.file?.type?.startsWith('video') ? 'video' : 'image',
+      format: data.file?.name?.split('.').pop()?.toUpperCase() || 'JPG',
+      size: data.file?.size ? `${(data.file.size / 1024 / 1024).toFixed(1)} MB` : 'Unknown',
+      license: data.license || 'Personal',
+    });
+
     setSnackbar({
       open: true,
-      message: 'Reference uploaded successfully!',
+      message: `"${newAsset.title}" uploaded successfully!`,
       severity: 'success',
     });
   }, []);
 
   return (
-    <Box>
+    <PageContainer>
       {/* 페이지 헤더 */}
       <Box
         sx={{
@@ -293,7 +353,7 @@ export function ArchivePage() {
                     }}
                     onAddToBoard={(e) => {
                       e?.stopPropagation?.();
-                      setShowBoardDropdown(asset.id);
+                      handleOpenBoardDropdown(asset);
                     }}
                   />
                 </Box>
@@ -359,7 +419,7 @@ export function ArchivePage() {
         onDownload={() => console.log('Download:', selectedAsset?.title)}
         onShare={() => console.log('Share:', selectedAsset?.title)}
         onEdit={() => console.log('Edit:', selectedAsset?.title)}
-        onAddToBoard={() => setShowBoardDropdown(selectedAsset?.id)}
+        onAddToBoard={() => handleOpenBoardDropdown(selectedAsset)}
         onPrevious={handlePrevious}
         onNext={handleNext}
         hasPrevious={selectedAssetIndex > 0}
@@ -369,7 +429,10 @@ export function ArchivePage() {
       {/* 무드보드 선택 드롭다운 (오버레이로 표시) */}
       {showBoardDropdown && (
         <Box
-          onClick={() => setShowBoardDropdown(null)}
+          onClick={() => {
+            setShowBoardDropdown(false);
+            setCurrentAssetForBoard(null);
+          }}
           sx={{
             position: 'fixed',
             inset: 0,
@@ -394,7 +457,7 @@ export function ArchivePage() {
               Add to Moodboard
             </Typography>
             <CollectionDropdown
-              collections={moodboards}
+              collections={moodboardOptions}
               onSelect={handleAddToBoard}
               onCreate={handleCreateBoard}
               buttonLabel="Select Board"
@@ -420,7 +483,7 @@ export function ArchivePage() {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Box>
+    </PageContainer>
   );
 }
 

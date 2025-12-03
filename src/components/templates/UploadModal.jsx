@@ -136,11 +136,12 @@ export function UploadModal({
 
   /**
    * 상태 리셋
+   * @param {boolean} keepPreviewUrl - 업로드 성공 시 previewUrl 유지 (true면 revoke 안함)
    */
-  const resetState = useCallback(() => {
+  const resetState = useCallback((keepPreviewUrl = false) => {
     setActiveStep(0);
     setSelectedFile(null);
-    if (previewUrl) {
+    if (previewUrl && !keepPreviewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
     setPreviewUrl(null);
@@ -179,26 +180,27 @@ export function UploadModal({
         });
       }, 200);
 
-      // 실제 업로드 호출
+      // 실제 업로드 호출 (previewUrl 포함)
       await onUpload({
         file: selectedFile,
+        previewUrl,
         ...formData,
       });
 
       clearInterval(progressInterval);
       setUploadProgress(100);
 
-      // 성공 처리
+      // 성공 처리 (previewUrl 유지하여 아카이브에서 표시 가능)
       setTimeout(() => {
         setShowSuccess(true);
-        resetState();
+        resetState(true);
         onClose();
       }, 500);
     } catch (err) {
       setError(err.message || 'Upload failed. Please try again.');
       setIsUploading(false);
     }
-  }, [selectedFile, formData, onUpload, onClose, resetState]);
+  }, [selectedFile, formData, previewUrl, onUpload, onClose, resetState]);
 
   /**
    * Step 컨텐츠 렌더링

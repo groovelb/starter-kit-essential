@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -31,7 +31,8 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import { ImageCard } from '../components/card/ImageCard';
 import { ImageDetailModal } from '../components/data/ImageDetailModal';
-import { museAssets } from '../data/museMockData';
+import { PageContainer } from '../components/container/PageContainer';
+import museDataStore from '../data/museDataStore';
 
 /**
  * MoodboardsPage 컴포넌트
@@ -40,39 +41,19 @@ import { museAssets } from '../data/museMockData';
  * 여러 무드보드를 탭으로 전환하고, 각 보드의 아이템을 관리.
  *
  * 동작 방식:
- * 1. 탭으로 무드보드 간 전환
- * 2. 각 무드보드 내 아이템 그리드 표시
- * 3. 아이템 제거, 순서 변경 (더미 기능)
- * 4. 새 무드보드 생성, 이름 변경, 삭제
+ * 1. 마운트 시 museDataStore에서 무드보드 데이터 로드 및 구독
+ * 2. 탭으로 무드보드 간 전환
+ * 3. 각 무드보드 내 아이템 그리드 표시
+ * 4. 아이템 제거, 순서 변경 (시뮬레이션)
+ * 5. 새 무드보드 생성, 이름 변경, 삭제 → 스토어에 반영
+ * 6. Archive 페이지에서 추가한 아이템이 자동으로 반영됨
  *
  * Example usage:
  * <MoodboardsPage />
  */
 export function MoodboardsPage() {
-  // 무드보드 데이터 (실제 앱에서는 상태 관리 라이브러리 사용)
-  const [moodboards, setMoodboards] = useState([
-    {
-      id: 'board-1',
-      name: 'Tech Product Shots',
-      description: 'Product photography references for tech campaigns',
-      items: [museAssets[0], museAssets[2], museAssets[3]],
-      createdAt: '2024-10-15',
-    },
-    {
-      id: 'board-2',
-      name: 'Summer Campaign',
-      description: 'Bright and vibrant summer vibes',
-      items: [museAssets[1], museAssets[4]],
-      createdAt: '2024-10-10',
-    },
-    {
-      id: 'board-3',
-      name: 'Brand Identity',
-      description: 'Corporate identity and branding references',
-      items: [museAssets[5], museAssets[0], museAssets[4], museAssets[2]],
-      createdAt: '2024-09-28',
-    },
-  ]);
+  // 무드보드 데이터 (스토어에서 초기화)
+  const [moodboards, setMoodboards] = useState(() => museDataStore.getMoodboards());
 
   const [activeTab, setActiveTab] = useState(0);
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -85,7 +66,17 @@ export function MoodboardsPage() {
   const [likedIds, setLikedIds] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  const currentBoard = moodboards[activeTab];
+  /**
+   * 스토어 변경 구독
+   * Archive에서 아이템 추가 시 자동 반영
+   */
+  useEffect(() => {
+    const unsubscribe = museDataStore.subscribe('moodboards', setMoodboards);
+    return unsubscribe;
+  }, []);
+
+  // 현재 활성 보드 (안전하게 접근)
+  const currentBoard = moodboards[activeTab] || null;
 
   /**
    * 탭 변경
@@ -111,21 +102,15 @@ export function MoodboardsPage() {
   const handleCreateBoard = useCallback(() => {
     if (!newBoardName.trim()) return;
 
-    const newBoard = {
-      id: `board-${Date.now()}`,
-      name: newBoardName.trim(),
-      description: '',
-      items: [],
-      createdAt: new Date().toISOString().split('T')[0],
-    };
+    museDataStore.createMoodboard(newBoardName.trim());
 
-    setMoodboards((prev) => [...prev, newBoard]);
+    // 새로 생성된 보드로 탭 이동
     setActiveTab(moodboards.length);
     setNewBoardName('');
     setShowCreateDialog(false);
     setSnackbar({
       open: true,
-      message: `Created "${newBoard.name}"`,
+      message: `Created "${newBoardName.trim()}"`,
       severity: 'success',
     });
   }, [newBoardName, moodboards.length]);
@@ -134,13 +119,10 @@ export function MoodboardsPage() {
    * 무드보드 이름 변경
    */
   const handleRenameBoard = useCallback(() => {
-    if (!newBoardName.trim()) return;
+    if (!newBoardName.trim() || !currentBoard) return;
 
-    setMoodboards((prev) =>
-      prev.map((board, index) =>
-        index === activeTab ? { ...board, name: newBoardName.trim() } : board
-      )
-    );
+    museDataStore.renameMoodboard(currentBoard.id, newBoardName.trim());
+
     setNewBoardName('');
     setShowRenameDialog(false);
     handleMenuClose();
@@ -149,13 +131,16 @@ export function MoodboardsPage() {
       message: 'Board renamed',
       severity: 'success',
     });
-  }, [newBoardName, activeTab, handleMenuClose]);
+  }, [newBoardName, currentBoard, handleMenuClose]);
 
   /**
    * 무드보드 삭제
    */
   const handleDeleteBoard = useCallback(() => {
-    setMoodboards((prev) => prev.filter((_, index) => index !== activeTab));
+    if (!currentBoard) return;
+
+    museDataStore.deleteMoodboard(currentBoard.id);
+
     setActiveTab(Math.max(0, activeTab - 1));
     setShowDeleteDialog(false);
     handleMenuClose();
@@ -164,28 +149,22 @@ export function MoodboardsPage() {
       message: 'Board deleted',
       severity: 'info',
     });
-  }, [activeTab, handleMenuClose]);
+  }, [currentBoard, activeTab, handleMenuClose]);
 
   /**
    * 아이템 제거
    */
-  const handleRemoveItem = useCallback(
-    (itemId) => {
-      setMoodboards((prev) =>
-        prev.map((board, index) =>
-          index === activeTab
-            ? { ...board, items: board.items.filter((item) => item.id !== itemId) }
-            : board
-        )
-      );
-      setSnackbar({
-        open: true,
-        message: 'Removed from moodboard',
-        severity: 'info',
-      });
-    },
-    [activeTab]
-  );
+  const handleRemoveItem = useCallback((itemId) => {
+    if (!currentBoard) return;
+
+    museDataStore.removeItemFromMoodboard(currentBoard.id, itemId);
+
+    setSnackbar({
+      open: true,
+      message: 'Removed from moodboard',
+      severity: 'info',
+    });
+  }, [currentBoard]);
 
   /**
    * 좋아요 토글
@@ -218,7 +197,7 @@ export function MoodboardsPage() {
    * 이전/다음 네비게이션
    */
   const handlePrevious = useCallback(() => {
-    if (selectedAssetIndex > 0) {
+    if (selectedAssetIndex > 0 && currentBoard) {
       const newIndex = selectedAssetIndex - 1;
       setSelectedAssetIndex(newIndex);
       setSelectedAsset(currentBoard.items[newIndex]);
@@ -246,16 +225,13 @@ export function MoodboardsPage() {
   }, [handleMenuClose]);
 
   /**
-   * 복제 (더미)
+   * 복제
    */
   const handleDuplicate = useCallback(() => {
-    const duplicatedBoard = {
-      ...currentBoard,
-      id: `board-${Date.now()}`,
-      name: `${currentBoard.name} (Copy)`,
-      createdAt: new Date().toISOString().split('T')[0],
-    };
-    setMoodboards((prev) => [...prev, duplicatedBoard]);
+    if (!currentBoard) return;
+
+    museDataStore.duplicateMoodboard(currentBoard.id);
+
     handleMenuClose();
     setSnackbar({
       open: true,
@@ -265,7 +241,7 @@ export function MoodboardsPage() {
   }, [currentBoard, handleMenuClose]);
 
   return (
-    <Box>
+    <PageContainer>
       {/* 페이지 헤더 */}
       <Box
         sx={{
@@ -592,7 +568,7 @@ export function MoodboardsPage() {
         <DialogTitle sx={{ fontWeight: 700 }}>Delete Board</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete "{currentBoard?.name}"? This action cannot be undone.
+            Are you sure you want to delete &quot;{currentBoard?.name}&quot;? This action cannot be undone.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -634,7 +610,7 @@ export function MoodboardsPage() {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Box>
+    </PageContainer>
   );
 }
 

@@ -1,15 +1,15 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import AddIcon from '@mui/icons-material/Add';
-import Chip from '@mui/material/Chip';
 
 /**
  * ImageCard 컴포넌트
  *
  * 메인 그리드의 기본 아이템.
- * Masonry Grid에 적합하며, Hover 시 액션 오버레이를 제공한다.
+ * Hover 시 위치 변경 효과와 액션 버튼 표시.
  *
  * Props:
  * @param {string} src - 이미지 URL [Required]
@@ -35,13 +35,11 @@ export function ImageCard({
         borderRadius: 2,
         overflow: 'hidden',
         backgroundColor: 'background.paper',
-        boxShadow: 1,
-        transition: 'transform 0.2s, box-shadow 0.2s',
+        transition: 'transform 0.2s',
         cursor: 'pointer',
         '&:hover': {
           transform: 'translateY(-4px)',
-          boxShadow: 4,
-          '& .action-overlay': {
+          '& .action-buttons': {
             opacity: 1,
           },
         },
@@ -57,89 +55,89 @@ export function ImageCard({
         sx={{
           display: 'block',
           width: '100%',
-          height: 'auto', // Masonry 레이아웃을 위해 높이 자동
+          height: 'auto',
           objectFit: 'cover',
         }}
       />
 
-      {/* Hover 액션 오버레이 */}
+      {/* 액션 버튼 (Hover 시 표시) */}
       <Box
-        className="action-overlay"
+        className="action-buttons"
         sx={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          bgcolor: 'rgba(0, 0, 0, 0.4)',
+          top: 8,
+          right: 8,
+          display: 'flex',
+          gap: 0.5,
           opacity: 0,
           transition: 'opacity 0.2s',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          p: 2,
         }}
       >
-        {/* 상단 액션 버튼 */}
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-          <IconButton
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              onLike?.();
-            }}
-            sx={{
-              bgcolor: 'background.paper',
-              '&:hover': { bgcolor: 'white' },
-            }}
-          >
-            <FavoriteBorderIcon fontSize="small" />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToBoard?.();
-            }}
-            sx={{
-              bgcolor: 'primary.main',
-              color: 'white',
-              '&:hover': { bgcolor: 'primary.dark' },
-            }}
-          >
-            <AddIcon fontSize="small" />
-          </IconButton>
-        </Box>
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+            onLike?.();
+          }}
+          sx={{
+            bgcolor: 'background.paper',
+            boxShadow: 1,
+            '&:hover': { bgcolor: 'white' },
+          }}
+        >
+          <FavoriteBorderIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToBoard?.();
+          }}
+          sx={{
+            bgcolor: 'primary.main',
+            color: 'white',
+            boxShadow: 1,
+            '&:hover': { bgcolor: 'primary.dark' },
+          }}
+        >
+          <AddIcon fontSize="small" />
+        </IconButton>
+      </Box>
 
-        {/* 하단 정보 */}
-        <Box>
+      {/* 카드 하단 정보 (항상 표시) */}
+      {(title || tags.length > 0) && (
+        <Box sx={{ p: 1.5 }}>
           {title && (
             <Typography
-              variant="subtitle2"
-              sx={{ color: 'white', fontWeight: 600, mb: 1, textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}
+              variant="body2"
+              sx={{
+                fontWeight: 600,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                mb: tags.length > 0 ? 1 : 0,
+              }}
             >
               {title}
             </Typography>
           )}
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {tags.slice(0, 3).map((tag) => (
-              <Chip
-                key={tag}
-                label={`#${tag}`}
-                size="small"
-                sx={{
-                  height: 20,
-                  fontSize: '0.7rem',
-                  bgcolor: 'rgba(255,255,255,0.2)',
-                  color: 'white',
-                  backdropFilter: 'blur(4px)',
-                }}
-              />
-            ))}
-          </Box>
+          {tags.length > 0 && (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {tags.slice(0, 3).map((tag) => (
+                <Chip
+                  key={tag}
+                  label={tag}
+                  size="small"
+                  sx={{
+                    height: 20,
+                    fontSize: '0.7rem',
+                  }}
+                />
+              ))}
+            </Box>
+          )}
         </Box>
-      </Box>
+      )}
     </Box>
   );
 }
-
