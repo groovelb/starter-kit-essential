@@ -1,102 +1,141 @@
 # Orbit Project: Vibe Coding Starter Kit
 
-> **Concept:** 크리에이티브 팀을 위한 올인원 협업 OS (Digital Asset Management & Project Tool)
-> **Purpose:** 디자이너가 React + MUI 환경에서 실무 레벨의 UI를 직접 조립하고 커스텀해보는 경험 제공
+> **Concept:** 하이퍼 그로스 미디어 팀을 위한 콘텐츠 생산성 OS
+> **Purpose:** 디자이너가 "데이터 집약적"이고 "속도감 있는" UI를 설계하는 경험 제공
 
 ---
 
-## 1. Project Summary (프로젝트 개요)
-Orbit은 흩어진 디지털 자산과 프로젝트를 한곳에서 관리하는 가상의 B2B SaaS 플랫폼입니다.
-이 프로젝트는 "완벽한 기능 구현"보다는 **"MUI 컴포넌트의 실제 활용 사례(Best Practice)"**를 보여주는 데 집중합니다.
+## 1. Project Summary & Background (프로젝트 개요 및 배경)
+
+### 🏢 Target Company: "Neon Spikes" (가상)
+- **업종:** 숏폼 및 디지털 광고 콘텐츠 제작 스튜디오
+- **규모:** 크리에이터 20명, PM 5명 (매월 300개 이상의 영상 발행)
+- **상황:** 최근 클라이언트가 급증하면서 콘텐츠 생산량이 폭발적으로 늘어났습니다.
+
+### 🚨 The Core Problem (직면한 문제)
+**"속도가 생명인데, 관리가 발목을 잡고 있다."**
+
+1.  **자산의 파편화 (Asset Fragmentation):**
+    - 고화질 영상 소스가 NAS, Google Drive, Dropbox에 흩어져 있어 찾을 때마다 30분씩 허비합니다.
+    - "지난번 그 영상 어디 있어?"라는 질문이 슬랙에서 하루에 50번씩 반복됩니다.
+2.  **승인 병목 (Approval Bottleneck):**
+    - PM이 슬랙, 카톡, 이메일로 쏟아지는 컨펌 요청을 놓쳐 배포 기한(Dead-line)을 넘기기 일쑤입니다.
+    - 누가 지금 '노는 손'인지, 누가 '과부하' 상태인지 파악이 불가능합니다.
+3.  **버전 관리 실패 (Version Chaos):**
+    - `final_v2_real_final.mp4` 같은 파일명으로 인해 잘못된 버전이 클라이언트에게 전송되는 사고가 발생했습니다.
+
+### 🎯 Orbit's Mission
+Orbit은 Neon Spikes와 같은 고속 성장 미디어 팀을 위해 **"모든 디지털 자산과 프로젝트 흐름을 하나의 궤도(Orbit) 위에서 시각화"**하는 운영 체제입니다.
+단순한 저장소가 아닌, **제작 속도(Velocity)를 0.1초라도 단축시키는 것**이 이 서비스의 유일한 목표입니다.
 
 ---
 
 ## 2. PRD (Product Requirements Document)
-### 핵심 가치
-- **Universal UI:** 어떤 도메인으로도 확장 가능한 중립적이고 범용적인 레이아웃
-- **Real-world Data:** 실제 서비스처럼 느껴지는 풍부한 데이터 표현 (Pexels API 활용)
-- **Theme Playground:** 테마 변경만으로 서비스의 분위기가 드라마틱하게 바뀌는 경험
 
-### 주요 기능 (Scope)
-- **Dashboard:** 데이터 시각화 및 그리드 레이아웃 학습
-- **Asset Library:** 미디어 처리 및 반복 리스트 UI 학습
-- **Kanban/Table:** 복잡한 데이터 구조화 및 상태 관리 UI 학습
-- **Settings:** 폼 컨트롤 및 인터랙티브 컴포넌트 학습
+### 핵심 가치 (Core Value)
+- **Velocity First:** 모든 UI는 클릭 수를 줄이고, 빠른 탐색을 지원해야 함 (단축키, 빠른 필터)
+- **Visual Intelligence:** 메타데이터(해상도, 길이, 포맷)를 텍스트가 아닌 시각적 배지나 컬러로 즉시 인지 가능하게 함
+- **Contextual Focus:** 나의 작업 단계(기획/제작/검수)에 따라 필요한 정보만 노출
 
 ---
 
-## 3. Primary User Scenarios & Personas (핵심 사용자 시나리오 및 페르소나)
+## 3. Primary User Scenarios & Personas (핵심 사용자 시나리오: 문제와 해결)
 
-### 👤 Persona A: Sarah (Creative Director)
-> "팀 전체의 업무 흐름을 한눈에 보고, 빠른 의사결정을 내려야 해요."
-- **Goal:** 프로젝트 진행 상황 파악, 리소스 분배 최적화
-- **Key Scenario (Morning Check):**
-    1. 출근 후 **Team Pulse (Dashboard)**에 접속한다.
-    2. 상단 Metric Card에서 '오늘 마감 프로젝트' 숫자가 빨간색인 것을 발견한다.
-    3. 최근 Activity Feed를 통해 어떤 디자이너가 밤샘 작업을 했는지 확인한다.
+### 👤 Persona A: Sarah (Head of Content) - "병목 해결사"
+> "오늘 발행되어야 할 릴스 5개가 아직 승인 대기 중이에요. 어디서 막혔죠?"
 
-### 👤 Persona B: Mike (Senior Designer)
-> "고품질의 이미지 소스를 빠르게 찾아서 시안에 적용해야 해요."
-- **Goal:** 효율적인 에셋 검색 및 관리, 디자인 작업 속도 향상
-- **Key Scenario (Asset Hunting):**
-    1. **Asset Library** 메뉴로 이동한다.
-    2. 필터에서 '4K', 'Nature', 'Video'를 선택하여 고화질 영상 소스를 검색한다.
-    3. 마음에 드는 소스를 클릭해 상세 정보를 보고, 'Copy URL' 버튼을 눌러 피그마로 가져간다.
+- **🚨 The Problem (Pain Point):**
+    - 팀원들이 마감을 지키고 있는지 한눈에 파악 불가 (Slack, Notion, 파일 서버를 오가며 확인해야 함)
+    - 승인 대기 중인 프로젝트가 쌓여서 배포가 지연됨
+- **⚡ The Solution (Orbit's Value):**
+    - **Visual Bottleneck Indicator:** 대시보드에서 '지연' 상태를 색상으로 즉시 식별
+    - **One-Click Nudge:** 별도 메신저 이동 없이 담당자에게 알림 전송
+- **🎬 Key Scenario (Bottleneck Removal Workflow):**
+    1. 출근 직후 **Team Pulse (Dashboard)**를 확인한다. 상단 'Pending Approval' 지표가 **Red Alert** 상태인 것을 발견한다.
+    2. **Urgent Tasks** 위젯에서 '승인 대기 시간이 24시간을 넘긴' 프로젝트만 필터링한다.
+    3. 해당 카드의 `Remind` 버튼을 클릭해 담당자에게 Slack 알림을 쏘고, 바로 미리보기 모달을 띄워 **"즉시 승인"** 처리한다.
 
-### 👤 Persona C: Jin (Project Manager)
-> "수십 개의 프로젝트 일정을 꼼꼼하게 관리하고 누락을 방지해야 해요."
-- **Goal:** 프로젝트 상태 트래킹, 일정 관리, 리스크 최소화
-- **Key Scenario (Project Tracking):**
-    1. **Campaign Manager** 페이지에서 테이블 뷰를 연다.
-    2. 'Status' 컬럼을 기준으로 정렬하여 '지연(Delayed)' 상태인 프로젝트를 필터링한다.
-    3. 해당 프로젝트의 상태를 '긴급(Urgent)'으로 변경하고 담당자에게 알림을 보낸다.
+### 👤 Persona B: Mike (Visual Editor) - "소스 사냥꾼"
+> "지난번에 썼던 그 '네온 사인' 4K 영상, 라이선스 만료됐나요? 지금 당장 써야 하는데!"
 
-### 👤 Persona D: Alex (Newbie Designer)
-> "툴이 내 눈에 편안했으면 좋겠고, 나만의 작업 환경을 꾸미고 싶어요."
-- **Goal:** 개인화된 작업 환경 설정, 빠른 툴 적응
-- **Key Scenario (Personalize):**
-    1. **Studio Config (Settings)** 페이지에 들어간다.
-    2. 눈의 피로를 줄이기 위해 'Dark Mode'로 테마를 전환한다.
-    3. 프로필 사진을 업데이트하고, 불필요한 이메일 알림 스위치를 끈다.
+- **🚨 The Problem (Pain Point):**
+    - 수천 개의 파일 중 원하는 소스를 찾는 데만 1시간 소요
+    - 저작권 만료된 소스를 잘못 사용하여 법적 리스크 발생
+- **⚡ The Solution (Orbit's Value):**
+    - **Metadata Filtering:** 해상도, 프레임레이트, 라이선스 만료일로 즉시 필터링
+    - **Instant Preview:** 다운로드 없이 마우스 호버만으로 영상 내용 확인
+- **🎬 Key Scenario (Rapid Asset Hunting):**
+    1. **Asset Vault (Library)**에 진입해 단축키 `Cmd+K`로 필터 패널을 연다.
+    2. 태그: `#Neon`, 해상도: `4K`, 라이선스: `Commercial Use` 조건을 동시에 건다.
+    3. 검색된 12개 영상 위로 마우스를 올려 **Hover Preview**로 내용을 훑어본다.
+    4. 최적의 소스를 찾아 상세 페이지에서 'License Valid' 배지를 확인 후, **'Copy CDN Link'**로 편집 툴에 바로 붙여넣는다.
+
+### 👤 Persona C: Jin (Schedule Manager) - "일정 조율자"
+> "A 클라이언트는 피드백이 너무 느려요. 우리 팀 리소스가 낭비되고 있어요."
+
+- **🚨 The Problem (Pain Point):**
+    - 클라이언트 피드백 지연으로 내부 제작 일정이 꼬임
+    - 우선순위가 낮은 프로젝트에 디자이너들이 시간을 쏟고 있음
+- **⚡ The Solution (Orbit's Value):**
+    - **Status-based Sorting:** 진행 상태(Status)를 기준으로 프로젝트를 그룹화하여 관리
+    - **Priority Flagging:** 프로젝트 우선순위를 시각적으로 격상/격하 가능
+- **🎬 Key Scenario (Campaign Optimization):**
+    1. **Campaign Ops (Manager)**에서 테이블 뷰를 열고, 'Status' 컬럼을 기준으로 정렬한다.
+    2. 'Client Review' 상태에서 3일 이상 멈춰있는 프로젝트들을 일괄 선택(Multi-select)한다.
+    3. 상태를 **'On Hold(보류)'**로 변경하고, 우선순위를 'Low'로 낮춰 팀원들의 대시보드에서 해당 건을 아래로 내린다.
 
 ---
 
 ## 4. Design Concept (디자인 방향성)
-사용자들의 업무 효율성과 몰입을 극대화하기 위한 시각적 전략입니다.
 
-### 4.1. Visual Language: "Modern Utility"
-- **Neutral & Clean:** 콘텐츠(이미지, 데이터)가 주인공이 되도록 UI는 철저히 배경으로 물러납니다.
-    - 배경: `Grey.50` ~ `Grey.100`의 밝은 회색조 사용으로 레이어 깊이감 표현
-    - 카드: `Paper` 컴포넌트 + 미세한 `Elevation(1)` 또는 `Border`로 구분감 제공
-    - **이유:** Mike가 에셋을 볼 때 색상 간섭을 최소화해야 하며, Alex가 장시간 봐도 눈이 편해야 합니다.
+### 4.1. Visual Language: "Orbit Dark & Neon"
+- **Concept:** 어두운 편집실 모니터 환경에 최적화된 다크 모드 기본 + 형광색(Neon) 포인트
+- **Background:** `Deep Space (#0B0E14)` - 완전한 검정이 아닌 깊은 남색 계열
+- **Accent:** `Signal Green`, `Alert Red`, `Electric Blue` 등 채도가 높은 색상으로 상태를 즉각 알림
+- **Interaction:** 빠릿빠릿한(Snappy) 모션감. 딜레이 없는 Hover 효과.
 
 ### 4.2. Information Density (정보 밀도)
-- **High Density for Managers:** Sarah와 Jin이 사용하는 대시보드/테이블은 한 화면에 많은 정보를 담아야 합니다.
-    - `Table size="small"` 활용
-    - 폰트 사이즈: `13px ~ 14px` (Body2) 적극 활용
-    - 여백: `Compact` (8px~16px) 유지
-- **Visual Density for Creators:** Mike가 사용하는 라이브러리는 시각적 시원함을 제공해야 합니다.
-    - `CustomCard`의 `mediaRatio`를 강조
-    - 여백: `Relaxed` (24px) 적용
-
-### 4.3. Typography System
-- **Headings (Display):** `Inter` 또는 `Roboto`, Bold (700)
-    - 명확한 위계 구분을 위해 섹션 타이틀에 확실한 무게감 부여
-- **Data Numbers (Mono):** `Roboto Mono` 또는 `Monospace`
-    - Sarah가 보는 숫자 지표와 날짜 데이터의 가독성을 위해 등폭 폰트 사용
-- **Body Text:** `Inter`, Regular (400)
-    - 장문 가독성 최적화
-
-### 4.4. Color & Status
-- **Semantic Colors:** 상태 표시에만 색상을 제한적으로 사용합니다.
-    - `Success (Green)`: 완료, 정상 (On Track)
-    - `Warning (Orange)`: 임박, 주의 (At Risk)
-    - `Error (Red)`: 지연, 오류 (Delayed)
-    - `Primary (Blue)`: 주요 액션 버튼 (CTA), 활성 상태
+- **Maximized:** 한 화면에 최대한 많은 에셋과 정보를 보여주는 '전문가용 툴' 레이아웃
+- **Visual Hierarchy:** 텍스트보다는 **썸네일, 상태 배지, 프로그레스 바**가 시선을 먼저 잡아야 함
 
 ---
 
-## 5. Showcase Range (구현 범위)
+## 5. Detailed Feature Scope (세부 기능 명세)
+
+각 페이지는 Neon Spikes 팀이 직면한 구체적인 '병목'을 해결하도록 설계되었습니다.
+
+### 5.1. Team Pulse (Dashboard)
+**"승인 병목(Bottleneck)을 3초 안에 시각적으로 감지하라."**
+- **Metric Cards with Trends:** '오늘 마감', '승인 대기' 건수를 강조하고, 전주 대비 증감률(Velocity)을 표시하여 팀의 속도감을 보여줍니다.
+- **Urgent Task Widget:** 마감이 24시간 내로 임박했거나, 48시간 이상 승인이 지연된 'Red Alert' 항목만 모아서 보여줍니다.
+- **Activity Feed:** 파일 업로드, 댓글, 승인 상태 변경 등 팀의 모든 움직임을 실시간 타임라인으로 중계하여 '누가 무엇을 하는지' 투명하게 합니다.
+- **One-Click Actions:** 대시보드를 벗어나지 않고 카드 내에서 바로 `Remind(재촉)`, `Approve(승인)` 액션을 수행합니다.
+
+### 5.2. Asset Vault (Library)
+**"30분의 검색 시간을 30초로 단축하라."**
+- **Multi-Filter Sidebar:** 단순히 폴더를 뒤지는 것이 아니라, `해상도(4K)`, `비율(9:16)`, `분위기(Neon)` 등 메타데이터를 복합적으로 필터링합니다.
+- **Smart Grid (Masonry):** 숏폼(세로), 유튜브(가로), 카드뉴스(정방형) 등 서로 다른 비율의 미디어를 여백 없이 촘촘하게 배치하여 스크롤 효율을 높입니다.
+- **Instant Preview:**
+    - **Video:** 클릭 없이 마우스 호버만으로 영상을 재생(Muted)하여 내용을 확인합니다.
+    - **Image:** 클릭 시 고해상도 모달을 띄워 픽셀 단위 디테일을 확인합니다.
+- **Asset Details Panel:** 파일 크기, 포맷뿐만 아니라 '라이선스 만료일'과 '사용된 프로젝트'를 표시하여 잘못된 소스 사용을 방지합니다.
+
+### 5.3. Campaign Ops (Manager)
+**"수십 개의 프로젝트 흐름을 하나의 테이블에서 통제하라."**
+- **Status-driven Table:** 프로젝트의 현재 상태(기획/제작/내부검수/클라이언트검수/완료)를 색상 배지로 시각화하여 흐름을 파악합니다.
+- **Visual Progress:** 단순 텍스트 상태가 아닌, 진행률(%)을 프로그레스 바 형태로 보여주어 작업 완성도를 직관적으로 인지합니다.
+- **Bulk Actions:** 여러 프로젝트를 다중 선택하여 `상태 일괄 변경`, `담당자 일괄 할당`, `우선순위 조정` 등 반복 작업을 자동화합니다.
+- **Priority Sort:** 마감일 순, 혹은 긴급도(Urgent) 순으로 정렬하여 '지금 당장 해야 할 일'을 위로 올립니다.
+
+### 5.4. Studio Config (Settings)
+**"몰입을 방해하는 모든 요소를 제어하라."**
+- **Theme Switcher:** 장시간 편집 작업에 지친 눈을 위해 'Dark Mode'를 기본으로 제공하고, 브랜드 컬러(Accent)를 커스텀합니다.
+- **Notification Control:** 슬랙, 이메일, 푸시 알림 중 불필요한 채널을 끄고, '긴급(Urgent)' 알림만 받도록 설정합니다.
+- **Workspace Profile:** 내 역할(Editor/Manager)과 전문 분야를 태깅하여, 협업 시 적합한 작업자로 추천되도록 합니다.
+
+---
+
+## 6. Showcase Range (구현 범위)
 전체 백엔드 로직 없이, **프론트엔드 인터랙션과 UI**에 집중합니다.
 
 - **포함:**
@@ -110,7 +149,7 @@ Orbit은 흩어진 디지털 자산과 프로젝트를 한곳에서 관리하는
 
 ---
 
-## 6. Component List (사용될 핵심 컴포넌트)
+## 7. Component List (사용될 핵심 컴포넌트)
 기존 `src/components`를 기반으로, 필요 시 래핑(Wrapping)하여 사용합니다.
 
 ### Layout & Navigation
@@ -142,7 +181,7 @@ Orbit은 흩어진 디지털 자산과 프로젝트를 한곳에서 관리하는
 
 ---
 
-## 7. Template List (조립된 템플릿)
+## 8. Template List (조립된 템플릿)
 `CustomCard`와 MUI Grid 시스템을 활용하여 조립된 중간 단위 블록입니다. (`src/components/templates/`)
 
 1.  **StatsOverview:**
@@ -161,11 +200,10 @@ Orbit은 흩어진 디지털 자산과 프로젝트를 한곳에서 관리하는
 
 ---
 
-## 8. Page List (최종 페이지)
-템플릿을 배치하여 완성된 화면입니다. (`src/pages/orbit/`)
+## 9. Page List (최종 페이지)
+템플릿을 배치하여 완성된 화면입니다. (`src/pages/`)
 
-1.  **Overview (Dashboard):** `StatsOverview` + `ActivityFeed`
-2.  **Assets (Library):** `MediaGridGallery`
-3.  **Projects (Manager):** `TaskTableBoard`
-4.  **Settings (Config):** `ConfigFormSection`
-
+1.  **Team Pulse (Dashboard):** `StatsOverview` + `ActivityFeed`
+2.  **Asset Vault (Library):** `MediaGridGallery`
+3.  **Campaign Ops (Manager):** `TaskTableBoard`
+4.  **Studio Config (Settings):** `ConfigFormSection`
