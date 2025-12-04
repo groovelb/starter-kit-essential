@@ -139,8 +139,7 @@ export function QuotedContainer({
           variant={variant}
           component="blockquote"
           sx={{
-            fontWeight: 300,
-            fontStyle: 'italic',
+            fontWeight: 400,
             lineHeight: 1.6,
             textAlign: align,
             m: 0,
@@ -216,8 +215,7 @@ export function QuotedContainer({
           variant={variant}
           component="blockquote"
           sx={{
-            fontWeight: 300,
-            fontStyle: 'italic',
+            fontWeight: 400,
             lineHeight: 1.6,
             m: 0,
           }}
@@ -310,8 +308,7 @@ export function QuotedContainer({
             variant={variant}
             component="blockquote"
             sx={{
-              fontWeight: 300,
-              fontStyle: 'italic',
+              fontWeight: 400,
               lineHeight: 1.6,
               m: 0,
             }}

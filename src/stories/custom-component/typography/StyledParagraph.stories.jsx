@@ -10,9 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import { DocumentTitle, PageContainer, SectionTitle } from '../../../components/storybookDocumentation';
 import {
   StyledParagraph,
-  LeadParagraph,
   PullQuote,
-  Callout,
 } from '../../../components/typography/StyledParagraph';
 
 export default {
@@ -26,36 +24,43 @@ export default {
         component: `
 ## StyledParagraph
 
-섹션을 강조하기 위한 스타일링된 문단 컴포넌트.
+왼쪽 장식 라인과 Drop Cap을 지원하는 인용/강조 문단 컴포넌트.
 
 ### 용도
-- Lead paragraph로 섹션 소개
-- Editorial 스타일의 본문 텍스트
-- 인용구 (Pull Quote)
-- 중요 정보 강조 (Callout)
+- 인용문 강조
+- 섹션 도입부 텍스트
+- 중요 정보 하이라이트
         `,
       },
     },
   },
   argTypes: {
-    preset: {
-      control: 'select',
-      options: ['lead', 'editorial', 'quote', 'callout', 'caption'],
-      description: '스타일 프리셋',
+    children: {
+      control: { type: 'text' },
+      description: '문단 텍스트',
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['h4', 'h5', 'h6', 'body1', 'body2'],
+      description: 'Typography variant',
     },
     dropCap: {
-      control: 'boolean',
-      description: '첫 글자 확대 (Drop Cap)',
+      control: { type: 'boolean' },
+      description: '첫 글자 확대 (Drop Cap, 2줄 높이, 자동 float)',
     },
-    dropCapStyle: {
-      control: 'select',
-      options: ['float', 'inline', 'margin'],
-      description: 'Drop Cap 스타일',
+    styleColor: {
+      control: { type: 'select' },
+      options: ['primary.main', 'secondary.main', 'text.primary', 'text.secondary', 'error.main', 'warning.main', 'success.main'],
+      description: 'Drop Cap 및 장식 라인 색상',
     },
     align: {
-      control: 'select',
+      control: { type: 'select' },
       options: ['left', 'center', 'right', 'justify'],
       description: '텍스트 정렬',
+    },
+    maxWidth: {
+      control: { type: 'number' },
+      description: '최대 너비 (ch 단위)',
     },
   },
 };
@@ -71,9 +76,11 @@ const sampleText = {
 export const Default = {
   args: {
     children: sampleText.medium,
-    preset: 'lead',
+    variant: 'h5',
     dropCap: false,
+    styleColor: 'primary.main',
     align: 'left',
+    maxWidth: 65,
   },
 };
 
@@ -84,18 +91,18 @@ export const Documentation = {
       <DocumentTitle
         title="StyledParagraph"
         status="Available"
-        note="Styled paragraph component for section emphasis"
+        note="Quote style paragraph with decoration line"
         brandName="Typography"
         systemName="Starter Kit"
-        version="1.0"
+        version="2.0"
       />
       <PageContainer>
         <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
           StyledParagraph
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
-          섹션을 강조하기 위한 스타일링된 문단 컴포넌트입니다.
-          다양한 프리셋과 Drop Cap 옵션으로 Editorial 스타일의 레이아웃을 구성합니다.
+          왼쪽 장식 라인과 Drop Cap을 지원하는 인용/강조 문단 컴포넌트입니다.
+          styleColor로 장식 라인과 Drop Cap 색상을 동시에 제어합니다.
         </Typography>
 
         <SectionTitle title="Props" description="StyledParagraph 컴포넌트의 Props 목록입니다." />
@@ -111,22 +118,28 @@ export const Documentation = {
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>preset</TableCell>
-                <TableCell>&apos;lead&apos; | &apos;editorial&apos; | &apos;quote&apos; | &apos;callout&apos; | &apos;caption&apos;</TableCell>
-                <TableCell>&apos;lead&apos;</TableCell>
-                <TableCell>스타일 프리셋</TableCell>
+                <TableCell sx={ { fontFamily: 'monospace' } }>children</TableCell>
+                <TableCell>string</TableCell>
+                <TableCell>-</TableCell>
+                <TableCell>문단 텍스트 (필수)</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={ { fontFamily: 'monospace' } }>variant</TableCell>
+                <TableCell>&apos;h4&apos; | &apos;h5&apos; | &apos;h6&apos; | &apos;body1&apos; | &apos;body2&apos;</TableCell>
+                <TableCell>&apos;h5&apos;</TableCell>
+                <TableCell>Typography variant</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={ { fontFamily: 'monospace' } }>dropCap</TableCell>
                 <TableCell>boolean</TableCell>
                 <TableCell>false</TableCell>
-                <TableCell>첫 글자 확대 (Drop Cap)</TableCell>
+                <TableCell>첫 글자 확대 (Drop Cap, 2줄 높이, 자동 float)</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>dropCapStyle</TableCell>
-                <TableCell>&apos;float&apos; | &apos;inline&apos; | &apos;margin&apos;</TableCell>
-                <TableCell>&apos;float&apos;</TableCell>
-                <TableCell>Drop Cap 스타일</TableCell>
+                <TableCell sx={ { fontFamily: 'monospace' } }>styleColor</TableCell>
+                <TableCell>string</TableCell>
+                <TableCell>&apos;primary.main&apos;</TableCell>
+                <TableCell>Drop Cap 및 장식 라인 색상</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={ { fontFamily: 'monospace' } }>maxWidth</TableCell>
@@ -135,170 +148,77 @@ export const Documentation = {
                 <TableCell>최대 너비 (ch 단위 또는 CSS 값)</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell sx={ { fontFamily: 'monospace' } }>indent</TableCell>
-                <TableCell>boolean</TableCell>
-                <TableCell>false</TableCell>
-                <TableCell>첫 줄 들여쓰기</TableCell>
+                <TableCell sx={ { fontFamily: 'monospace' } }>align</TableCell>
+                <TableCell>&apos;left&apos; | &apos;center&apos; | &apos;right&apos; | &apos;justify&apos;</TableCell>
+                <TableCell>&apos;left&apos;</TableCell>
+                <TableCell>텍스트 정렬</TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
 
-        <SectionTitle title="Presets" description="다섯 가지 스타일 프리셋을 제공합니다." />
-        <Stack spacing={ 5 }>
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Lead - 섹션 소개 문단
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <StyledParagraph preset="lead">
-                { sampleText.medium }
-              </StyledParagraph>
-            </Box>
-          </Box>
+        <SectionTitle title="Basic Usage" description="기본 사용 예시입니다." />
+        <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
+          <StyledParagraph>
+            { sampleText.medium }
+          </StyledParagraph>
+        </Box>
 
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Editorial - 본문 텍스트
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <StyledParagraph preset="editorial">
-                { sampleText.long }
-              </StyledParagraph>
-            </Box>
-          </Box>
+        <SectionTitle title="Drop Cap" description="첫 글자가 2줄 높이로 확대됩니다." />
+        <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
+          <StyledParagraph dropCap>
+            { sampleText.long }
+          </StyledParagraph>
+        </Box>
 
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Quote - 인용구
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <StyledParagraph preset="quote">
-                { sampleText.short }
-              </StyledParagraph>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Callout - 중요 정보 강조
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <StyledParagraph preset="callout">
-                { sampleText.short }
-              </StyledParagraph>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Caption - 이미지/미디어 설명
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <StyledParagraph preset="caption">
-                { sampleText.short }
-              </StyledParagraph>
-            </Box>
-          </Box>
-        </Stack>
-
-        <SectionTitle title="Drop Cap Styles" description="세 가지 Drop Cap 스타일을 제공합니다." />
-        <Stack spacing={ 5 }>
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Float (기본) - 첫 글자가 왼쪽에 떠서 텍스트가 감싸는 형태
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <StyledParagraph preset="editorial" dropCap dropCapStyle="float">
-                { sampleText.long }
-              </StyledParagraph>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Inline - 첫 글자만 크게 인라인으로 표시
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <StyledParagraph preset="editorial" dropCap dropCapStyle="inline">
-                { sampleText.long }
-              </StyledParagraph>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Margin - 배경이 있는 Drop Cap
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <StyledParagraph preset="editorial" dropCap dropCapStyle="margin">
-                { sampleText.long }
-              </StyledParagraph>
-            </Box>
-          </Box>
-        </Stack>
-
-        <SectionTitle title="Convenience Components" description="자주 사용되는 패턴을 위한 편의 컴포넌트입니다." />
-        <Stack spacing={ 5 }>
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              LeadParagraph
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <LeadParagraph>
-                { sampleText.medium }
-              </LeadParagraph>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              PullQuote (with author)
-            </Typography>
-            <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <PullQuote author="Steve Jobs">
-                Design is not just what it looks like and feels like. Design is how it works.
-              </PullQuote>
-            </Box>
-          </Box>
-
-          <Box>
-            <Typography variant="subtitle2" sx={ { mb: 1, color: 'text.secondary' } }>
-              Callout Variants
-            </Typography>
-            <Stack spacing={ 2 } sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-              <Callout variant="default">
-                This is a default callout for general information.
-              </Callout>
-              <Callout variant="info">
-                This is an info callout for helpful tips and guidance.
-              </Callout>
-              <Callout variant="warning">
-                This is a warning callout for important cautions.
-              </Callout>
-              <Callout variant="success">
-                This is a success callout for positive confirmations.
-              </Callout>
-              <Callout variant="error">
-                This is an error callout for critical issues.
-              </Callout>
-            </Stack>
-          </Box>
-        </Stack>
-
-        <SectionTitle title="Korean Text" description="한글 텍스트에서의 스타일링입니다." />
+        <SectionTitle title="Style Color" description="styleColor로 장식 라인과 Drop Cap 색상을 동시에 제어합니다." />
         <Stack spacing={ 4 }>
           <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-            <StyledParagraph preset="lead">
-              { sampleText.korean }
+            <Typography variant="caption" sx={ { mb: 1, display: 'block', color: 'text.secondary' } }>
+              primary.main (기본값)
+            </Typography>
+            <StyledParagraph dropCap styleColor="primary.main">
+              { sampleText.medium }
             </StyledParagraph>
           </Box>
           <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
-            <StyledParagraph preset="editorial" dropCap>
-              디자인 시스템은 재사용 가능한 컴포넌트와 명확한 표준으로 구성된 집합으로, 어떤 수의 애플리케이션이든 구축할 수 있습니다. 제품 팀을 위한 단일 진실 공급원(Single Source of Truth) 역할을 하며, 일관된 사용자 경험을 제공합니다. 이를 통해 디자이너와 개발자 간의 협업이 더욱 효율적으로 이루어집니다.
+            <Typography variant="caption" sx={ { mb: 1, display: 'block', color: 'text.secondary' } }>
+              secondary.main
+            </Typography>
+            <StyledParagraph dropCap styleColor="secondary.main">
+              { sampleText.medium }
+            </StyledParagraph>
+          </Box>
+          <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
+            <Typography variant="caption" sx={ { mb: 1, display: 'block', color: 'text.secondary' } }>
+              error.main
+            </Typography>
+            <StyledParagraph dropCap styleColor="error.main">
+              { sampleText.medium }
             </StyledParagraph>
           </Box>
         </Stack>
+
+        <SectionTitle title="PullQuote" description="저자 정보를 포함한 인용문 컴포넌트입니다." />
+        <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
+          <PullQuote author="Steve Jobs">
+            Design is not just what it looks like and feels like. Design is how it works.
+          </PullQuote>
+        </Box>
+
+        <SectionTitle title="PullQuote with Drop Cap" description="Drop Cap이 적용된 인용문입니다." />
+        <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
+          <PullQuote author="Dieter Rams" dropCap styleColor="secondary.main">
+            Good design is as little design as possible. Less, but better, because it concentrates on the essential aspects.
+          </PullQuote>
+        </Box>
+
+        <SectionTitle title="Korean Text" description="한글 텍스트 예시입니다." />
+        <Box sx={ { p: 3, border: '1px solid', borderColor: 'divider' } }>
+          <StyledParagraph dropCap>
+            { sampleText.korean }
+          </StyledParagraph>
+        </Box>
 
         <SectionTitle title="Usage Example" description="코드 사용 예시입니다." />
         <Box
@@ -312,25 +232,20 @@ export const Documentation = {
             lineHeight: 1.6,
           } }
         >
-          {`// Lead paragraph
-<LeadParagraph>
-  Introducing our new design system...
-</LeadParagraph>
+          {`// 기본 사용
+<StyledParagraph>
+  Your quote text here...
+</StyledParagraph>
 
-// Editorial with Drop Cap
-<StyledParagraph preset="editorial" dropCap>
+// Drop Cap과 색상 지정
+<StyledParagraph dropCap styleColor="secondary.main">
   Lorem ipsum dolor sit amet...
 </StyledParagraph>
 
-// Pull Quote
+// PullQuote with author
 <PullQuote author="Steve Jobs">
   Design is how it works.
-</PullQuote>
-
-// Callout
-<Callout variant="info">
-  Important information here.
-</Callout>`}
+</PullQuote>`}
         </Box>
       </PageContainer>
     </>
