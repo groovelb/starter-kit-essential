@@ -34,21 +34,99 @@ export default {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['body1', 'body2', 'h1', 'h2', 'h3', 'h4'],
+      options: ['body1', 'body2', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
       description: '타이포그래피 variant',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'body1' },
+      },
     },
     animated: {
       control: 'boolean',
-      description: 'viewport 진입 시 애니메이션',
+      description: 'viewport 진입 시 애니메이션 활성화',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    threshold: {
+      control: { type: 'range', min: 0, max: 1, step: 0.1 },
+      description: 'Intersection Observer threshold',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '0.5' },
+      },
     },
   },
 };
 
-/** 기본 사용 */
+/** 기본 사용 - Controls 패널에서 variant, animated 조절 가능 */
 export const Default = {
-  render: () => (
-    <HighlightedTypography variant="h4">
-      This is a <Highlight type="underline">highlighted</Highlight> text example.
+  args: {
+    variant: 'h4',
+    animated: false,
+    threshold: 0.5,
+  },
+  render: (args) => (
+    <HighlightedTypography {...args}>
+      This is a <Highlight type="background">highlighted</Highlight> text example.
+    </HighlightedTypography>
+  ),
+};
+
+/** Highlight 타입별 인터랙티브 데모 */
+export const HighlightPlayground = {
+  args: {
+    highlightType: 'background',
+    highlightColor: 'primary.main',
+    textColor: 'auto',
+    animated: false,
+    delay: 0,
+    duration: 600,
+  },
+  argTypes: {
+    highlightType: {
+      control: 'select',
+      options: ['underline', 'background', 'marker', 'circle'],
+      description: '강조 유형',
+    },
+    highlightColor: {
+      control: 'select',
+      options: ['primary.main', 'secondary.main', 'error.main', 'warning.main', 'success.main', '#FF0000', '#00FF00', '#0000FF', '#000000', '#FFFF00'],
+      description: '강조 색상',
+    },
+    textColor: {
+      control: 'select',
+      options: ['auto', 'white', 'inherit', 'primary.main'],
+      description: '텍스트 색상 (background 타입에서 유효)',
+    },
+    animated: {
+      control: 'boolean',
+      description: 'draw 애니메이션 활성화',
+    },
+    delay: {
+      control: { type: 'number', min: 0, max: 2000, step: 100 },
+      description: '애니메이션 지연 (ms)',
+    },
+    duration: {
+      control: { type: 'number', min: 100, max: 2000, step: 100 },
+      description: '애니메이션 지속 시간 (ms)',
+    },
+  },
+  render: (args) => (
+    <HighlightedTypography variant="h4" animated={args.animated}>
+      This text has a{' '}
+      <Highlight
+        type={args.highlightType}
+        color={args.highlightColor}
+        textColor={args.textColor}
+        animated={args.animated}
+        delay={args.delay}
+        duration={args.duration}
+      >
+        highlighted word
+      </Highlight>{' '}
+      in it.
     </HighlightedTypography>
   ),
 };
@@ -155,6 +233,12 @@ export const Documentation = {
                 <TableCell>number</TableCell>
                 <TableCell>600</TableCell>
                 <TableCell>애니메이션 지속 시간 (ms)</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={ { fontFamily: 'monospace' } }>textColor</TableCell>
+                <TableCell>string</TableCell>
+                <TableCell>&apos;auto&apos;</TableCell>
+                <TableCell>텍스트 색상 (&apos;auto&apos;: 배경 밝기에 따라 자동 결정)</TableCell>
               </TableRow>
             </TableBody>
           </Table>
