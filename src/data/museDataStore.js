@@ -67,38 +67,45 @@ function getCurrentDate() {
  */
 class MuseDataStore {
   constructor() {
-    // 초기 데이터 (디자인 영감 이미지로 구성)
-    // 카테고리: branding(0-3), graphic(4-7), uiux(8-11), typography(12-15), abstract(16-20)
+    // 초기 데이터 (디자인 결과물 이미지로 구성)
+    // 카테고리별 8개: abstract(0-7), fineart(8-15), illustration(16-23), poster(24-31), gradient(32-39), photography(40-47), portrait(48-55)
     this.data = {
       assets: [...museAssets],
       moodboards: [
         {
           id: 'board-1',
-          name: 'Brand Identity',
-          description: 'Branding and logo design references',
+          name: 'Abstract Art',
+          description: 'Abstract and geometric artwork collection',
           items: [museAssets[0], museAssets[1], museAssets[2], museAssets[3]],
           createdAt: '2024-10-15',
         },
         {
           id: 'board-2',
-          name: 'Graphic Design',
-          description: 'Print and visual design inspiration',
-          items: [museAssets[4], museAssets[5], museAssets[6], museAssets[7]],
+          name: 'Fine Art',
+          description: 'Paintings and canvas artwork',
+          items: [museAssets[8], museAssets[9], museAssets[10], museAssets[11]],
           createdAt: '2024-10-10',
         },
         {
           id: 'board-3',
-          name: 'UI/UX Design',
-          description: 'Digital product and interface collection',
-          items: [museAssets[8], museAssets[9], museAssets[10], museAssets[11]],
+          name: 'Illustration',
+          description: 'Digital illustration and artwork',
+          items: [museAssets[16], museAssets[17], museAssets[18], museAssets[19]],
           createdAt: '2024-09-28',
         },
         {
           id: 'board-4',
-          name: 'Abstract Art',
-          description: 'Abstract textures and gradient artwork',
-          items: [museAssets[16], museAssets[17], museAssets[18], museAssets[19]],
+          name: 'Photography',
+          description: 'Product and editorial photography',
+          items: [museAssets[40], museAssets[41], museAssets[42], museAssets[43]],
           createdAt: '2024-09-15',
+        },
+        {
+          id: 'board-5',
+          name: 'Portrait',
+          description: 'Fashion and artistic portraits',
+          items: [museAssets[48], museAssets[49], museAssets[50], museAssets[51]],
+          createdAt: '2024-09-01',
         },
       ],
       projects: [...museProjects],

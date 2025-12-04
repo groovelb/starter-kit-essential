@@ -6,19 +6,22 @@ import { ImageDetailModal } from '../../../components/data/ImageDetailModal';
 import { museAssets } from '../../../data/museMockData';
 
 export default {
-  title: 'Custom Component/Data',
+  title: 'Custom Component/Data/ImageDetailModal',
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: {
       description: {
         component: `
-## Data Display Components
+## ImageDetailModal
 
-MUSE 프로젝트를 위한 데이터 표시 컴포넌트 모음.
+레퍼런스 이미지 상세 보기 모달 컴포넌트.
 
-### 컴포넌트 목록
-- **ImageDetailModal**: 레퍼런스 이미지 상세 보기 모달
+### 기능
+- 이미지 상세 정보 표시 (제목, 태그, 메타데이터)
+- 좋아요, 다운로드, 공유, 편집 액션
+- 이전/다음 네비게이션 지원
+- 다양한 에셋 타입 (이미지, 비디오) 지원
         `,
       },
     },

@@ -24,7 +24,7 @@ const ColoredItem = styled(Paper)(({ theme }) => ({
 }));
 
 export default {
-  title: 'MUI Component/Grid',
+  title: 'MUI Component/Layout/Grid',
   component: Grid,
   tags: ['autodocs'],
   parameters: {

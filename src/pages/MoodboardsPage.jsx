@@ -3,9 +3,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Chip from '@mui/material/Chip';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -18,7 +15,7 @@ import TextField from '@mui/material/TextField';
 import Fade from '@mui/material/Fade';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import Grid from '@mui/material/Grid';
+import Masonry from '@mui/lab/Masonry';
 import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ShareIcon from '@mui/icons-material/Share';
@@ -29,7 +26,9 @@ import FolderIcon from '@mui/icons-material/Folder';
 import CloseIcon from '@mui/icons-material/Close';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CollectionsIcon from '@mui/icons-material/Collections';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ImageCard } from '../components/card/ImageCard';
+import { MoodboardCard } from '../components/card/MoodboardCard';
 import { ImageDetailModal } from '../components/data/ImageDetailModal';
 import { PageContainer } from '../components/container/PageContainer';
 import museDataStore from '../data/museDataStore';
@@ -38,12 +37,14 @@ import museDataStore from '../data/museDataStore';
  * MoodboardsPage 컴포넌트
  *
  * 무드보드 관리 및 큐레이션 화면.
- * 여러 무드보드를 탭으로 전환하고, 각 보드의 아이템을 관리.
+ * 두 가지 뷰를 제공:
+ * 1. 그리드 뷰: MoodboardCard로 모든 무드보드 미리보기
+ * 2. 상세 뷰: 선택한 무드보드의 아이템 목록
  *
  * 동작 방식:
  * 1. 마운트 시 museDataStore에서 무드보드 데이터 로드 및 구독
- * 2. 탭으로 무드보드 간 전환
- * 3. 각 무드보드 내 아이템 그리드 표시
+ * 2. 그리드 뷰에서 MoodboardCard 클릭 → 상세 뷰로 전환
+ * 3. 상세 뷰에서 "Back" 클릭 → 그리드 뷰로 복귀
  * 4. 아이템 제거, 순서 변경 (시뮬레이션)
  * 5. 새 무드보드 생성, 이름 변경, 삭제 → 스토어에 반영
  * 6. Archive 페이지에서 추가한 아이템이 자동으로 반영됨
@@ -55,8 +56,10 @@ export function MoodboardsPage() {
   // 무드보드 데이터 (스토어에서 초기화)
   const [moodboards, setMoodboards] = useState(() => museDataStore.getMoodboards());
 
-  const [activeTab, setActiveTab] = useState(0);
+  // 뷰 상태: null = 그리드 뷰, boardId = 상세 뷰
+  const [selectedBoardId, setSelectedBoardId] = useState(null);
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [menuTargetBoardId, setMenuTargetBoardId] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [selectedAssetIndex, setSelectedAssetIndex] = useState(-1);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -75,25 +78,42 @@ export function MoodboardsPage() {
     return unsubscribe;
   }, []);
 
-  // 현재 활성 보드 (안전하게 접근)
-  const currentBoard = moodboards[activeTab] || null;
+  // 현재 선택된 보드 (상세 뷰에서 사용)
+  const currentBoard = selectedBoardId
+    ? moodboards.find((b) => b.id === selectedBoardId)
+    : null;
+
+  // 메뉴 대상 보드 (편집/삭제용)
+  const menuTargetBoard = menuTargetBoardId
+    ? moodboards.find((b) => b.id === menuTargetBoardId)
+    : currentBoard;
 
   /**
-   * 탭 변경
+   * 무드보드 카드 클릭 → 상세 뷰로 이동
    */
-  const handleTabChange = useCallback((event, newValue) => {
-    setActiveTab(newValue);
+  const handleBoardClick = useCallback((boardId) => {
+    setSelectedBoardId(boardId);
+  }, []);
+
+  /**
+   * 그리드 뷰로 복귀
+   */
+  const handleBackToGrid = useCallback(() => {
+    setSelectedBoardId(null);
   }, []);
 
   /**
    * 메뉴 열기/닫기
    */
-  const handleMenuOpen = useCallback((event) => {
+  const handleMenuOpen = useCallback((event, boardId = null) => {
+    event.stopPropagation();
     setMenuAnchor(event.currentTarget);
+    setMenuTargetBoardId(boardId);
   }, []);
 
   const handleMenuClose = useCallback(() => {
     setMenuAnchor(null);
+    setMenuTargetBoardId(null);
   }, []);
 
   /**
@@ -102,10 +122,10 @@ export function MoodboardsPage() {
   const handleCreateBoard = useCallback(() => {
     if (!newBoardName.trim()) return;
 
-    museDataStore.createMoodboard(newBoardName.trim());
+    const newBoard = museDataStore.createMoodboard(newBoardName.trim());
 
-    // 새로 생성된 보드로 탭 이동
-    setActiveTab(moodboards.length);
+    // 새로 생성된 보드의 상세 뷰로 이동
+    setSelectedBoardId(newBoard.id);
     setNewBoardName('');
     setShowCreateDialog(false);
     setSnackbar({
@@ -113,15 +133,15 @@ export function MoodboardsPage() {
       message: `Created "${newBoardName.trim()}"`,
       severity: 'success',
     });
-  }, [newBoardName, moodboards.length]);
+  }, [newBoardName]);
 
   /**
    * 무드보드 이름 변경
    */
   const handleRenameBoard = useCallback(() => {
-    if (!newBoardName.trim() || !currentBoard) return;
+    if (!newBoardName.trim() || !menuTargetBoard) return;
 
-    museDataStore.renameMoodboard(currentBoard.id, newBoardName.trim());
+    museDataStore.renameMoodboard(menuTargetBoard.id, newBoardName.trim());
 
     setNewBoardName('');
     setShowRenameDialog(false);
@@ -131,17 +151,20 @@ export function MoodboardsPage() {
       message: 'Board renamed',
       severity: 'success',
     });
-  }, [newBoardName, currentBoard, handleMenuClose]);
+  }, [newBoardName, menuTargetBoard, handleMenuClose]);
 
   /**
    * 무드보드 삭제
    */
   const handleDeleteBoard = useCallback(() => {
-    if (!currentBoard) return;
+    if (!menuTargetBoard) return;
 
-    museDataStore.deleteMoodboard(currentBoard.id);
+    museDataStore.deleteMoodboard(menuTargetBoard.id);
 
-    setActiveTab(Math.max(0, activeTab - 1));
+    // 삭제된 보드가 현재 보기 중인 보드면 그리드 뷰로 복귀
+    if (selectedBoardId === menuTargetBoard.id) {
+      setSelectedBoardId(null);
+    }
     setShowDeleteDialog(false);
     handleMenuClose();
     setSnackbar({
@@ -149,7 +172,7 @@ export function MoodboardsPage() {
       message: 'Board deleted',
       severity: 'info',
     });
-  }, [currentBoard, activeTab, handleMenuClose]);
+  }, [menuTargetBoard, selectedBoardId, handleMenuClose]);
 
   /**
    * 아이템 제거
@@ -228,9 +251,9 @@ export function MoodboardsPage() {
    * 복제
    */
   const handleDuplicate = useCallback(() => {
-    if (!currentBoard) return;
+    if (!menuTargetBoard) return;
 
-    museDataStore.duplicateMoodboard(currentBoard.id);
+    museDataStore.duplicateMoodboard(menuTargetBoard.id);
 
     handleMenuClose();
     setSnackbar({
@@ -238,207 +261,154 @@ export function MoodboardsPage() {
       message: 'Board duplicated',
       severity: 'success',
     });
-  }, [currentBoard, handleMenuClose]);
+  }, [menuTargetBoard, handleMenuClose]);
+
+  /**
+   * 편집 버튼 (MoodboardCard에서 호출)
+   */
+  const handleEditBoard = useCallback((boardId) => {
+    const board = moodboards.find((b) => b.id === boardId);
+    if (board) {
+      setNewBoardName(board.name);
+      setMenuTargetBoardId(boardId);
+      setShowRenameDialog(true);
+    }
+  }, [moodboards]);
+
+  /**
+   * 삭제 버튼 (MoodboardCard에서 호출)
+   */
+  const handleDeleteBoardFromCard = useCallback((boardId) => {
+    setMenuTargetBoardId(boardId);
+    setShowDeleteDialog(true);
+  }, []);
 
   return (
     <PageContainer>
-      {/* 페이지 헤더 */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          mb: 3,
-          gap: 2,
-          flexWrap: 'wrap',
-        }}
-      >
-        <Box>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 800,
-              letterSpacing: '-0.02em',
-              mb: 0.5,
-            }}
-          >
-            Moodboards
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {moodboards.length} boards, {moodboards.reduce((acc, b) => acc + b.items.length, 0)} total items
-          </Typography>
-        </Box>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setShowCreateDialog(true)}
-          sx={{
-            textTransform: 'none',
-            fontWeight: 600,
-            px: 3,
-            py: 1.25,
-            borderRadius: 2,
-          }}
-        >
-          New Board
-        </Button>
-      </Box>
-
-      {/* 무드보드 탭 */}
-      {moodboards.length > 0 ? (
+      {/* ========================================== */}
+      {/* 상세 뷰: 선택한 무드보드의 아이템 목록 */}
+      {/* ========================================== */}
+      {selectedBoardId && currentBoard ? (
         <>
+          {/* 상세 뷰 헤더 */}
           <Box
             sx={{
-              borderBottom: 1,
-              borderColor: 'divider',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
               mb: 3,
             }}
           >
-            <Tabs
-              value={activeTab}
-              onChange={handleTabChange}
-              variant="scrollable"
-              scrollButtons="auto"
-              sx={{
-                '& .MuiTab-root': {
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  minWidth: 'auto',
-                  px: 2,
-                },
-              }}
-            >
-              {moodboards.map((board) => (
-                <Tab
-                  key={board.id}
-                  label={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <FolderIcon sx={{ fontSize: 18 }} />
-                      {board.name}
-                      <Chip
-                        label={board.items.length}
-                        size="small"
-                        sx={{ height: 20, fontSize: '0.7rem' }}
-                      />
-                    </Box>
-                  }
-                />
-              ))}
-            </Tabs>
+            <IconButton onClick={handleBackToGrid} sx={{ mr: 1 }}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Box sx={{ flex: 1 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 800,
+                  letterSpacing: '-0.02em',
+                  mb: 0.5,
+                }}
+              >
+                {currentBoard.name}
+              </Typography>
+              {currentBoard.description && (
+                <Typography variant="body1" color="text.secondary">
+                  {currentBoard.description}
+                </Typography>
+              )}
+              <Typography variant="caption" color="text.disabled">
+                Created {currentBoard.createdAt} • {currentBoard.items.length} items
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<ShareIcon />}
+                onClick={handleShare}
+                sx={{ textTransform: 'none' }}
+              >
+                Share
+              </Button>
+              <IconButton onClick={(e) => handleMenuOpen(e)}>
+                <MoreVertIcon />
+              </IconButton>
+            </Box>
           </Box>
 
-          {/* 현재 보드 헤더 */}
-          {currentBoard && (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mb: 3,
-                p: 2,
-                borderRadius: 2,
-                bgcolor: 'action.hover',
-              }}
+          {/* 보드 아이템 Masonry 그리드 */}
+          {currentBoard.items.length > 0 ? (
+            <Masonry
+              columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+              spacing={2}
+              sx={{ margin: 0 }}
             >
-              <Box>
-                <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                  {currentBoard.name}
-                </Typography>
-                {currentBoard.description && (
-                  <Typography variant="body2" color="text.secondary">
-                    {currentBoard.description}
-                  </Typography>
-                )}
-                <Typography variant="caption" color="text.disabled">
-                  Created {currentBoard.createdAt} • {currentBoard.items.length} items
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  startIcon={<ShareIcon />}
-                  onClick={handleShare}
-                  sx={{ textTransform: 'none' }}
-                >
-                  Share
-                </Button>
-                <IconButton onClick={handleMenuOpen}>
-                  <MoreVertIcon />
-                </IconButton>
-              </Box>
-            </Box>
-          )}
-
-          {/* 보드 아이템 그리드 */}
-          {currentBoard && currentBoard.items.length > 0 ? (
-            <Grid container spacing={3}>
               {currentBoard.items.map((item, index) => (
-                <Grid key={`${currentBoard.id}-${item.id}`} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                  <Fade in timeout={300 + index * 50}>
-                    <Box sx={{ position: 'relative' }}>
-                      <Box
-                        onClick={() => handleCardClick(item, index)}
-                        sx={{ cursor: 'pointer' }}
-                      >
-                        <ImageCard
-                          src={item.thumbnail}
-                          title={item.title}
-                          tags={item.tags}
-                          onLike={(e) => {
-                            e?.stopPropagation?.();
-                            handleLike(item.id);
-                          }}
-                          onAddToBoard={(e) => {
-                            e?.stopPropagation?.();
-                          }}
-                        />
-                      </Box>
-                      {/* 제거 버튼 */}
-                      <IconButton
-                        size="small"
-                        onClick={() => handleRemoveItem(item.id)}
-                        sx={{
-                          position: 'absolute',
-                          top: 8,
-                          right: 8,
-                          bgcolor: 'error.main',
-                          color: 'white',
-                          opacity: 0,
-                          transition: 'opacity 0.2s',
-                          '.MuiBox-root:hover &': {
-                            opacity: 1,
-                          },
-                          '&:hover': {
-                            bgcolor: 'error.dark',
-                          },
+                <Fade key={`${currentBoard.id}-${item.id}`} in timeout={300 + index * 50}>
+                  <Box sx={{ position: 'relative' }}>
+                    <Box
+                      onClick={() => handleCardClick(item, index)}
+                      sx={{ cursor: 'pointer' }}
+                    >
+                      <ImageCard
+                        src={item.thumbnail}
+                        title={item.title}
+                        tags={item.tags}
+                        onLike={(e) => {
+                          e?.stopPropagation?.();
+                          handleLike(item.id);
                         }}
-                      >
-                        <CloseIcon fontSize="small" />
-                      </IconButton>
-                      {/* 드래그 핸들 (더미) */}
-                      <IconButton
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          top: 8,
-                          left: 8,
-                          bgcolor: 'rgba(255,255,255,0.9)',
-                          opacity: 0,
-                          transition: 'opacity 0.2s',
-                          cursor: 'grab',
-                          '.MuiBox-root:hover &': {
-                            opacity: 1,
-                          },
+                        onAddToBoard={(e) => {
+                          e?.stopPropagation?.();
                         }}
-                      >
-                        <DragIndicatorIcon fontSize="small" />
-                      </IconButton>
+                      />
                     </Box>
-                  </Fade>
-                </Grid>
+                    {/* 제거 버튼 */}
+                    <IconButton
+                      size="small"
+                      onClick={() => handleRemoveItem(item.id)}
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        bgcolor: 'error.main',
+                        color: 'white',
+                        opacity: 0,
+                        transition: 'opacity 0.2s',
+                        '.MuiBox-root:hover &': {
+                          opacity: 1,
+                        },
+                        '&:hover': {
+                          bgcolor: 'error.dark',
+                        },
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                    {/* 드래그 핸들 (더미) */}
+                    <IconButton
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        left: 8,
+                        bgcolor: 'rgba(255,255,255,0.9)',
+                        opacity: 0,
+                        transition: 'opacity 0.2s',
+                        cursor: 'grab',
+                        '.MuiBox-root:hover &': {
+                          opacity: 1,
+                        },
+                      }}
+                    >
+                      <DragIndicatorIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </Fade>
               ))}
-            </Grid>
+            </Masonry>
           ) : (
             <Box
               sx={{
@@ -470,29 +440,103 @@ export function MoodboardsPage() {
           )}
         </>
       ) : (
-        <Box
-          sx={{
-            textAlign: 'center',
-            py: 12,
-            px: 4,
-          }}
-        >
-          <FolderIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-            No moodboards yet
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Create your first moodboard to start curating
-          </Typography>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setShowCreateDialog(true)}
-            sx={{ textTransform: 'none' }}
+        <>
+          {/* ========================================== */}
+          {/* 그리드 뷰: 모든 무드보드를 MoodboardCard로 표시 */}
+          {/* ========================================== */}
+
+          {/* 페이지 헤더 */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              mb: 4,
+              gap: 2,
+              flexWrap: 'wrap',
+            }}
           >
-            Create Moodboard
-          </Button>
-        </Box>
+            <Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 800,
+                  letterSpacing: '-0.02em',
+                  mb: 0.5,
+                }}
+              >
+                Moodboards
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                {moodboards.length} boards, {moodboards.reduce((acc, b) => acc + b.items.length, 0)} total items
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setShowCreateDialog(true)}
+              sx={{
+                textTransform: 'none',
+                fontWeight: 600,
+                px: 3,
+                py: 1.25,
+                borderRadius: 2,
+              }}
+            >
+              New Board
+            </Button>
+          </Box>
+
+          {/* 무드보드 그리드 */}
+          {moodboards.length > 0 ? (
+            <Masonry
+              columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+              spacing={2}
+              sx={{ margin: 0 }}
+            >
+              {moodboards.map((board, index) => (
+                <Fade key={board.id} in timeout={300 + index * 50}>
+                  <Box>
+                    <MoodboardCard
+                      id={board.id}
+                      name={board.name}
+                      description={board.description}
+                      items={board.items}
+                      createdAt={board.createdAt}
+                      onClick={() => handleBoardClick(board.id)}
+                      onEdit={handleEditBoard}
+                      onDelete={handleDeleteBoardFromCard}
+                    />
+                  </Box>
+                </Fade>
+              ))}
+            </Masonry>
+          ) : (
+            <Box
+              sx={{
+                textAlign: 'center',
+                py: 12,
+                px: 4,
+              }}
+            >
+              <FolderIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                No moodboards yet
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Create your first moodboard to start curating
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setShowCreateDialog(true)}
+                sx={{ textTransform: 'none' }}
+              >
+                Create Moodboard
+              </Button>
+            </Box>
+          )}
+        </>
       )}
 
       {/* 보드 메뉴 */}
@@ -501,7 +545,7 @@ export function MoodboardsPage() {
         open={Boolean(menuAnchor)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={() => { setNewBoardName(currentBoard?.name || ''); setShowRenameDialog(true); }}>
+        <MenuItem onClick={() => { setNewBoardName(menuTargetBoard?.name || ''); setShowRenameDialog(true); }}>
           <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
           <ListItemText>Rename</ListItemText>
         </MenuItem>
@@ -568,7 +612,7 @@ export function MoodboardsPage() {
         <DialogTitle sx={{ fontWeight: 700 }}>Delete Board</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{currentBoard?.name}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{menuTargetBoard?.name}&quot;? This action cannot be undone.
           </Typography>
         </DialogContent>
         <DialogActions>

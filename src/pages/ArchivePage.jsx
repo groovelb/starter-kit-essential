@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Fab from '@mui/material/Fab';
 import Fade from '@mui/material/Fade';
-import Grid from '@mui/material/Grid';
+import Masonry from '@mui/lab/Masonry';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import AddIcon from '@mui/icons-material/Add';
@@ -325,42 +325,36 @@ export function ArchivePage() {
         resultCount={filteredAssets.length}
       />
 
-      {/* 이미지 그리드 */}
+      {/* 이미지 Masonry 그리드 */}
       {filteredAssets.length > 0 ? (
-        <Grid container spacing={3}>
+        <Masonry
+          columns={{ xs: 1, sm: 2, md: viewMode === 'list' ? 1 : 3, lg: viewMode === 'list' ? 1 : 4 }}
+          spacing={2}
+          sx={{ margin: 0 }}
+        >
           {filteredAssets.map((asset, index) => (
-            <Grid
-              key={asset.id}
-              size={{
-                xs: 12,
-                sm: 6,
-                md: viewMode === 'list' ? 12 : 4,
-                lg: viewMode === 'list' ? 12 : 3,
-              }}
-            >
-              <Fade in timeout={300 + index * 50}>
-                <Box
-                  onClick={() => handleCardClick(asset, index)}
-                  sx={{ cursor: 'pointer' }}
-                >
-                  <ImageCard
-                    src={asset.thumbnail}
-                    title={asset.title}
-                    tags={asset.tags}
-                    onLike={(e) => {
-                      e?.stopPropagation?.();
-                      handleLike(asset.id);
-                    }}
-                    onAddToBoard={(e) => {
-                      e?.stopPropagation?.();
-                      handleOpenBoardDropdown(asset);
-                    }}
-                  />
-                </Box>
-              </Fade>
-            </Grid>
+            <Fade key={asset.id} in timeout={300 + index * 50}>
+              <Box
+                onClick={() => handleCardClick(asset, index)}
+                sx={{ cursor: 'pointer' }}
+              >
+                <ImageCard
+                  src={asset.thumbnail}
+                  title={asset.title}
+                  tags={asset.tags}
+                  onLike={(e) => {
+                    e?.stopPropagation?.();
+                    handleLike(asset.id);
+                  }}
+                  onAddToBoard={(e) => {
+                    e?.stopPropagation?.();
+                    handleOpenBoardDropdown(asset);
+                  }}
+                />
+              </Box>
+            </Fade>
           ))}
-        </Grid>
+        </Masonry>
       ) : (
         <Box
           sx={{

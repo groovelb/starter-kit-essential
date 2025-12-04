@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 
 export default {
-  title: 'MUI Component/Tabs',
+  title: 'MUI Component/Navigation/Tabs',
   component: Tabs,
   tags: ['autodocs'],
   parameters: {

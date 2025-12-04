@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 export default {
-  title: 'MUI Component/TextField',
+  title: 'MUI Component/Input/TextField',
   component: TextField,
   tags: ['autodocs'],
   parameters: {

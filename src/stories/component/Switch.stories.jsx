@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 
 export default {
-  title: 'MUI Component/Switch',
+  title: 'MUI Component/Input/Switch',
   component: Switch,
   tags: ['autodocs'],
   parameters: {

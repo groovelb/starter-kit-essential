@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 
 export default {
-  title: 'MUI Component/Checkbox',
+  title: 'MUI Component/Input/Checkbox',
   component: Checkbox,
   tags: ['autodocs'],
   parameters: {
