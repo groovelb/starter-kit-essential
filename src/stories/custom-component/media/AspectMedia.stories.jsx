@@ -74,8 +74,8 @@ export default {
 /** 기본 이미지 */
 export const Default = {
   args: {
-    src: testImages.nature[0].src.medium,
-    alt: testImages.nature[0].alt,
+    src: testImages.photography[0].src.medium,
+    alt: testImages.photography[0].alt,
     type: 'image',
     aspectRatio: '16/9',
     objectFit: 'cover',
@@ -95,7 +95,7 @@ export const AspectRatios = {
         <Grid size={{ xs: 6, md: 3 }} key={ratio}>
           <Stack spacing={1}>
             <AspectMedia
-              src={testImages.nature[idx].src.medium}
+              src={testImages.photography[idx].src.medium}
               alt={`Ratio ${ratio}`}
               aspectRatio={ratio}
             />
@@ -118,7 +118,7 @@ export const ObjectFitOptions = {
           <Stack spacing={1}>
             <Box sx={{ backgroundColor: 'grey.200', p: 0.5 }}>
               <AspectMedia
-                src={testImages.product[0].src.medium}
+                src={testImages.abstract[0].src.medium}
                 alt={`Object-fit: ${fit}`}
                 aspectRatio="1/1"
                 objectFit={fit}
@@ -138,8 +138,8 @@ export const ObjectFitOptions = {
 export const Video = {
   args: {
     type: 'video',
-    src: testVideos.nature[0].src.sd,
-    poster: testVideos.nature[0].poster,
+    src: testVideos.motion[0].src.sd,
+    poster: testVideos.motion[0].poster,
     aspectRatio: '16/9',
     isAutoPlay: true,
     isMuted: true,
@@ -158,8 +158,8 @@ export const VideoWithControls = {
     <Box sx={{ width: 500 }}>
       <AspectMedia
         type="video"
-        src={testVideos.nature[1].src.sd}
-        poster={testVideos.nature[1].poster}
+        src={testVideos.motion[1].src.sd}
+        poster={testVideos.motion[1].poster}
         aspectRatio="16/9"
         hasControls
         isMuted={false}
@@ -172,9 +172,9 @@ export const VideoWithControls = {
 export const ImageGallery = {
   render: () => (
     <Stack spacing={4} sx={{ width: 800 }}>
-      <Typography variant="h6">Nature</Typography>
+      <Typography variant="h6">Photography</Typography>
       <Grid container spacing={2}>
-        {testImages.nature.map((img) => (
+        {testImages.photography.map((img) => (
           <Grid size={{ xs: 6, md: 3 }} key={img.id}>
             <AspectMedia
               src={img.src.small}
@@ -185,9 +185,9 @@ export const ImageGallery = {
         ))}
       </Grid>
 
-      <Typography variant="h6">Product</Typography>
+      <Typography variant="h6">Abstract</Typography>
       <Grid container spacing={2}>
-        {testImages.product.map((img) => (
+        {testImages.abstract.map((img) => (
           <Grid size={{ xs: 6, md: 3 }} key={img.id}>
             <AspectMedia
               src={img.src.small}
