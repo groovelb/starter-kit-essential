@@ -1,167 +1,18 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/material/styles';
-import { DocumentTitle, PageContainer } from '../../components/storybookDocumentation';
+import {
+  DocumentTitle,
+  PageContainer,
+  TreeNode,
+} from '../../components/storybookDocumentation';
 
 export default {
   title: 'Style/Overview',
   parameters: {
     layout: 'padded',
-    docs: {
-      description: {
-        component: `
-## Theme 구조
-
-\`src/styles/theme.js\`의 전체 구조를 트리 형태로 탐색합니다.
-
-키를 클릭하면 하위 구조를 펼치거나 접을 수 있습니다.
-        `,
-      },
-    },
   },
-};
-
-/** 트리 노드 컴포넌트 */
-const TreeNode = ({ keyName, value, depth = 0, defaultOpen = false }) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-  const isObject = typeof value === 'object' && value !== null && !Array.isArray(value);
-  const isArray = Array.isArray(value);
-  const isExpandable = isObject || isArray;
-  const childCount = isExpandable ? Object.keys(value).length : 0;
-
-  // 색상값 감지
-  const isColor = typeof value === 'string' && (
-    value.startsWith('#') ||
-    value.startsWith('rgb') ||
-    value.startsWith('rgba')
-  );
-
-  // 값 포맷팅
-  const formatValue = (val) => {
-    if (typeof val === 'string') return `"${val}"`;
-    if (typeof val === 'number') return val;
-    if (typeof val === 'boolean') return val ? 'true' : 'false';
-    if (typeof val === 'function') return 'ƒ()';
-    if (val === null) return 'null';
-    if (val === undefined) return 'undefined';
-    return String(val);
-  };
-
-  return (
-    <Box sx={ { ml: depth > 0 ? 2 : 0 } }>
-      <Box
-        onClick={ () => isExpandable && setIsOpen(!isOpen) }
-        sx={ {
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          py: 0.5,
-          px: 1,
-          cursor: isExpandable ? 'pointer' : 'default',
-          borderRadius: 1,
-          '&:hover': isExpandable ? { backgroundColor: 'action.hover' } : {},
-          borderLeft: depth > 0 ? '1px solid' : 'none',
-          borderColor: 'divider',
-        } }
-      >
-        {/* 펼침/접힘 아이콘 */}
-        { isExpandable ? (
-          <Typography
-            component="span"
-            sx={ {
-              width: 16,
-              color: 'text.secondary',
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              userSelect: 'none',
-            } }
-          >
-            { isOpen ? '▼' : '▶' }
-          </Typography>
-        ) : (
-          <Box sx={ { width: 16 } } />
-        ) }
-
-        {/* 키 이름 */}
-        <Typography
-          component="span"
-          sx={ {
-            color: isExpandable ? 'primary.main' : 'secondary.main',
-            fontFamily: 'monospace',
-            fontSize: '13px',
-            fontWeight: isExpandable ? 600 : 400,
-          } }
-        >
-          { keyName }
-        </Typography>
-
-        {/* 구분자 */}
-        <Typography component="span" sx={ { color: 'text.secondary', fontSize: '13px' } }>
-          :
-        </Typography>
-
-        {/* 값 또는 타입 정보 */}
-        { isExpandable ? (
-          <Typography
-            component="span"
-            sx={ { color: 'text.secondary', fontSize: '12px', fontFamily: 'monospace' } }
-          >
-            { isArray ? `Array[${childCount}]` : `{${childCount}}` }
-          </Typography>
-        ) : (
-          <Box sx={ { display: 'flex', alignItems: 'center', gap: 1 } }>
-            { isColor && (
-              <Box
-                sx={ {
-                  width: 14,
-                  height: 14,
-                  backgroundColor: value,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  borderRadius: '2px',
-                  flexShrink: 0,
-                } }
-              />
-            ) }
-            <Typography
-              component="span"
-              sx={ {
-                color: typeof value === 'string' ? 'success.dark' :
-                       typeof value === 'number' ? 'warning.dark' : 'text.primary',
-                fontFamily: 'monospace',
-                fontSize: '12px',
-                maxWidth: 400,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              } }
-            >
-              { formatValue(value) }
-            </Typography>
-          </Box>
-        ) }
-      </Box>
-
-      {/* 하위 노드 */}
-      { isExpandable && (
-        <Collapse in={ isOpen }>
-          <Box>
-            { Object.entries(value).map(([childKey, childValue]) => (
-              <TreeNode
-                key={ childKey }
-                keyName={ childKey }
-                value={ childValue }
-                depth={ depth + 1 }
-              />
-            )) }
-          </Box>
-        </Collapse>
-      ) }
-    </Box>
-  );
 };
 
 /** 기본 - Theme 트리 탐색기 */

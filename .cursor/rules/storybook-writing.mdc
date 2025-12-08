@@ -11,9 +11,10 @@ All stories MUST follow these rules:
 
 | Rule | Description |
 |------|-------------|
+| First Story Named "Docs" | **첫 번째 스토리의 export 이름은 반드시 `Docs`** (autodocs 제외). Storybook 사이드바에서 Docs가 최상단에 표시됨 |
 | Single Component per Story | 스토리 한 개당 단일 컴포넌트만 보여준다 |
 | Docs First with Controls | (Component) 항상 첫 문서는 Docs이며, 해당 컴포넌트의 모든 props를 타입에 맞는 `argTypes`와 `control`로 유저가 확인/조작할 수 있도록 적용 |
-| Style Docs Structure | (Style) 1줄 개요 → 토큰 구조 (트리 뷰) → 토큰 값 (테이블) 순서로 구성. `Overview.stories.jsx`의 TreeNode 패턴 참고 |
+| Style Docs Structure | (Style) 첫 스토리(`Docs`)는 1줄 개요 → 토큰 구조 (트리 뷰) → 토큰 값 (테이블) → 사용 예시 → Vibe Coding Prompt 순서로 구성. 기존 상세 스토리(Palette, SemanticTokens 등)는 유지 |
 | DocumentTitle English | DocumentTitle의 모든 props (`title`, `status`, `note`, `brandName`, `systemName`) 값은 영어로 작성 |
 | Description Korean | DocumentTitle 외의 설명 (페이지 제목, 섹션 설명, 테이블 내용 등)은 한글로 작성 |
 | Props Table Required | (Component) 모든 스토리 Doc의 최상단에 컴포넌트 설명과 함께 Props 테이블을 표시 |
