@@ -1,8 +1,10 @@
 import Box from '@mui/material/Box';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { MemoryRouter } from 'react-router-dom';
 import { ArchivePage } from '../../pages/ArchivePage';
 import { MoodboardsPage } from '../../pages/MoodboardsPage';
+import LandingPage from '../../pages/LandingPage.jsx';
 import { defaultTheme as theme } from '../../styles/themes';
 
 /**
@@ -33,6 +35,7 @@ export default {
 MUSE 프로젝트의 전체 페이지 컴포넌트.
 
 ### 페이지 목록
+- **LandingPage**: 서비스 랜딩 페이지 - 브랜드 소개 및 CTA
 - **ArchivePage**: 메인 대시보드 - 레퍼런스 아카이브 탐색 및 관리
 - **MoodboardsPage**: 무드보드 관리 및 큐레이션
 
@@ -143,6 +146,52 @@ export const Moodboards = {
 4. 드래그 핸들로 순서 변경 (시뮬레이션)
 5. 메뉴에서 보드 관리 (이름 변경, 복제, 공유, 삭제)
 6. Share 버튼으로 공유 링크 복사
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Landing 페이지
+ *
+ * 서비스 소개 및 CTA 랜딩 페이지.
+ *
+ * 주요 구성:
+ * - HeroSection: 브랜드 메시지 + 3가지 USP 요약
+ * - USPSection: 실제 컴포넌트 데모와 함께 기능 설명
+ * - CTASection: Archive 페이지로 유도하는 강력한 CTA
+ */
+export const Landing = {
+  render: () => (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <MemoryRouter>
+        <LandingPage />
+      </MemoryRouter>
+    </ThemeProvider>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Landing 페이지
+
+MUSE 서비스의 첫 진입점이 되는 랜딩 페이지입니다.
+
+**구성 요소:**
+- HeroSection: CAPTURE / CURATE / CREATE 헤드라인 + 3가지 USP 카드
+- USPSection: 실제 컴포넌트(FileDropzone, FilterBar, MoodboardCard) 데모
+- CTASection: 통계, 이미지 프리뷰, Archive 이동 버튼
+
+**디자인 특징:**
+- StretchedHeadline 애니메이션으로 시각적 임팩트
+- 그리드 패턴 배경으로 에디토리얼 느낌
+- 실제 제품 컴포넌트를 데모로 활용하여 신뢰성 구축
+- 다크 CTA 섹션으로 시각적 대비 강조
+
+**콘텐츠 관리:**
+모든 텍스트는 \`src/data/landingContent.js\`에서 중앙 관리됩니다.
         `,
       },
     },

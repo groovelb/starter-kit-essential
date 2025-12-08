@@ -11,9 +11,12 @@ All stories MUST follow these rules:
 
 | Rule | Description |
 |------|-------------|
+| Single Component per Story | 스토리 한 개당 단일 컴포넌트만 보여준다 |
+| Docs First with Controls | (Component) 항상 첫 문서는 Docs이며, 해당 컴포넌트의 모든 props를 타입에 맞는 `argTypes`와 `control`로 유저가 확인/조작할 수 있도록 적용 |
+| Style Docs Structure | (Style) 1줄 개요 → 토큰 구조 (트리 뷰) → 토큰 값 (테이블) 순서로 구성. `Overview.stories.jsx`의 TreeNode 패턴 참고 |
 | DocumentTitle English | DocumentTitle의 모든 props (`title`, `status`, `note`, `brandName`, `systemName`) 값은 영어로 작성 |
 | Description Korean | DocumentTitle 외의 설명 (페이지 제목, 섹션 설명, 테이블 내용 등)은 한글로 작성 |
-| Props Table Required | 모든 스토리 Doc의 최상단에 컴포넌트 설명과 함께 Props 테이블을 표시 |
+| Props Table Required | (Component) 모든 스토리 Doc의 최상단에 컴포넌트 설명과 함께 Props 테이블을 표시 |
 | SectionTitle Usage | 2개 이상의 섹션이 있을 경우 반드시 `SectionTitle`로 구분 |
 
 ### Story Types
@@ -29,18 +32,70 @@ All stories MUST follow these rules:
 
 Use `tags: ['autodocs']` for automatic documentation. No separate Doc story needed. DocumentTitle cannot be added to autodocs Docs tab.
 
+**중요**: 모든 props에 대해 타입에 맞는 `argTypes`와 `control`을 정의하여 사용자가 Docs 탭에서 직접 값을 조작하며 확인할 수 있도록 한다.
+
 ```jsx
 export default {
   title: 'Component/Button',
   component: Button,
   tags: ['autodocs'],
-  argTypes: { /* props */ },
+  argTypes: {
+    // string 타입
+    label: {
+      control: 'text',
+      description: '버튼에 표시할 텍스트',
+    },
+    // boolean 타입
+    isDisabled: {
+      control: 'boolean',
+      description: '버튼 비활성화 여부',
+    },
+    // select 타입 (enum)
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'outlined'],
+      description: '버튼 스타일 변형',
+    },
+    // number 타입
+    size: {
+      control: { type: 'number', min: 1, max: 10 },
+      description: '버튼 크기',
+    },
+    // color 타입
+    backgroundColor: {
+      control: 'color',
+      description: '버튼 배경색',
+    },
+    // function 타입 (action)
+    onClick: {
+      action: 'clicked',
+      description: '클릭 이벤트 핸들러',
+    },
+  },
 };
 
 export const Default = {
-  args: { /* default args */ },
+  args: {
+    label: '버튼',
+    isDisabled: false,
+    variant: 'primary',
+  },
 };
 ```
+
+### argTypes Control 타입 가이드
+
+| Props 타입 | control | 예시 |
+|-----------|---------|------|
+| string | `'text'` | `control: 'text'` |
+| boolean | `'boolean'` | `control: 'boolean'` |
+| number | `{ type: 'number' }` | `control: { type: 'number', min: 0, max: 100 }` |
+| enum/선택지 | `'select'` 또는 `'radio'` | `control: 'select', options: ['a', 'b']` |
+| color | `'color'` | `control: 'color'` |
+| object | `'object'` | `control: 'object'` |
+| array | `'object'` | `control: 'object'` |
+| date | `'date'` | `control: 'date'` |
+| function | `action()` | `action: 'clicked'` |
 
 ### Documentation Story (Doc)
 
@@ -363,9 +418,241 @@ export const Default = {
 
 ## 스토리 구성 규칙
 
-### Style 섹션
+### Style 섹션 (디자인 토큰 문서)
 
-Style 섹션은 디자인 토큰 문서이므로 단일 문서형 스토리를 권장한다.
+Style 섹션은 MUI theme 기반 디자인 토큰 문서이다. **autodocs를 사용하지 않고** 직접 Doc 스토리를 작성한다.
+
+#### Style 스토리 필수 구조
+
+```
+1. DocumentTitle (영문)
+2. PageContainer
+   ├── 페이지 제목 (h4)
+   ├── 스토리 개요 (1줄 설명)
+   ├── SectionTitle: "토큰 구조" → 트리 뷰로 theme 계층 표시 (필수)
+   ├── SectionTitle: "토큰 값" → 테이블로 토큰값 표시 (필수)
+   ├── SectionTitle: "사용 예시" → MUI sx prop 코드 예시 (필수)
+   └── SectionTitle: "Vibe Coding Prompt" → AI 코딩용 프롬프트 예시 (필수)
+```
+
+#### 1. 스토리 개요 (1줄)
+
+페이지 제목 바로 아래에 **한 줄**로 해당 토큰의 역할을 설명한다.
+
+```jsx
+<Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+  Color System
+</Typography>
+<Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
+  프로젝트에서 사용하는 색상 팔레트와 시멘틱 컬러 토큰입니다.
+</Typography>
+```
+
+#### 2. 토큰 구조 (트리 뷰) - 필수
+
+`Overview.stories.jsx`의 TreeNode 패턴을 사용하여 MUI theme 계층 구조를 트리 형태로 보여준다.
+
+```jsx
+// theme에서 관련 토큰만 추출
+const tokenStructure = {
+  palette: {
+    primary: theme.palette.primary,
+    secondary: theme.palette.secondary,
+    error: theme.palette.error,
+    // ...
+  },
+};
+
+// TreeNode 컴포넌트로 렌더링
+<SectionTitle title="토큰 구조" description="theme.palette 계층 구조" />
+<Box sx={ { p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 } }>
+  { Object.entries(tokenStructure).map(([key, value]) => (
+    <TreeNode key={ key } keyName={ key } value={ value } />
+  )) }
+</Box>
+```
+
+#### 3. 토큰 값 (테이블) - 필수
+
+토큰의 실제 값을 테이블 형태로 정리하여 보여준다.
+
+```jsx
+<SectionTitle title="토큰 값" description="주요 토큰의 실제 값" />
+<TableContainer>
+  <Table size="small">
+    <TableHead>
+      <TableRow>
+        <TableCell sx={ { fontWeight: 600 } }>Token</TableCell>
+        <TableCell sx={ { fontWeight: 600 } }>Value</TableCell>
+        <TableCell sx={ { fontWeight: 600 } }>설명</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      <TableRow>
+        <TableCell sx={ { fontFamily: 'monospace' } }>primary.main</TableCell>
+        <TableCell sx={ { fontFamily: 'monospace' } }>#0000FF</TableCell>
+        <TableCell>주요 브랜드 색상</TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</TableContainer>
+```
+
+#### 4. 사용 예시 (MUI sx prop) - 필수
+
+해당 토큰을 MUI 컴포넌트의 sx prop에서 어떻게 사용하는지 코드로 보여준다.
+
+```jsx
+<SectionTitle title="사용 예시" description="MUI sx prop에서의 토큰 활용" />
+<Box
+  component="pre"
+  sx={ {
+    backgroundColor: 'grey.100',
+    p: 2,
+    fontSize: 12,
+    fontFamily: 'monospace',
+    overflow: 'auto',
+    borderRadius: 1,
+  } }
+>
+{`// 색상 토큰 사용
+<Box sx={{ backgroundColor: 'primary.main' }} />
+<Typography sx={{ color: 'text.secondary' }} />
+
+// 간격 토큰 사용
+<Box sx={{ p: 2, m: 3, gap: 1 }} />
+
+// 반응형 적용
+<Box sx={{
+  p: { xs: 2, md: 4 },
+  backgroundColor: 'background.paper'
+}} />`}
+</Box>
+```
+
+#### 5. Vibe Coding Prompt - 필수
+
+AI 코딩 도구(Claude, Cursor 등)에서 해당 토큰을 활용할 때 사용할 수 있는 프롬프트 예시를 제공한다.
+
+```jsx
+<SectionTitle
+  title="Vibe Coding Prompt"
+  description="AI 코딩 도구에서 활용할 수 있는 프롬프트 예시"
+/>
+<Box
+  component="pre"
+  sx={ {
+    backgroundColor: 'grey.900',
+    color: 'grey.100',
+    p: 2,
+    fontSize: 12,
+    fontFamily: 'monospace',
+    overflow: 'auto',
+    borderRadius: 1,
+  } }
+>
+{`/* 색상 토큰 활용 프롬프트 예시 */
+
+"primary.main (#0000FF)을 사용해서 CTA 버튼을 만들어줘.
+hover 시 primary.dark로 변경되도록 해줘."
+
+"text.primary와 text.secondary를 사용해서
+카드 컴포넌트의 제목과 설명 텍스트 색상을 구분해줘."
+
+"background.paper 배경에 primary.main 보더를 가진
+선택된 상태의 카드를 만들어줘."`}
+</Box>
+```
+
+**Vibe Coding Prompt 작성 가이드:**
+
+| 요소 | 설명 |
+|------|------|
+| 토큰 명시 | 사용할 토큰 경로를 명확히 언급 (예: `primary.main`) |
+| 값 참고 | 필요시 실제 값도 함께 표기 (예: `#0000FF`) |
+| 컨텍스트 | 어떤 상황에서 사용하는지 설명 |
+| 상호작용 | hover, active 등 상태별 토큰 변화 명시 |
+
+#### Style 스토리 템플릿
+
+```jsx
+import { useTheme } from '@mui/material/styles';
+import { DocumentTitle, PageContainer, SectionTitle } from '../../components/storybookDocumentation';
+
+export default {
+  title: 'Style/TokenName',
+  parameters: {
+    layout: 'padded',
+    // autodocs 태그 없음 - Style은 직접 Doc 작성
+  },
+};
+
+export const Default = {
+  render: () => {
+    const theme = useTheme();
+
+    // 관련 토큰 구조 추출
+    const tokenStructure = {
+      // theme에서 필요한 부분만 추출
+    };
+
+    return (
+      <>
+        <DocumentTitle
+          title="Token Name"
+          status="Available"
+          note="Brief description in English"
+          brandName="Design System"
+          systemName="Starter Kit"
+          version="1.0"
+        />
+        <PageContainer>
+          {/* 제목 + 1줄 개요 */}
+          <Typography variant="h4" sx={ { fontWeight: 700, mb: 1 } }>
+            토큰 제목
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={ { mb: 4 } }>
+            한 줄로 토큰의 역할을 설명합니다.
+          </Typography>
+
+          {/* 필수: 토큰 구조 (트리 뷰) */}
+          <SectionTitle title="토큰 구조" description="MUI theme 계층 구조" />
+          <Box sx={ { p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1, mb: 4 } }>
+            {/* TreeNode로 트리 뷰 렌더링 */}
+          </Box>
+
+          {/* 필수: 토큰 값 (테이블) */}
+          <SectionTitle title="토큰 값" description="주요 토큰의 실제 값" />
+          <TableContainer sx={ { mb: 4 } }>
+            {/* 테이블로 토큰값 표시 */}
+          </TableContainer>
+
+          {/* 필수: 사용 예시 */}
+          <SectionTitle title="사용 예시" description="MUI sx prop에서의 토큰 활용" />
+          <Box component="pre" sx={ { backgroundColor: 'grey.100', p: 2, mb: 4, ... } }>
+            {/* MUI sx prop 코드 예시 */}
+          </Box>
+
+          {/* 필수: Vibe Coding Prompt */}
+          <SectionTitle title="Vibe Coding Prompt" description="AI 코딩 도구에서 활용할 수 있는 프롬프트 예시" />
+          <Box component="pre" sx={ { backgroundColor: 'grey.900', color: 'grey.100', p: 2, ... } }>
+            {/* AI 프롬프트 예시 */}
+          </Box>
+        </PageContainer>
+      </>
+    );
+  },
+};
+```
+
+#### Style vs Component 비교
+
+| 구분 | Style 스토리 | Component 스토리 |
+|------|-------------|-----------------|
+| autodocs | ❌ 사용 안 함 | ✅ `tags: ['autodocs']` |
+| 최상단 필수 | 토큰 구조 (theme 경로) | Props 테이블 |
+| 인터랙션 | 없음 (정적 참조) | argTypes/controls |
+| 목적 | 디자인 토큰 문서화 | 컴포넌트 사용법 |
 
 | 접근 방식 | 설명 |
 |----------|------|
@@ -414,11 +701,26 @@ Style 섹션은 디자인 토큰 문서이므로 단일 문서형 스토리를 �
 스토리 작성 완료 전 확인:
 
 ### MUST (Required)
+
+**공통**
+- [ ] 스토리 한 개당 단일 컴포넌트/토큰만 보여주는가?
 - [ ] DocumentTitle props가 모두 영어로 작성되었는가?
 - [ ] 설명(페이지 제목, 섹션 설명, 테이블 내용)이 한글로 작성되었는가?
-- [ ] 최상단에 Props 테이블이 있는가?
 - [ ] 2개 이상의 섹션에 SectionTitle이 사용되었는가?
-- [ ] 올바른 스토리 타입이 사용되었는가? (autodocs for components, Doc for documentation)
+
+**Component 스토리**
+- [ ] `tags: ['autodocs']`가 적용되었는가?
+- [ ] 모든 props에 타입에 맞는 argTypes와 control이 적용되었는가?
+- [ ] 최상단에 Props 테이블이 있는가?
+
+**Style 스토리**
+- [ ] autodocs 없이 직접 Doc 스토리를 작성했는가?
+- [ ] 1줄 개요가 페이지 제목 아래에 있는가?
+- [ ] 토큰 구조가 트리 뷰로 표시되어 있는가? (Overview.stories.jsx TreeNode 패턴)
+- [ ] 토큰 값이 테이블로 정리되어 있는가?
+- [ ] MUI sx prop 사용 예시가 포함되어 있는가?
+- [ ] Vibe Coding Prompt 예시가 포함되어 있는가?
+- [ ] `useTheme()` 훅으로 실제 theme 값을 참조하는가?
 
 ### SHOULD (Recommended)
 - [ ] PageContainer로 콘텐츠가 감싸져 있는가? (Doc stories)

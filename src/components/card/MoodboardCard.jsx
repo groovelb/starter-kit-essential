@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -5,6 +6,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import { CustomCard } from './CustomCard';
+import { ImageTransition } from '../media/ImageTransition';
 
 /**
  * MoodboardCard 컴포넌트
@@ -14,10 +16,11 @@ import { CustomCard } from './CustomCard';
  * 무드보드의 메타데이터(이름, 설명, 아이템 수, 생성일)를 표시.
  *
  * 동작 방식:
- * 1. 썸네일 그리드: items 배열의 처음 4개 이미지를 2×2 그리드로 표시
+ * 1. 기본 상태: items 배열의 처음 4개 이미지를 2×2 그리드로 표시
  * 2. 이미지가 4개 미만일 경우: 빈 슬롯은 회색 배경으로 표시
  * 3. 이미지가 0개일 경우: 전체 placeholder 아이콘 표시
- * 4. Hover 시: 카드가 살짝 위로 이동하고 액션 버튼 표시
+ * 4. Hover 시: 0.3초 간격으로 이미지가 하나씩 fade 트랜지션되며 순환
+ * 5. Hover 해제 시: 2×2 그리드로 복귀
  *
  * Props:
  * @param {string} id - 무드보드 ID [Required]
@@ -53,9 +56,56 @@ export function MoodboardCard({
   sx,
   ...props
 }) {
+  // ============================================
+  // 상태 관리
+  // ============================================
+  const [isHovered, setIsHovered] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const intervalRef = useRef(null);
+
   // 썸네일에 표시할 이미지 (최대 4개)
   const thumbnailImages = items.slice(0, 4);
   const itemCount = items.length;
+
+  /**
+   * Hover 시 자동 이미지 순환
+   * - 마우스 진입: 0.3초 간격으로 이미지 인덱스 증가
+   * - 마우스 이탈: interval 정리 및 인덱스 초기화
+   */
+  useEffect(() => {
+    if (isHovered && items.length > 1) {
+      intervalRef.current = setInterval(() => {
+        setActiveIndex((prev) => (prev + 1) % items.length);
+      }, 300);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isHovered, items.length]);
+
+  /**
+   * 마우스 이벤트 핸들러
+   */
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setActiveIndex(0);
+  };
+
+  /**
+   * ImageTransition용 이미지 배열 생성
+   */
+  const transitionImages = items.map((item) => ({
+    src: item.thumbnail || item.src?.medium || item.src,
+    alt: item.title || 'Moodboard image',
+  }));
 
   /**
    * 날짜 포맷팅 (YYYY-MM-DD → MMM DD, YYYY)
@@ -71,27 +121,69 @@ export function MoodboardCard({
   };
 
   /**
-   * 2×2 썸네일 그리드 미디어 슬롯
-   * - 이미지가 있으면 4개 슬롯에 이미지 또는 빈 배경 표시
-   * - 이미지가 없으면 placeholder 아이콘 표시
+   * 미디어 슬롯 렌더링
+   * - 기본 상태: 2×2 썸네일 그리드
+   * - Hover 상태: ImageTransition으로 단일 이미지 순환
+   * - 이미지 없음: placeholder 아이콘 표시
    */
-  const ThumbnailGrid = (
-    <Box
-      className="thumbnail-grid"
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gridTemplateRows: 'repeat(2, 1fr)',
-        gap: '2px',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'grey.200',
-        transition: 'transform 0.3s ease',
-      }}
-    >
-      {thumbnailImages.length > 0 ? (
-        // 이미지가 있는 경우: 4개 슬롯 렌더링
-        [...Array(4)].map((_, index) => {
+  const renderMediaSlot = () => {
+    // 이미지가 없는 경우: placeholder
+    if (items.length === 0) {
+      return (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'grey.100',
+            color: 'grey.400',
+          }}
+        >
+          <CollectionsIcon sx={{ fontSize: 48, mb: 1 }} />
+          <Typography variant="caption" color="inherit">
+            No images yet
+          </Typography>
+        </Box>
+      );
+    }
+
+    // Hover 상태: ImageTransition으로 이미지 순환
+    if (isHovered && items.length > 1) {
+      return (
+        <ImageTransition
+          images={transitionImages}
+          activeIndex={activeIndex}
+          transition="fade"
+          duration={300}
+          aspectRatio="1/1"
+          objectFit="cover"
+          sx={{
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      );
+    }
+
+    // 기본 상태: 2×2 썸네일 그리드
+    return (
+      <Box
+        className="thumbnail-grid"
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gridTemplateRows: 'repeat(2, 1fr)',
+          gap: '2px',
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'grey.200',
+          transition: 'transform 0.3s ease',
+        }}
+      >
+        {[...Array(4)].map((_, index) => {
           const image = thumbnailImages[index];
           return (
             <Box
@@ -116,43 +208,20 @@ export function MoodboardCard({
                   }}
                 />
               ) : (
-                // 빈 슬롯
                 <Box
                   sx={{
                     position: 'absolute',
                     inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
                     backgroundColor: 'grey.100',
                   }}
                 />
               )}
             </Box>
           );
-        })
-      ) : (
-        // 이미지가 없는 경우: placeholder
-        <Box
-          sx={{
-            gridColumn: '1 / -1',
-            gridRow: '1 / -1',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'grey.100',
-            color: 'grey.400',
-          }}
-        >
-          <CollectionsIcon sx={{ fontSize: 48, mb: 1 }} />
-          <Typography variant="caption" color="inherit">
-            No images yet
-          </Typography>
-        </Box>
-      )}
-    </Box>
-  );
+        })}
+      </Box>
+    );
+  };
 
   /**
    * 오버레이 슬롯 (액션 버튼 + 아이템 수 배지)
@@ -241,24 +310,22 @@ export function MoodboardCard({
   return (
     <CustomCard
       layout="vertical"
-      mediaSlot={ThumbnailGrid}
+      mediaSlot={renderMediaSlot()}
       mediaRatio="1/1"
       contentPadding="md"
       overlaySlot={OverlayContent}
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       sx={{
         cursor: 'pointer',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-        // CustomCard 기본 border 제거 (기존 스타일 유지)
         border: 'none',
         '&:hover': {
           transform: 'translateY(-4px)',
           boxShadow: '0 12px 24px -8px rgba(0,0,0,0.15)',
           '& .moodboard-actions': {
             opacity: 1,
-          },
-          '& .thumbnail-grid': {
-            transform: 'scale(1.02)',
           },
         },
         ...sx,

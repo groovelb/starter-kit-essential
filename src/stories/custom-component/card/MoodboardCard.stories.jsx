@@ -77,7 +77,8 @@ export default {
 | **메타데이터** | 태그 칩 | 설명, 아이템 수, 생성일 |
 
 ### 주요 기능
-- **2×2 썸네일 그리드**: 컬렉션 미리보기
+- **2×2 썸네일 그리드**: 기본 상태에서 컬렉션 미리보기
+- **Hover 이미지 순환**: 마우스 hover 시 0.3초 간격으로 이미지가 fade 트랜지션
 - **반응형 메타데이터**: 이름, 설명, 아이템 수, 생성일
 - **Hover 인터랙션**: 편집/삭제 버튼 표시
 - **빈 상태 처리**: 이미지가 없을 때 placeholder 표시
@@ -274,6 +275,43 @@ export const ReadOnly = {
   render: (args) => (
     <Box sx={{ width: 280 }}>
       <MoodboardCard {...args} />
+    </Box>
+  ),
+};
+
+/** Hover 이미지 순환 (많은 이미지) */
+export const HoverTransition = {
+  render: () => (
+    <Box sx={{ display: 'flex', gap: 3 }}>
+      <Box sx={{ width: 280 }}>
+        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+          8개 이미지 (Hover하여 순환 확인)
+        </Typography>
+        <MoodboardCard
+          id="board-many"
+          name="Many Images"
+          description="Hover to see images cycle through with fade transition"
+          items={[
+            ...createMockAssets('abstract', 4),
+            ...createMockAssets('fineart', 4),
+          ]}
+          createdAt="2024-10-15"
+          onEdit={() => {}}
+        />
+      </Box>
+      <Box sx={{ width: 280 }}>
+        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+          1개 이미지 (순환 없음)
+        </Typography>
+        <MoodboardCard
+          id="board-single"
+          name="Single Image"
+          description="Only one image, no cycling on hover"
+          items={createMockAssets('photography', 1)}
+          createdAt="2024-10-15"
+          onEdit={() => {}}
+        />
+      </Box>
     </Box>
   ),
 };
